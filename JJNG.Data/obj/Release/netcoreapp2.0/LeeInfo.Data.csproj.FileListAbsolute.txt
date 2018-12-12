@@ -1,0 +1,9 @@
+D:\LeeInfo\LeeInfo.Data\bin\Release\netcoreapp2.0\LeeInfo.Data.deps.json
+D:\LeeInfo\LeeInfo.Data\bin\Release\netcoreapp2.0\LeeInfo.Data.dll
+D:\LeeInfo\LeeInfo.Data\bin\Release\netcoreapp2.0\LeeInfo.Data.pdb
+D:\LeeInfo\LeeInfo.Data\obj\Release\netcoreapp2.0\LeeInfo.Data.csproj.CoreCompileInputs.cache
+D:\LeeInfo\LeeInfo.Data\obj\Release\netcoreapp2.0\LeeInfo.Data.AssemblyInfoInputs.cache
+D:\LeeInfo\LeeInfo.Data\obj\Release\netcoreapp2.0\LeeInfo.Data.AssemblyInfo.cs
+D:\LeeInfo\LeeInfo.Data\obj\Release\netcoreapp2.0\LeeInfo.Data.dll
+D:\LeeInfo\LeeInfo.Data\obj\Release\netcoreapp2.0\LeeInfo.Data.pdb
+D:\LeeInfo\LeeInfo.Data\obj\Release\netcoreapp2.0\LeeInfo.Data.csprojAssemblyReference.cache

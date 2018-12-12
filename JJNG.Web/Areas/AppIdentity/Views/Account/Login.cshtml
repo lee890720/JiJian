@@ -1,0 +1,57 @@
+﻿@model LoginModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>既见后台管理系统</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="~/css/adminlte.min.css" />
+    <link rel="stylesheet" href="~/css/site.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a  asp-page="/"><b>既  见</b></a>
+        </div>
+        <div class="login-box-body">
+            <h4 class="login-box-msg">欢 迎 登 录</h4>
+            <form asp-action="Login" method="post">
+                <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+                <div class="form-group has-feedback">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <input type="checkbox" asp-for="RememberMe" class="minimal" style="vertical-align:middle"/>
+                        <span style="vertical-align:middle"> 记住我</span>
+                    </div>
+                    <div class="col-xs-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="~/js/adminlte.min.js"></script>
+    <script>
+        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue',
+            radioClass: 'iradio_minimal-blue'
+        });
+    </script>
+</body>
+</html>

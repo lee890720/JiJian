@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="App\**" />
+    <Compile Remove="新建文件夹\**" />
+    <EmbeddedResource Remove="App\**" />
+    <EmbeddedResource Remove="新建文件夹\**" />
+    <None Remove="App\**" />
+    <None Remove="新建文件夹\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
+  </ItemGroup>
+
+</Project>

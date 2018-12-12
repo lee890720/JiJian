@@ -1,0 +1,56 @@
+﻿@model AppIdentityUser
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+<div class="col-md-12">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @Html.HiddenFor(x => x.Id)
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserName, "用户名", htmlAttributes: new { @class = "control-label" })
+        <p class="form-control-static">@Model.UserName</p>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PhoneNumber, "联系方式", htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Department, "部门", htmlAttributes: new { @class = "control-label" })
+        @Html.DropDownList("Department", ViewData["Department"] as SelectList, "请选择", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Position, "职位", htmlAttributes: new { @class = "control-label" })
+        @Html.DropDownList("Position", ViewData["Position"] as SelectList, "请选择", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.BelongTo, "隶属", htmlAttributes: new { @class = "control-label" })
+        @Html.DropDownList("BelongTo", ViewData["BelongTo"] as SelectList, "请选择", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">密码</label>
+        <input name="password" type="password" class="form-control" />
+    </div>
+
+    @*<div class="form-group">
+        @Html.LabelFor(model => model.UserImage, "头像", htmlAttributes: new { @class = "control-label" })
+        @Html.EditorFor(model => model.UserImage, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.UserImage, "", new { @class = "text-danger" })
+    </div>*@
+</div>
+<script>
+    $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
+        checkboxClass: 'icheckbox_flat-blue',
+        radioClass: 'iradio_flat-blue'
+    });
+</script>

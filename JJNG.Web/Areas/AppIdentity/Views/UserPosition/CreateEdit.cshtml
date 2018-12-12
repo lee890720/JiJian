@@ -1,0 +1,26 @@
+﻿@model JJNG.Data.AppIdentity.UserPosition
+
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+    <div class="col-md-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @if (ViewData["action"].ToString() == "Create")
+    { }
+    else
+    {
+        <input type="hidden" asp-for="PositionId" />
+    }   
+            <div class="form-group">
+                <label asp-for="PositionName" class="control-label"></label>
+                <input asp-for="PositionName" class="form-control" />
+                <span asp-validation-for="PositionName" class="text-danger"></span>
+    </div>
+</div>
+

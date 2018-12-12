@@ -1,0 +1,16 @@
+D:\LeeInfo\LeeInfo.Web\bin\Debug\netcoreapp2.0\LeeInfo.Web.deps.json
+D:\LeeInfo\LeeInfo.Web\bin\Debug\netcoreapp2.0\LeeInfo.Web.runtimeconfig.json
+D:\LeeInfo\LeeInfo.Web\bin\Debug\netcoreapp2.0\LeeInfo.Web.runtimeconfig.dev.json
+D:\LeeInfo\LeeInfo.Web\bin\Debug\netcoreapp2.0\LeeInfo.Web.dll
+D:\LeeInfo\LeeInfo.Web\bin\Debug\netcoreapp2.0\LeeInfo.Web.pdb
+D:\LeeInfo\LeeInfo.Web\bin\Debug\netcoreapp2.0\LeeInfo.Data.dll
+D:\LeeInfo\LeeInfo.Web\bin\Debug\netcoreapp2.0\LeeInfo.Lib.dll
+D:\LeeInfo\LeeInfo.Web\bin\Debug\netcoreapp2.0\LeeInfo.Data.pdb
+D:\LeeInfo\LeeInfo.Web\bin\Debug\netcoreapp2.0\LeeInfo.Lib.pdb
+D:\LeeInfo\LeeInfo.Web\obj\Debug\netcoreapp2.0\LeeInfo.Web.csprojResolveAssemblyReference.cache
+D:\LeeInfo\LeeInfo.Web\obj\Debug\netcoreapp2.0\LeeInfo.Web.csproj.CoreCompileInputs.cache
+D:\LeeInfo\LeeInfo.Web\obj\Debug\netcoreapp2.0\LeeInfo.Web.AssemblyInfoInputs.cache
+D:\LeeInfo\LeeInfo.Web\obj\Debug\netcoreapp2.0\LeeInfo.Web.AssemblyInfo.cs
+D:\LeeInfo\LeeInfo.Web\obj\Debug\netcoreapp2.0\LeeInfo.Web.csproj.CopyComplete
+D:\LeeInfo\LeeInfo.Web\obj\Debug\netcoreapp2.0\LeeInfo.Web.dll
+D:\LeeInfo\LeeInfo.Web\obj\Debug\netcoreapp2.0\LeeInfo.Web.pdb

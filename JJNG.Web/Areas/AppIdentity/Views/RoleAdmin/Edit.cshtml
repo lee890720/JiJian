@@ -1,0 +1,58 @@
+﻿@model RoleEditModel
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+    <input type="hidden" name="roleName" value="@Model.Role.Name" />
+    <input type="hidden" name="roleId" value="@Model.Role.Id" />
+
+    <h6 class="bg-info p-1 text-white">新增成员到 @Model.Role.Name</h6>
+    <table class="table table-bordered table-sm">
+        @if (Model.NonMembers.Count() == 0)
+        {
+            <tr><td colspan="2">所有成员都在里面</td></tr>
+        }
+        else
+        {
+            @foreach (AppIdentityUser user in Model.NonMembers)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>
+                        <input type="checkbox" class="flat-blue" name="IdsToAdd" value="@user.Id">
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+
+    <h6 class="bg-info p-1 text-white">将成员移除从 @Model.Role.Name</h6>
+    <table class="table table-bordered table-sm">
+        @if (Model.Members.Count() == 0)
+        {
+            <tr><td colspan="2">没有成员在里面</td></tr>
+        }
+        else
+        {
+            @foreach (AppIdentityUser user in Model.Members)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>
+                        <input type="checkbox" class="flat-blue" name="IdsToDelete" value="@user.Id">
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+<script>
+    $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
+        checkboxClass: 'icheckbox_flat-blue',
+        radioClass: 'iradio_flat-blue'
+    })
+</script>

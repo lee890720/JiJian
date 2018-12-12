@@ -1,0 +1,15 @@
+D:\既见\JJNG\JJNG.Web\bin\Release\netcoreapp2.0\JJNG.Web.deps.json
+D:\既见\JJNG\JJNG.Web\bin\Release\netcoreapp2.0\JJNG.Web.runtimeconfig.json
+D:\既见\JJNG\JJNG.Web\bin\Release\netcoreapp2.0\JJNG.Web.runtimeconfig.dev.json
+D:\既见\JJNG\JJNG.Web\bin\Release\netcoreapp2.0\JJNG.Web.dll
+D:\既见\JJNG\JJNG.Web\bin\Release\netcoreapp2.0\JJNG.Web.pdb
+D:\既见\JJNG\JJNG.Web\bin\Release\netcoreapp2.0\JJNG.Data.dll
+D:\既见\JJNG\JJNG.Web\bin\Release\netcoreapp2.0\JJNG.Data.pdb
+D:\既见\JJNG\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.csprojAssemblyReference.cache
+D:\既见\JJNG\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.csproj.CoreCompileInputs.cache
+D:\既见\JJNG\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.AssemblyInfoInputs.cache
+D:\既见\JJNG\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.AssemblyInfo.cs
+D:\既见\JJNG\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.csproj.CopyComplete
+D:\既见\JJNG\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.dll
+D:\既见\JJNG\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.pdb
+D:\既见\JJNG\JJNG.Web\obj\Release\netcoreapp2.0\UserSecretsAssemblyInfo.cs

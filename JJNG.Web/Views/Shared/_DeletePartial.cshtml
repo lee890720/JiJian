@@ -1,0 +1,10 @@
+﻿@model String
+@using (Html.BeginForm())
+{
+    @Html.Partial("_ModalHeader", new ModalHeader { Heading = "删除\t"})
+
+    <div class="modal-body form-horizontal">
+        你确定要删除 @Model?
+    </div>
+    @Html.Partial("_ModalFooter", new ModalFooter { SubmitButtonText = "提交" })
+}

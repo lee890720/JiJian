@@ -1,0 +1,32 @@
+﻿<section class="content-header hidden-xs">
+        @{
+            var actionstr = ViewData["action"].ToString();
+            if(actionstr=="Create")
+            {
+                <h1>
+                    新增
+                </h1>
+            }
+            if(actionstr=="Edit")
+            {
+                <h1>
+                    编辑
+                </h1>
+            }
+        }
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <form asp-action="@ViewData["action"]" role="form">
+                    @await Html.PartialAsync("_ModalHeader", new ModalHeader { Heading = "点击右侧或按ESC退出" })
+                    <div class="box-body">
+                        @RenderBody()
+                    </div>
+                    @await Html.PartialAsync("_ModalFooter", new ModalFooter { })
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
