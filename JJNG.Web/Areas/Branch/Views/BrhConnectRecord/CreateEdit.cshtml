@@ -1,0 +1,74 @@
+﻿@model JJNG.Data.Branch.BrhConnectRecord
+
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+@if (ViewData["action"].ToString() == "Create")
+{ }
+else
+{
+    <input type="hidden" asp-for="ConnectRecordId" />
+}
+    <div class="col-md-6">
+        <div class="form-group">
+            <label asp-for="MorningStaff" class="control-label"></label>
+            <input asp-for="MorningStaff" class="form-control" />
+            <span asp-validation-for="MorningStaff" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="NigthStaff" class="control-label"></label>
+            <input asp-for="NigthStaff" class="form-control" />
+            <span asp-validation-for="NigthStaff" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="HouseCash" class="control-label"></label>
+            <input asp-for="HouseCash" class="form-control" />
+            <span asp-validation-for="HouseCash" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="OtherCash" class="control-label"></label>
+            <input asp-for="OtherCash" class="form-control" />
+            <span asp-validation-for="OtherCash" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="RevolvingFund" class="control-label"></label>
+            <input asp-for="RevolvingFund" class="form-control" />
+            <span asp-validation-for="RevolvingFund" class="text-danger"></span>
+        </div>
+    </div>
+<div class="col-md-6">
+    <div class="form-group">
+        <label asp-for="BillCount" class="control-label"></label>
+        <input asp-for="BillCount" class="form-control" />
+        <span asp-validation-for="BillCount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CardCount" class="control-label"></label>
+        <input asp-for="CardCount" class="form-control" />
+        <span asp-validation-for="CardCount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EnteringStaff" class="control-label"></label>
+        <input asp-for="EnteringStaff" value="@ViewData["UserName"]" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="EnteringStaff" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Branch" class="control-label"></label>
+        <input asp-for="Branch" value="@ViewData["BelongTo"]" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="Branch" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Note" class="control-label"></label>
+        <input asp-for="Note" class="form-control" />
+        <span asp-validation-for="Note" class="text-danger"></span>
+    </div>
+</div>
+
+

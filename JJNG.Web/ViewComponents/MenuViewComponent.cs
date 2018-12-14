@@ -24,8 +24,11 @@ namespace JJNG.Web.ViewComponents
             {
                 foreach (var r in list_str)
                 {
-                    if (t.Description.IndexOf(r) != -1&&t.Valid)
+                    if (t.Description.IndexOf(r) != -1 && t.Valid)
+                    {
                         menu.Add(t);
+                        break;
+                    }
                 }
             }
             return View(menu);

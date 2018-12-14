@@ -1,0 +1,154 @@
+﻿@model JJNG.Data.Branch.BrhFrontDeskAccounts
+
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input type="hidden" asp-for="FrontDeskAccountsId" />
+<div class="col-md-4">
+    <div class="form-group">
+        <label asp-for="EnteringDate" class="control-label"></label>
+        <input asp-for="EnteringDate" type="date" id="createDate1" class="form-control" />
+        <span asp-validation-for="EnteringDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="HouseNumber" class="control-label"></label>
+        @Html.DropDownList("HouseNumber", ViewData["HouseNumber"] as SelectList, "请选择", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerName" class="control-label"></label>
+        <input asp-for="CustomerName" class="form-control" />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerCount" class="control-label"></label>
+        <input asp-for="CustomerCount" class="form-control" />
+        <span asp-validation-for="CustomerCount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Channel" class="control-label"></label>
+        @Html.DropDownList("Channel", ViewData["Channel"] as SelectList, "请选择", new { @class = "form-control" })
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="form-group">
+        <label asp-for="StartDate" class="control-label"></label>
+        <input asp-for="StartDate" type="date" id="startDate" class="form-control" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="UnitPrice" class="control-label"></label>
+        <input asp-for="UnitPrice" id="unitPrice" class="form-control" />
+        <span asp-validation-for="UnitPrice" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TotalPrice" class="control-label"></label>
+        <input asp-for="TotalPrice" readonly="readonly" id="totalPrice" class="form-control" />
+        <span asp-validation-for="TotalPrice" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Receivable" class="control-label"></label>
+        <input asp-for="Receivable"  class="form-control" />
+        <span asp-validation-for="Receivable" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Received" class="control-label"></label>
+        <input asp-for="Received" id="received" readonly="readonly" class="form-control" />
+        <span asp-validation-for="Received" class="text-danger"></span>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="form-group">
+        <label asp-for="EndDate" class="control-label"></label>
+        <input asp-for="EndDate" type="date" id="endDate" class="form-control" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EnteringStaff" class="control-label"></label>
+        <input asp-for="EnteringStaff" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="EnteringStaff" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="RelationStaff" class="control-label"></label>
+        <input asp-for="RelationStaff" class="form-control" />
+        <span asp-validation-for="RelationStaff" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Branch" class="control-label"></label>
+        <input asp-for="Branch" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="Branch" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Note" class="control-label"></label>
+        <input asp-for="Note" class="form-control" />
+        <span asp-validation-for="Note" class="text-danger"></span>
+    </div>
+</div>
+<script>
+    function formatDate(date) {
+        var myyear = date.getFullYear();
+        var mymonth = date.getMonth() + 1;
+        var myweekday = date.getDate();
+
+        if (mymonth < 10) {
+            mymonth = "0" + mymonth;
+        }
+        if (myweekday < 10) {
+            myweekday = "0" + myweekday;
+        }
+        return (myyear + "-" + mymonth + "-" + myweekday);
+    }
+    function checkIsDouble(checkString) {
+
+        var reg = /^[0-9,.]*$/;
+
+        if (reg.test(checkString)) {
+            return true;
+        }
+        alert("输入数字");
+        return false;
+    }
+    function DateDiff(sDate1, sDate2) {    //sDate1和sDate2是2002-12-18格式
+        var aDate, oDate1, oDate2, iDays
+        aDate = sDate1.split("-")
+        oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])    //转换为12-18-2002格式
+        aDate = sDate2.split("-")
+        oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
+        iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24)    //把相差的毫秒数转换为天数
+        return iDays
+    }
+    var now = new Date();
+    var nowDay = now.getDate();
+    var nowMonth = now.getMonth();
+    var nowYear = now.getFullYear();
+    var tomorrow = new Date(nowYear, nowMonth, nowDay + 1);
+    $('#unitPrice').keyup(function () {
+        var startDate = document.getElementById("startDate").value;
+        var endDate = document.getElementById("endDate").value;
+        var unitPrice = document.getElementById("unitPrice").value;
+        var result = 0.00;
+        if (checkIsDouble(unitPrice))
+            result = parseFloat(unitPrice);
+        var days = DateDiff(startDate, endDate);
+        result = result * days;
+        $('#totalPrice').val(result.toString());
+    });
+    $('#startDate,#endDate').change(function () {
+        var startDate = document.getElementById("startDate").value;
+        var endDate = document.getElementById("endDate").value;
+        var unitPrice = document.getElementById("unitPrice").value;
+        var result = 0.00;
+        if (parseFloat(unitPrice) > 0)
+            result = parseFloat(unitPrice);
+        var days = DateDiff(startDate, endDate);
+        result = result * days;
+        $('#totalPrice').val(result.toString());
+    });
+</script>

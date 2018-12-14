@@ -111,6 +111,22 @@ namespace JJNG.Data.Migrations.AppIdentityDb
                     b.ToTable("User_BelongTo");
                 });
 
+            modelBuilder.Entity("JJNG.Data.AppIdentity.UserBelongToDetial", b =>
+                {
+                    b.Property<int>("BelongToDetialId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("BelongToId");
+
+                    b.Property<string>("HouseNumber");
+
+                    b.HasKey("BelongToDetialId");
+
+                    b.HasIndex("BelongToId");
+
+                    b.ToTable("User_BelongToDetial");
+                });
+
             modelBuilder.Entity("JJNG.Data.AppIdentity.UserDepartment", b =>
                 {
                     b.Property<int>("DepartmentId")
@@ -248,6 +264,14 @@ namespace JJNG.Data.Migrations.AppIdentityDb
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "IdentityRole")
                         .WithMany()
                         .HasForeignKey("IdentityRoleId");
+                });
+
+            modelBuilder.Entity("JJNG.Data.AppIdentity.UserBelongToDetial", b =>
+                {
+                    b.HasOne("JJNG.Data.AppIdentity.UserBelongTo", "UserBelongTo")
+                        .WithMany("UserBelongToDetial")
+                        .HasForeignKey("BelongToId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

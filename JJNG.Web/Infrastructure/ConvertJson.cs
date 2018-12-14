@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Runtime.Serialization.Json;
 
 
-namespace JJNG.Lib
+namespace JJNG.Web
 {
     public static class ConvertJson
     {

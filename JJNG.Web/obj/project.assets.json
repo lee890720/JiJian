@@ -13220,11 +13220,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\既见\\JJNG\\JJNG.Web\\JJNG.Web.csproj",
+      "projectUniqueName": "D:\\JiJian\\JJNG.Web\\JJNG.Web.csproj",
       "projectName": "JJNG.Web",
-      "projectPath": "D:\\既见\\JJNG\\JJNG.Web\\JJNG.Web.csproj",
+      "projectPath": "D:\\JiJian\\JJNG.Web\\JJNG.Web.csproj",
       "packagesPath": "C:\\Users\\lee-lenovo\\.nuget\\packages\\",
-      "outputPath": "D:\\既见\\JJNG\\JJNG.Web\\obj\\",
+      "outputPath": "D:\\JiJian\\JJNG.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -13243,8 +13243,8 @@
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "D:\\既见\\JJNG\\JJNG.Data\\JJNG.Data.csproj": {
-              "projectPath": "D:\\既见\\JJNG\\JJNG.Data\\JJNG.Data.csproj"
+            "D:\\JiJian\\JJNG.Data\\JJNG.Data.csproj": {
+              "projectPath": "D:\\JiJian\\JJNG.Data\\JJNG.Data.csproj"
             }
           }
         }

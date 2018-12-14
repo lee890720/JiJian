@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace JJNG.Lib
+namespace JJNG.Web
 {
     public static class Tools
     {

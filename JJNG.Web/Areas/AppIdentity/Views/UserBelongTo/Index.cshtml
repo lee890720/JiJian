@@ -40,6 +40,18 @@
                                         @Html.DisplayFor(modelItem => item.BelongToName)
                                     </td>
                                     <td class="hidden-xs">
+                                        @if (item.BelongToName != "运营中心")
+                                        {
+                                            <a asp-action="Index" asp-controller="UserBelongToDetial" asp-route-area="AppIdentity" asp-route-id="@item.BelongToId" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                                <i class="glyphicon glyphicon-plus"></i> 增加房号
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a  class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                                <i class="glyphicon glyphicon-plus"></i> 不可增加
+                                            </a>
+                                        }
                                         <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.BelongToId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
                                             <i class="glyphicon glyphicon-pencil"></i> 编辑
                                         </a>

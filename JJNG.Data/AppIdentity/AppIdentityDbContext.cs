@@ -11,6 +11,7 @@ namespace JJNG.Data.AppIdentity
     public class AppIdentityDbContext : IdentityDbContext<AppIdentityUser>
     {
         public virtual DbSet<UserBelongTo> UserBelongTo { get; set; }
+        public virtual DbSet<UserBelongToDetial> UserBelongToDetial { get; set; }
         public virtual DbSet<UserDepartment> UserDepartment { get; set; }
         public virtual DbSet<UserPosition> UserPosition { get; set; }
         public virtual DbSet<AppIdentityRole> AppIdentityRole { get; set; }

@@ -53,6 +53,154 @@ namespace JJNG.Data.Migrations
 
                     b.ToTable("App_Menu");
                 });
+
+            modelBuilder.Entity("JJNG.Data.Branch.BrhConnectRecord", b =>
+                {
+                    b.Property<int>("ConnectRecordId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("BillCount");
+
+                    b.Property<string>("Branch")
+                        .IsRequired();
+
+                    b.Property<int>("CardCount");
+
+                    b.Property<DateTime>("EnteringDate");
+
+                    b.Property<string>("EnteringStaff")
+                        .IsRequired();
+
+                    b.Property<double>("HouseCash");
+
+                    b.Property<string>("MorningStaff");
+
+                    b.Property<string>("NigthStaff");
+
+                    b.Property<string>("Note");
+
+                    b.Property<double>("OtherCash");
+
+                    b.Property<double>("RevolvingFund");
+
+                    b.HasKey("ConnectRecordId");
+
+                    b.ToTable("Brh_ConnectRecord");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Branch.BrhFrontDeskAccounts", b =>
+                {
+                    b.Property<long>("FrontDeskAccountsId");
+
+                    b.Property<string>("Branch")
+                        .IsRequired();
+
+                    b.Property<string>("Channel")
+                        .IsRequired();
+
+                    b.Property<int>("CustomerCount");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired();
+
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<DateTime>("EnteringDate");
+
+                    b.Property<string>("EnteringStaff")
+                        .IsRequired();
+
+                    b.Property<int>("HouseNumber");
+
+                    b.Property<bool>("IsFinance");
+
+                    b.Property<bool>("IsFinish");
+
+                    b.Property<bool>("IsFront");
+
+                    b.Property<string>("Note");
+
+                    b.Property<double>("Receivable");
+
+                    b.Property<double>("Received");
+
+                    b.Property<string>("RelationStaff");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<double>("TotalPrice");
+
+                    b.Property<double>("UnitPrice");
+
+                    b.HasKey("FrontDeskAccountsId");
+
+                    b.ToTable("Brh_FrontDeskAccounts");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Branch.BrhFrontPaymentDetial", b =>
+                {
+                    b.Property<int>("FrontPaymentDetialId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("BrhConnectRecordConnectRecordId");
+
+                    b.Property<long>("FrontDeskAccountsId");
+
+                    b.Property<double>("PayAmount");
+
+                    b.Property<DateTime>("PayDate");
+
+                    b.Property<string>("PayWay")
+                        .IsRequired();
+
+                    b.HasKey("FrontPaymentDetialId");
+
+                    b.HasIndex("BrhConnectRecordConnectRecordId");
+
+                    b.HasIndex("FrontDeskAccountsId");
+
+                    b.ToTable("Brh_FrontPaymentDetial");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncChannel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ChannelName");
+
+                    b.Property<int>("Sequence");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fnc_Channel");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncPayment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("PaymentName");
+
+                    b.Property<int>("Sequence");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fnc_Payment");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Branch.BrhFrontPaymentDetial", b =>
+                {
+                    b.HasOne("JJNG.Data.Branch.BrhConnectRecord")
+                        .WithMany("BrhFrontPaymentDetial")
+                        .HasForeignKey("BrhConnectRecordConnectRecordId");
+
+                    b.HasOne("JJNG.Data.Branch.BrhFrontDeskAccounts", "BrhFrontDeskAccounts")
+                        .WithMany("BrhFrontPaymentDetial")
+                        .HasForeignKey("FrontDeskAccountsId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 #pragma warning restore 612, 618
         }
     }

@@ -12542,11 +12542,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\既见\\JJNG\\JJNG.Data\\JJNG.Data.csproj",
+      "projectUniqueName": "D:\\JiJian\\JJNG.Data\\JJNG.Data.csproj",
       "projectName": "JJNG.Data",
-      "projectPath": "D:\\既见\\JJNG\\JJNG.Data\\JJNG.Data.csproj",
+      "projectPath": "D:\\JiJian\\JJNG.Data\\JJNG.Data.csproj",
       "packagesPath": "C:\\Users\\lee-lenovo\\.nuget\\packages\\",
-      "outputPath": "D:\\既见\\JJNG\\JJNG.Data\\obj\\",
+      "outputPath": "D:\\JiJian\\JJNG.Data\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
