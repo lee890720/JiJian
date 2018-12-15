@@ -52,7 +52,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             if (ModelState.IsValid)
             {
-                brhConnectRecord.EnteringDate = DateTime.Now;
+                brhConnectRecord.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                 _context.Add(brhConnectRecord);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -90,7 +90,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             {
                 try
                 {
-                    brhConnectRecord.EnteringDate = DateTime.Now;
+                    brhConnectRecord.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                     _context.Update(brhConnectRecord);
                     await _context.SaveChangesAsync();
                 }
@@ -129,7 +129,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(long? id, IFormCollection form)
+        public async Task<IActionResult> Delete(int? id, IFormCollection form)
         {
             var brhConnectRecord = await _context.BrhConnectRecord.SingleOrDefaultAsync(m => m.ConnectRecordId == id);
             _context.BrhConnectRecord.Remove(brhConnectRecord);

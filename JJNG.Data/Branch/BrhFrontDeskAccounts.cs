@@ -16,7 +16,7 @@ namespace JJNG.Data.Branch
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         public long FrontDeskAccountsId { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日HH时mm分}")]
         [Display(Name = "录入日期")]
         public DateTime EnteringDate { get; set; }
         [Required]
@@ -57,6 +57,12 @@ namespace JJNG.Data.Branch
         [Required]
         [Display(Name = "录单人")]
         public string EnteringStaff { get; set; }
+        [Display(Name = "管家")]
+        public string Steward { get; set; }
+        [Display(Name = "前台小组长")]
+        public string FrontDeskLeader { get; set; }
+        [Display(Name = "管家小组长")]
+        public string StewardLeader { get; set; }
         [Display(Name = "对应关系")]
         public string RelationStaff { get; set; }
         [Required]

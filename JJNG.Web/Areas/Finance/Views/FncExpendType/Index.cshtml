@@ -1,4 +1,4 @@
-﻿@model IEnumerable<JJNG.Data.Finance.FncPayment>
+﻿@model IEnumerable<JJNG.Data.Finance.FncExpendType>
 
 @{
     var actionName = ViewContext.RouteData.Values["action"].ToString();
@@ -25,28 +25,27 @@
                     </div>
                     <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
                         <thead>
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.PaymentName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Sequence)
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PaymentName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Sequence)
-                                    </td>
-                                    <td>
-                                        <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.Id" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ExpendType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Sequence)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpendType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sequence)
+            </td>
+            <td>
+             <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.Id" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
                                             <i class="glyphicon glyphicon-pencil"></i> 编辑
                                         </a>
                                         <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.Id" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
@@ -67,7 +66,7 @@
         $(function () {
             var table1 = $('#table-1').DataTable(
                 {
-                    order: [[0, "asc"]],
+                    order: [[1, "asc"]],
                     dom:
                         "<'row'<'col-sm-6'><'col-sm-6'>>" +
                         "<'row'<'col-sm-12'tr>>" +

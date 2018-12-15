@@ -88,6 +88,68 @@ namespace JJNG.Data.Migrations
                     b.ToTable("Brh_ConnectRecord");
                 });
 
+            modelBuilder.Entity("JJNG.Data.Branch.BrhEarningRecord", b =>
+                {
+                    b.Property<int>("EarningRecordId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<double>("Amount");
+
+                    b.Property<string>("Branch")
+                        .IsRequired();
+
+                    b.Property<string>("EarningType");
+
+                    b.Property<DateTime>("EnteringDate");
+
+                    b.Property<string>("EnteringStaff")
+                        .IsRequired();
+
+                    b.Property<string>("Note");
+
+                    b.Property<string>("PaymentType")
+                        .IsRequired();
+
+                    b.Property<string>("Source");
+
+                    b.HasKey("EarningRecordId");
+
+                    b.ToTable("Brh_EarningRecord");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Branch.BrhExpendRecord", b =>
+                {
+                    b.Property<int>("ExpendRecordId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<double>("Amount");
+
+                    b.Property<string>("Branch")
+                        .IsRequired();
+
+                    b.Property<string>("ConnectNumber");
+
+                    b.Property<DateTime>("EnteringDate");
+
+                    b.Property<string>("EnteringStaff")
+                        .IsRequired();
+
+                    b.Property<string>("ExpendType");
+
+                    b.Property<bool>("IsFinance");
+
+                    b.Property<string>("Note");
+
+                    b.Property<string>("PaymentType")
+                        .IsRequired();
+
+                    b.Property<string>("Purpose");
+
+                    b.HasKey("ExpendRecordId");
+
+                    b.ToTable("Brh_ExpendRecord");
+                });
+
             modelBuilder.Entity("JJNG.Data.Branch.BrhFrontDeskAccounts", b =>
                 {
                     b.Property<long>("FrontDeskAccountsId");
@@ -110,6 +172,8 @@ namespace JJNG.Data.Migrations
                     b.Property<string>("EnteringStaff")
                         .IsRequired();
 
+                    b.Property<string>("FrontDeskLeader");
+
                     b.Property<int>("HouseNumber");
 
                     b.Property<bool>("IsFinance");
@@ -128,6 +192,10 @@ namespace JJNG.Data.Migrations
 
                     b.Property<DateTime>("StartDate");
 
+                    b.Property<string>("Steward");
+
+                    b.Property<string>("StewardLeader");
+
                     b.Property<double>("TotalPrice");
 
                     b.Property<double>("UnitPrice");
@@ -142,8 +210,6 @@ namespace JJNG.Data.Migrations
                     b.Property<int>("FrontPaymentDetialId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("BrhConnectRecordConnectRecordId");
-
                     b.Property<long>("FrontDeskAccountsId");
 
                     b.Property<double>("PayAmount");
@@ -155,50 +221,139 @@ namespace JJNG.Data.Migrations
 
                     b.HasKey("FrontPaymentDetialId");
 
-                    b.HasIndex("BrhConnectRecordConnectRecordId");
-
                     b.HasIndex("FrontDeskAccountsId");
 
                     b.ToTable("Brh_FrontPaymentDetial");
                 });
 
-            modelBuilder.Entity("JJNG.Data.Finance.FncChannel", b =>
+            modelBuilder.Entity("JJNG.Data.Branch.BrhImprestAccounts", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ImprestAccountsId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ChannelName");
+                    b.Property<double>("Balance");
 
-                    b.Property<int>("Sequence");
+                    b.Property<string>("BelongTo");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Department");
 
-                    b.ToTable("Fnc_Channel");
+                    b.Property<double>("Equity");
+
+                    b.Property<string>("ImprestAccountsName");
+
+                    b.Property<string>("Manager");
+
+                    b.HasKey("ImprestAccountsId");
+
+                    b.ToTable("Brh_ImprestAccounts");
                 });
 
-            modelBuilder.Entity("JJNG.Data.Finance.FncPayment", b =>
+            modelBuilder.Entity("JJNG.Data.Branch.BrhImprestRecord", b =>
+                {
+                    b.Property<int>("ImprestRecordId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<double>("Amount");
+
+                    b.Property<string>("Branch")
+                        .IsRequired();
+
+                    b.Property<string>("ConnectNumber");
+
+                    b.Property<DateTime>("EnteringDate");
+
+                    b.Property<string>("EnteringStaff")
+                        .IsRequired();
+
+                    b.Property<string>("ExpendType");
+
+                    b.Property<int>("ImprestAccountsId");
+
+                    b.Property<bool>("IsFinance");
+
+                    b.Property<string>("Note");
+
+                    b.Property<string>("PaymentType")
+                        .IsRequired();
+
+                    b.Property<string>("Purpose");
+
+                    b.HasKey("ImprestRecordId");
+
+                    b.HasIndex("ImprestAccountsId");
+
+                    b.ToTable("Brh_ImprestRecord");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncChannelType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("PaymentName");
+                    b.Property<string>("ChannelType");
 
                     b.Property<int>("Sequence");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Fnc_Payment");
+                    b.ToTable("Fnc_ChannelType");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncEarningType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("EarningType");
+
+                    b.Property<int>("Sequence");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fnc_EarningType");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncExpendType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ExpendType");
+
+                    b.Property<int>("Sequence");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fnc_ExpendType");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncPaymentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("PaymentType");
+
+                    b.Property<int>("Sequence");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fnc_PaymentType");
                 });
 
             modelBuilder.Entity("JJNG.Data.Branch.BrhFrontPaymentDetial", b =>
                 {
-                    b.HasOne("JJNG.Data.Branch.BrhConnectRecord")
-                        .WithMany("BrhFrontPaymentDetial")
-                        .HasForeignKey("BrhConnectRecordConnectRecordId");
-
                     b.HasOne("JJNG.Data.Branch.BrhFrontDeskAccounts", "BrhFrontDeskAccounts")
                         .WithMany("BrhFrontPaymentDetial")
                         .HasForeignKey("FrontDeskAccountsId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("JJNG.Data.Branch.BrhImprestRecord", b =>
+                {
+                    b.HasOne("JJNG.Data.Branch.BrhImprestAccounts", "BrhImprestAccounts")
+                        .WithMany("BrhImprestRecord")
+                        .HasForeignKey("ImprestAccountsId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

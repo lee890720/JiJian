@@ -12,6 +12,7 @@ namespace JJNG.Data.Branch
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int ConnectRecordId { get; set; }
         [Required]
+        [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日HH时mm分}")]
         [Display(Name = "录入时间")]
         public DateTime EnteringDate { get; set; }
         [Display(Name = "早班人员")]
@@ -41,6 +42,5 @@ namespace JJNG.Data.Branch
         public string Branch { get; set; }
         [Display(Name = "备注")]
         public string Note { get; set; }
-        public ICollection<BrhFrontPaymentDetial> BrhFrontPaymentDetial { get; set; }
     }
 }

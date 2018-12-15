@@ -14,9 +14,9 @@
 <input type="hidden" asp-for="FrontDeskAccountsId" />
 <div class="col-md-4">
     <div class="form-group">
-        <label asp-for="EnteringDate" class="control-label"></label>
-        <input asp-for="EnteringDate" type="date" id="createDate1" class="form-control" />
-        <span asp-validation-for="EnteringDate" class="text-danger"></span>
+        <label asp-for="StartDate" class="control-label"></label>
+        <input asp-for="StartDate" type="date" id="startDate" class="form-control" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="HouseNumber" class="control-label"></label>
@@ -34,14 +34,20 @@
     </div>
     <div class="form-group">
         <label asp-for="Channel" class="control-label"></label>
-        @Html.DropDownList("Channel", ViewData["Channel"] as SelectList, "请选择", new { @class = "form-control" })
+        @Html.DropDownList("Channel", ViewData["ChannelType"] as SelectList, "请选择", new { @class = "form-control" })
+
+    </div>
+    <div class="form-group">
+        <label asp-for="EnteringStaff" class="control-label"></label>
+        <input asp-for="EnteringStaff" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="EnteringStaff" class="text-danger"></span>
     </div>
 </div>
 <div class="col-md-4">
     <div class="form-group">
-        <label asp-for="StartDate" class="control-label"></label>
-        <input asp-for="StartDate" type="date" id="startDate" class="form-control" />
-        <span asp-validation-for="StartDate" class="text-danger"></span>
+        <label asp-for="EndDate" class="control-label"></label>
+        <input asp-for="EndDate" type="date" id="endDate" class="form-control" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="UnitPrice" class="control-label"></label>
@@ -63,27 +69,32 @@
         <input asp-for="Received" id="received" readonly="readonly" class="form-control" />
         <span asp-validation-for="Received" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label asp-for="Branch" class="control-label"></label>
+        <input asp-for="Branch" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="Branch" class="text-danger"></span>
+    </div>
 </div>
 <div class="col-md-4">
     <div class="form-group">
-        <label asp-for="EndDate" class="control-label"></label>
-        <input asp-for="EndDate" type="date" id="endDate" class="form-control" />
-        <span asp-validation-for="EndDate" class="text-danger"></span>
+        <label asp-for="Steward" class="control-label"></label>
+        <input asp-for="Steward" class="form-control" />
+        <span asp-validation-for="Steward" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="EnteringStaff" class="control-label"></label>
-        <input asp-for="EnteringStaff" readonly="readonly" style="color:red" class="form-control" />
-        <span asp-validation-for="EnteringStaff" class="text-danger"></span>
+        <label asp-for="FrontDeskLeader" class="control-label"></label>
+        <input asp-for="FrontDeskLeader" class="form-control" />
+        <span asp-validation-for="FrontDeskLeader" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="StewardLeader" class="control-label"></label>
+        <input asp-for="StewardLeader" class="form-control" />
+        <span asp-validation-for="StewardLeader" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="RelationStaff" class="control-label"></label>
         <input asp-for="RelationStaff" class="form-control" />
         <span asp-validation-for="RelationStaff" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Branch" class="control-label"></label>
-        <input asp-for="Branch" readonly="readonly" style="color:red" class="form-control" />
-        <span asp-validation-for="Branch" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Note" class="control-label"></label>

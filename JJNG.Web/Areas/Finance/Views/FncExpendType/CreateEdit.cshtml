@@ -1,4 +1,4 @@
-﻿@model JJNG.Data.Finance.FncChannel
+﻿@model JJNG.Data.Finance.FncExpendType
 
 @{
     Layout = "_CreateEditLayout";
@@ -18,9 +18,9 @@
         <input type="hidden" asp-for="Id" />
     }   
             <div class="form-group">
-                <label asp-for="ChannelName" class="control-label"></label>
-                <input asp-for="ChannelName" class="form-control" />
-                <span asp-validation-for="ChannelName" class="text-danger"></span>
+                <label asp-for="ExpendType" class="control-label"></label>
+                <input asp-for="ExpendType" class="form-control" />
+                <span asp-validation-for="ExpendType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Sequence" class="control-label"></label>

@@ -1,0 +1,62 @@
+﻿@model JJNG.Data.Branch.BrhExpendRecord
+
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+@if (ViewData["action"].ToString() == "Create")
+{ }
+else
+{
+    <input type="hidden" asp-for="ExpendRecordId" />
+}
+<div class="col-md-6">
+    <div class="form-group">
+        <label asp-for="ExpendType" class="control-label"></label>
+        @Html.DropDownList("ExpendType", ViewData["ExpendType"] as SelectList, "请选择", new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label asp-for="Purpose" class="control-label"></label>
+        <input asp-for="Purpose" class="form-control" />
+        <span asp-validation-for="Purpose" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Amount" class="control-label"></label>
+        <input asp-for="Amount" class="form-control" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PaymentType" class="control-label"></label>
+        @Html.DropDownList("PaymentType", ViewData["PaymentType"] as SelectList, "请选择", new { @class = "form-control" })
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        <label asp-for="ConnectNumber" class="control-label"></label>
+        <input asp-for="ConnectNumber" class="form-control" />
+        <span asp-validation-for="ConnectNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EnteringStaff" class="control-label"></label>
+        <input asp-for="EnteringStaff" value="@ViewData["UserName"]" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="EnteringStaff" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Branch" class="control-label"></label>
+        <input asp-for="Branch" value="@ViewData["BelongTo"]" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="Branch" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Note" class="control-label"></label>
+        <input asp-for="Note" class="form-control" />
+        <span asp-validation-for="Note" class="text-danger"></span>
+    </div>
+</div>
+
+

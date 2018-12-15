@@ -50,10 +50,10 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var list_housenumber = _identitycontext.UserBelongToDetial.Where(x=>x.BelongToId==belongToId).ToList();
             ViewData["HouseNumber"] = new SelectList(list_housenumber, "HouseNumber", "HouseNumber");
 
-            var list_payment = _context.FncPayment.ToList();
-            ViewData["Payment"] = new SelectList(list_payment, "PaymentName", "PaymentName");
-            var list_channel = _context.FncChannel.ToList();
-            ViewData["Channel"] = new SelectList(list_channel, "ChannelName", "ChannelName");
+            var list_paymenttype = _context.FncPaymentType.ToList();
+            ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType");
+            var list_channeltype = _context.FncChannelType.ToList();
+            ViewData["ChannelType"] = new SelectList(list_channeltype, "ChannelType", "ChannelType");
 
             ViewData["FrontDeskAccountsId"] = belongToId.ToString()+ConvertJson.DateTimeToStamp(DateTime.Now).ToString();
             return PartialView("~/Areas/Branch/Views/BrhFrontDeskAccount/Create.cshtml");
@@ -64,12 +64,13 @@ namespace JJNG.Web.Areas.Branch.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FrontDeskAccountsId,EnteringDate,HouseNumber,CustomerName,CustomerCount,StartDate,EndDate,Channel,UnitPrice,TotalPrice,Receivable,Received,IsFinish,EnteringStaff,RelationStaff,IsFront,IsFinance,Branch,Note")] BrhFrontDeskAccounts brhFrontDeskAccounts,string payway1,DateTime? paydate1,double? payamount1, string payway2, DateTime? paydate2, double? payamount2, string payway3, DateTime? paydate3, double? payamount3)
+        public async Task<IActionResult> Create([Bind("FrontDeskAccountsId,EnteringDate,HouseNumber,CustomerName,CustomerCount,StartDate,EndDate,Channel,UnitPrice,TotalPrice,Receivable,Received,IsFinish,EnteringStaff,Steward,FrontDeskLeader,StewardLeader,RelationStaff,IsFront,IsFinance,Branch,Note")] BrhFrontDeskAccounts brhFrontDeskAccounts,string payway1,DateTime? paydate1,double? payamount1, string payway2, DateTime? paydate2, double? payamount2, string payway3, DateTime? paydate3, double? payamount3)
         {
             if (ModelState.IsValid)
             {
                 if (brhFrontDeskAccounts.Receivable == brhFrontDeskAccounts.Received)
                     brhFrontDeskAccounts.IsFinish = true;
+                brhFrontDeskAccounts.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                 _context.Add(brhFrontDeskAccounts);
                 await _context.SaveChangesAsync();
                 BrhFrontPaymentDetial bfp1 = new BrhFrontPaymentDetial();
@@ -125,8 +126,8 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var list_housenumber = _identitycontext.UserBelongToDetial.Where(x => x.BelongToId == belongToId).ToList();
             ViewData["HouseNumber"] = new SelectList(list_housenumber, "HouseNumber", "HouseNumber",brhFrontDeskAccounts.HouseNumber);
 
-            var list_channel = _context.FncChannel.ToList();
-            ViewData["Channel"] = new SelectList(list_channel, "ChannelName", "ChannelName",brhFrontDeskAccounts.Channel);
+            var list_channeltype = _context.FncChannelType.ToList();
+            ViewData["ChannelType"] = new SelectList(list_channeltype, "ChannelType", "ChannelType");
             return PartialView("~/Areas/Branch/Views/BrhFrontDeskAccount/Edit.cshtml",brhFrontDeskAccounts);
         }
 
@@ -135,7 +136,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("FrontDeskAccountsId,EnteringDate,HouseNumber,CustomerName,CustomerCount,StartDate,EndDate,Channel,UnitPrice,TotalPrice,Receivable,Received,IsFinish,EnteringStaff,RelationStaff,IsFront,IsFinance,Branch,Note")] BrhFrontDeskAccounts brhFrontDeskAccounts)
+        public async Task<IActionResult> Edit(long id, [Bind("FrontDeskAccountsId,EnteringDate,HouseNumber,CustomerName,CustomerCount,StartDate,EndDate,Channel,UnitPrice,TotalPrice,Receivable,Received,IsFinish,EnteringStaff,Steward,FrontDeskLeader,StewardLeader,RelationStaff,IsFront,IsFinance,Branch,Note")] BrhFrontDeskAccounts brhFrontDeskAccounts)
         {
             if (id != brhFrontDeskAccounts.FrontDeskAccountsId)
             {
@@ -148,6 +149,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 {
                     if (brhFrontDeskAccounts.Receivable == brhFrontDeskAccounts.Received)
                         brhFrontDeskAccounts.IsFinish = true;
+                    brhFrontDeskAccounts.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                     _context.Update(brhFrontDeskAccounts);
                     await _context.SaveChangesAsync();
                 }
@@ -199,8 +201,8 @@ namespace JJNG.Web.Areas.Branch.Controllers
         public IActionResult AddDetial(long? id)
         {
             ViewData["FrontDeskAccountsId"] = id;
-            var list_payment = _context.FncPayment.ToList();
-            ViewData["Payment"] = new SelectList(list_payment, "PaymentName", "PaymentName");
+            var list_paymenttype = _context.FncPaymentType.ToList();
+            ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType");
             return PartialView("~/Areas/Branch/Views/BrhFrontDeskAccount/AddDetial.cshtml");
         }
 
@@ -229,7 +231,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
         public IActionResult DetialList(long? id)
         {
-            var appDbContext = _context.BrhFrontPaymentDetials.Include(b => b.BrhFrontDeskAccounts).Where(x=>x.FrontDeskAccountsId==id);
+            var appDbContext = _context.BrhFrontPaymentDetials.Where(x=>x.FrontDeskAccountsId==id);
             return PartialView("~/Areas/Branch/Views/BrhFrontDeskAccount/DetialList.cshtml",appDbContext.ToList());
         }
 

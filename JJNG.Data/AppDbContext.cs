@@ -9,11 +9,17 @@ namespace JJNG.Data
     public partial class AppDbContext : DbContext
     {
         public virtual DbSet<AppMenu> AppMenu { get; set; }
-        public virtual DbSet<FncPayment> FncPayment { get; set; }
-        public virtual DbSet<FncChannel> FncChannel { get; set; }
+        public virtual DbSet<FncPaymentType> FncPaymentType { get; set; }
+        public virtual DbSet<FncChannelType> FncChannelType { get; set; }
+        public virtual DbSet<FncExpendType> FncExpendType { get; set; }
+        public virtual DbSet<FncEarningType> FncEarningType { get; set; }
         public virtual DbSet<BrhFrontDeskAccounts> BrhFrontDeskAccounts { get; set; }
         public virtual DbSet<BrhFrontPaymentDetial> BrhFrontPaymentDetials { get; set; }
+        public virtual DbSet<BrhImprestAccounts> BrhImprestAccounts { get; set; }
         public virtual DbSet<BrhConnectRecord> BrhConnectRecord { get; set; }
+        public virtual DbSet<BrhEarningRecord> BrhEarningRecord { get; set; }
+        public virtual DbSet<BrhExpendRecord> BrhExpendRecord { get; set; }
+        public virtual DbSet<BrhImprestRecord> BrhImprestRecord { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

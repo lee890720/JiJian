@@ -14,36 +14,36 @@ namespace JJNG.Web.Areas.Finance.Controllers
 {
     [Area("Finance")]
     [Authorize(Roles = "Admins,管理员")]
-    public class FncPaymentController : Controller
+    public class FncChannelTypeController : Controller
     {
         private readonly AppDbContext _context;
 
-        public FncPaymentController(AppDbContext context)
+        public FncChannelTypeController(AppDbContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.FncPayment.ToListAsync());
+            return View(await _context.FncChannelType.ToListAsync());
         }
 
         public IActionResult Create()
         {
-               return PartialView("~/Areas/Finance/Views/FncPayment/CreateEdit.cshtml");
+               return PartialView("~/Areas/Finance/Views/FncChannelType/CreateEdit.cshtml");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PaymentName,Sequence")] FncPayment fncPayment)
+        public async Task<IActionResult> Create([Bind("Id,ChannelType,Sequence")] FncChannelType fncChannelType)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(fncPayment);
+                _context.Add(fncChannelType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-         return PartialView("~/Areas/Finance/Views/FncPayment/CreateEdit.cshtml",fncPayment);
+         return PartialView("~/Areas/Finance/Views/FncChannelType/CreateEdit.cshtml",fncChannelType);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -53,19 +53,19 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 return NotFound();
             }
 
-            var fncPayment = await _context.FncPayment.SingleOrDefaultAsync(m => m.Id == id);
-            if (fncPayment == null)
+            var fncChannelType = await _context.FncChannelType.SingleOrDefaultAsync(m => m.Id == id);
+            if (fncChannelType == null)
             {
                 return NotFound();
             }
-          return PartialView("~/Areas/Finance/Views/FncPayment/CreateEdit.cshtml",fncPayment);
+         return PartialView("~/Areas/Finance/Views/FncChannelType/CreateEdit.cshtml",fncChannelType);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PaymentName,Sequence")] FncPayment fncPayment)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ChannelType,Sequence")] FncChannelType fncChannelType)
         {
-            if (id != fncPayment.Id)
+            if (id != fncChannelType.Id)
             {
                 return NotFound();
             }
@@ -74,12 +74,12 @@ namespace JJNG.Web.Areas.Finance.Controllers
             {
                 try
                 {
-                    _context.Update(fncPayment);
+                    _context.Update(fncChannelType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FncPaymentExists(fncPayment.Id))
+                    if (!FncChannelTypeExists(fncChannelType.Id))
                     {
                         return NotFound();
                     }
@@ -90,7 +90,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-         return PartialView("~/Areas/Finance/Views/FncPayment/CreateEdit.cshtml",fncPayment);
+         return PartialView("~/Areas/Finance/Views/FncChannelType/CreateEdit.cshtml",fncChannelType);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -100,29 +100,29 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 return NotFound();
             }
 
-            var fncPayment = await _context.FncPayment
+            var fnChannelType = await _context.FncChannelType
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (fncPayment == null)
+            if (fnChannelType == null)
             {
                 return NotFound();
             }
 
-           return PartialView("~/Areas/Finance/Views/FncPayment/Delete.cshtml",fncPayment.PaymentName);
+         return PartialView("~/Areas/Finance/Views/FncChannelType/Delete.cshtml",fnChannelType.ChannelType);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int? id, IFormCollection form)
         {
-            var fncPayment = await _context.FncPayment.SingleOrDefaultAsync(m => m.Id == id);
-            _context.FncPayment.Remove(fncPayment);
+            var fncChannelType = await _context.FncChannelType.SingleOrDefaultAsync(m => m.Id == id);
+            _context.FncChannelType.Remove(fncChannelType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool FncPaymentExists(int id)
+        private bool FncChannelTypeExists(int id)
         {
-            return _context.FncPayment.Any(e => e.Id == id);
+            return _context.FncChannelType.Any(e => e.Id == id);
         }
     }
 }
