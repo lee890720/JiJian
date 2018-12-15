@@ -44,6 +44,12 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhFrontDeskAccount\DetialList.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhFrontDeskAccount\Edit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhFrontDeskAccount\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestAccount\CreateEdit.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestAccount\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestAccount\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestRecord\CreateEdit.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestRecord\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestRecord\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\_ViewImports.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\_ViewStart.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncChannelType\CreateEdit.cshtml

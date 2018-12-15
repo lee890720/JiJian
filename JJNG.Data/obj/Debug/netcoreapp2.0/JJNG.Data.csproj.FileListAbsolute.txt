@@ -15,3 +15,4 @@ D:\JiJian\JJNG.Data\obj\Debug\netcoreapp2.0\JJNG.Data.AssemblyInfoInputs.cache
 D:\JiJian\JJNG.Data\obj\Debug\netcoreapp2.0\JJNG.Data.AssemblyInfo.cs
 D:\JiJian\JJNG.Data\obj\Debug\netcoreapp2.0\JJNG.Data.dll
 D:\JiJian\JJNG.Data\obj\Debug\netcoreapp2.0\JJNG.Data.pdb
+D:\JiJian\JJNG.Data\obj\Debug\netcoreapp2.0\JJNG.Data.csprojAssemblyReference.cache

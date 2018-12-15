@@ -16,7 +16,7 @@ using JJNG.Web;
 namespace JJNG.Web.Areas.Branch.Controllers
 {
     [Area("Branch")]
-  [Authorize(Roles = "Admins,前台")]
+    [Authorize(Roles = "Admins,前台")]
     public class BrhImprestRecordController : Controller
     {
         private readonly AppDbContext _context;
@@ -30,22 +30,27 @@ namespace JJNG.Web.Areas.Branch.Controllers
             _userManager = usrMgr;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-    AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+            AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
             ViewData["BelongTo"] = _user.BelongTo;
-            var appDbContext = _context.BrhImprestRecord.Include(b => b.BrhImprestAccounts);
+            ViewData["ImprestAccountsId"] = id;
+            var appDbContext = _context.BrhImprestRecord.Include(b => b.BrhImprestAccounts).Where(x=>x.ImprestAccountsId==id);
             return View(await appDbContext.ToListAsync());
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? id)
         {
-          AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+            AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
             ViewData["BelongTo"] = _user.BelongTo;
-            ViewData["ImprestAccountsId"] = new SelectList(_context.BrhImprestAccounts, "ImprestAccountsId", "ImprestAccountsId");
-      return PartialView("~/Areas/Branch/Views/BrhImprestRecord/CreateEdit.cshtml");
+            var list_paymenttype = _context.FncPaymentType.ToList();
+            ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType");
+            var list_expendtype = _context.FncExpendType.ToList();
+            ViewData["ExpendType"] = new SelectList(list_expendtype, "ExpendType", "ExpendType");
+            ViewData["ImprestAccountsId"] = id;           
+            return PartialView("~/Areas/Branch/Views/BrhImprestRecord/CreateEdit.cshtml");
         }
 
         [HttpPost]
@@ -54,12 +59,17 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             if (ModelState.IsValid)
             {
+                brhImprestRecord.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                 _context.Add(brhImprestRecord);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId).Sum(x => x.Amount);
+                var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId);
+                brhImprestAccount.Equity = brhImprestAccount.Balance - total;
+                _context.Update(brhImprestAccount);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index),new {id=brhImprestRecord.ImprestAccountsId});
             }
-            ViewData["ImprestAccountsId"] = new SelectList(_context.BrhImprestAccounts, "ImprestAccountsId", "ImprestAccountsId", brhImprestRecord.ImprestAccountsId);
-         return PartialView("~/Areas/Branch/Views/BrhImprestRecord/CreateEdit.cshtml",brhImprestRecord);
+            return PartialView("~/Areas/Branch/Views/BrhImprestRecord/CreateEdit.cshtml", brhImprestRecord);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -68,14 +78,19 @@ namespace JJNG.Web.Areas.Branch.Controllers
             {
                 return NotFound();
             }
-
             var brhImprestRecord = await _context.BrhImprestRecord.SingleOrDefaultAsync(m => m.ImprestRecordId == id);
+            AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+            ViewData["UserName"] = _user.UserName;
+            ViewData["BelongTo"] = _user.BelongTo;
+            var list_paymenttype = _context.FncPaymentType.ToList();
+            ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType",brhImprestRecord.PaymentType);
+            var list_expendtype = _context.FncExpendType.ToList();
+            ViewData["ExpendType"] = new SelectList(list_expendtype, "ExpendType", "ExpendType",brhImprestRecord.ExpendType);
             if (brhImprestRecord == null)
             {
                 return NotFound();
             }
-            ViewData["ImprestAccountsId"] = new SelectList(_context.BrhImprestAccounts, "ImprestAccountsId", "ImprestAccountsId", brhImprestRecord.ImprestAccountsId);
-    return PartialView("~/Areas/Branch/Views/BrhImprestRecord/CreateEdit.cshtml",brhImprestRecord);
+            return PartialView("~/Areas/Branch/Views/BrhImprestRecord/CreateEdit.cshtml", brhImprestRecord);
         }
 
         [HttpPost]
@@ -91,12 +106,18 @@ namespace JJNG.Web.Areas.Branch.Controllers
             {
                 try
                 {
+                    brhImprestRecord.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                     _context.Update(brhImprestRecord);
+                    await _context.SaveChangesAsync();
+                    var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId).Sum(x => x.Amount);
+                    var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId);
+                    brhImprestAccount.Equity = brhImprestAccount.Balance - total;
+                    _context.Update(brhImprestAccount);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BrhImprestRecordExists(brhImprestRecord.ImprestRecordId))
+                    if (!BrhImprestRecordExists(brhImprestRecord.ImprestAccountsId))
                     {
                         return NotFound();
                     }
@@ -105,10 +126,9 @@ namespace JJNG.Web.Areas.Branch.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { id = brhImprestRecord.ImprestAccountsId });
             }
-            ViewData["ImprestAccountsId"] = new SelectList(_context.BrhImprestAccounts, "ImprestAccountsId", "ImprestAccountsId", brhImprestRecord.ImprestAccountsId);
-           return PartialView("~/Areas/Branch/Views/BrhImprestRecord/CreateEdit.cshtml",brhImprestRecord);
+            return PartialView("~/Areas/Branch/Views/BrhImprestRecord/CreateEdit.cshtml", brhImprestRecord);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -136,7 +156,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var brhImprestRecord = await _context.BrhImprestRecord.SingleOrDefaultAsync(m => m.ImprestRecordId == id);
             _context.BrhImprestRecord.Remove(brhImprestRecord);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { id = brhImprestRecord.ImprestAccountsId });
         }
 
         private bool BrhImprestRecordExists(int id)

@@ -68,38 +68,46 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (brhFrontDeskAccounts.Receivable == brhFrontDeskAccounts.Received)
-                    brhFrontDeskAccounts.IsFinish = true;
-                brhFrontDeskAccounts.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
-                _context.Add(brhFrontDeskAccounts);
-                await _context.SaveChangesAsync();
                 BrhFrontPaymentDetial bfp1 = new BrhFrontPaymentDetial();
                 BrhFrontPaymentDetial bfp2 = new BrhFrontPaymentDetial();
                 BrhFrontPaymentDetial bfp3 = new BrhFrontPaymentDetial();
-                bfp1.FrontDeskAccountsId = brhFrontDeskAccounts.FrontDeskAccountsId;
-                bfp2.FrontDeskAccountsId = brhFrontDeskAccounts.FrontDeskAccountsId;
-                bfp3.FrontDeskAccountsId = brhFrontDeskAccounts.FrontDeskAccountsId;
                 if (!string.IsNullOrEmpty(payway1) && !double.IsNaN((double)payamount1))
                 {
+                    bfp1.FrontDeskAccountsId = brhFrontDeskAccounts.FrontDeskAccountsId;
                     bfp1.PayWay = payway1;
                     bfp1.PayDate = (DateTime)paydate1;
                     bfp1.PayAmount = (double)payamount1;
                     _context.Add(bfp1);
                 }
+                else
+                    bfp1.PayAmount = 0;
                 if (!string.IsNullOrEmpty(payway2) && !double.IsNaN((double)payamount2))
                 {
+                    bfp2.FrontDeskAccountsId = brhFrontDeskAccounts.FrontDeskAccountsId;
                     bfp2.PayWay = payway2;
                     bfp2.PayDate = (DateTime)paydate2;
                     bfp2.PayAmount = (double)payamount2;
                     _context.Add(bfp2);
                 }
+                else
+                    bfp2.PayAmount = 0;
                 if (!string.IsNullOrEmpty(payway3) && !double.IsNaN((double)payamount3))
                 {
+                    bfp3.FrontDeskAccountsId = brhFrontDeskAccounts.FrontDeskAccountsId;
                     bfp3.PayWay = payway3;
                     bfp3.PayDate = (DateTime)paydate3;
                     bfp3.PayAmount = (double)payamount3;
                     _context.Add(bfp3);
                 }
+                else
+                    bfp3.PayAmount = 0;
+                await _context.SaveChangesAsync();
+
+                brhFrontDeskAccounts.Received = bfp1.PayAmount + bfp2.PayAmount + bfp3.PayAmount;
+                if (brhFrontDeskAccounts.Receivable == brhFrontDeskAccounts.Received)
+                    brhFrontDeskAccounts.IsFinish = true;
+                brhFrontDeskAccounts.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
+                _context.Add(brhFrontDeskAccounts);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

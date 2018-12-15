@@ -21,7 +21,7 @@ $.fn.dataTable.ext.search.push(
     function (settings, data, dataIndex) {
         var iStart = document.getElementById('date_beg').value;
         var iEnd = document.getElementById('date_end').value;
-        var iDateCol = 4;
+        var iDateCol = 0;
 
         iStart = iStart.substring(0, 4) + iStart.substring(5, 7) + iStart.substring(8, 10);
         iEnd = iEnd.substring(0, 4) + iEnd.substring(5, 7) + iEnd.substring(8, 10);

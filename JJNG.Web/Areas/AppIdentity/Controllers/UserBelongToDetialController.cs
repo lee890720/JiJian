@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using JJNG.Data.AppIdentity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using JJNG.Data.AppIdentity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JJNG.Web.Areas.AppIdentity.Controllers
 {
@@ -34,12 +32,9 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
         {
             ViewData["BelongToName"] = _context.UserBelongTo.SingleOrDefault(x => x.BelongToId == id).BelongToName;
             ViewData["BelongToId"] = id;
-    return PartialView("~/Areas/AppIdentity/Views/UserBelongToDetial/CreateEdit.cshtml");
+            return PartialView("~/Areas/AppIdentity/Views/UserBelongToDetial/CreateEdit.cshtml");
         }
 
-        // POST: AppIdentity/UserBelongToDetial/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BelongToDetialId,BelongToId,HouseNumber")] UserBelongToDetial userBelongToDetial)

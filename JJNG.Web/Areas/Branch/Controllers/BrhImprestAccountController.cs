@@ -35,7 +35,9 @@ namespace JJNG.Web.Areas.Branch.Controllers
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
             ViewData["BelongTo"] = _user.BelongTo;
-            return View(await _context.BrhImprestAccounts.ToListAsync());
+            ViewData["Department"] = _user.Department;
+            var brhImprestAccounts = _context.BrhImprestAccounts.Where(x => x.BelongTo == _user.BelongTo && x.Department == _user.Department&&(string.IsNullOrEmpty(x.Manager)||x.Manager==_user.UserName));
+            return View(await brhImprestAccounts.ToListAsync());
         }
 
         public async Task<IActionResult> Create()
@@ -128,7 +130,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 return NotFound();
             }
 
-            return PartialView("~/Areas/Branch/Views/BrhImpresetAccount/Delete.cshtml", "这条记录");
+            return PartialView("~/Areas/Branch/Views/BrhImprestAccount/Delete.cshtml", "这条记录");
         }
 
         [HttpPost]

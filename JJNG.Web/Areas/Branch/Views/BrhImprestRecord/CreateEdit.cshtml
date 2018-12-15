@@ -11,25 +11,20 @@
 }
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 @if (ViewData["action"].ToString() == "Create")
-{ }
+{
+    <div class="form-group">
+        <input type="hidden" asp-for="ImprestAccountsId" value="@ViewData["ImprestAccountsId"]" class="form-control" />
+    </div>
+}
 else
 {
     <input type="hidden" asp-for="ImprestRecordId" />
+    <input type="hidden" asp-for="ImprestAccountsId" />
 }
 <div class="col-md-6">
     <div class="form-group">
-        <label asp-for="ImprestAccountsId" class="control-label"></label>
-        <select asp-for="ImprestAccountsId" class="form-control" asp-items="ViewBag.ImprestAccountsId"></select>
-    </div>
-    <div class="form-group">
-        <label asp-for="EnteringDate" class="control-label"></label>
-        <input asp-for="EnteringDate" class="form-control" />
-        <span asp-validation-for="EnteringDate" class="text-danger"></span>
-    </div>
-    <div class="form-group">
         <label asp-for="ExpendType" class="control-label"></label>
-        <input asp-for="ExpendType" class="form-control" />
-        <span asp-validation-for="ExpendType" class="text-danger"></span>
+        @Html.DropDownList("ExpendType", ViewData["ExpendType"] as SelectList, "请选择", new { @class = "form-control" })
     </div>
     <div class="form-group">
         <label asp-for="Purpose" class="control-label"></label>
@@ -43,9 +38,10 @@ else
     </div>
     <div class="form-group">
         <label asp-for="PaymentType" class="control-label"></label>
-        <input asp-for="PaymentType" class="form-control" />
-        <span asp-validation-for="PaymentType" class="text-danger"></span>
+        @Html.DropDownList("PaymentType", ViewData["PaymentType"] as SelectList, "请选择", new { @class = "form-control" })
     </div>
+</div>
+<div class="col-md-6">
     <div class="form-group">
         <label asp-for="ConnectNumber" class="control-label"></label>
         <input asp-for="ConnectNumber" class="form-control" />
@@ -53,19 +49,12 @@ else
     </div>
     <div class="form-group">
         <label asp-for="EnteringStaff" class="control-label"></label>
-        <input asp-for="EnteringStaff" class="form-control" />
+        <input asp-for="EnteringStaff" value="@ViewData["UserName"]" readonly="readonly" style="color:red" class="form-control" />
         <span asp-validation-for="EnteringStaff" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <div class="checkbox">
-            <label>
-                <input asp-for="IsFinance" /> @Html.DisplayNameFor(model => model.IsFinance)
-            </label>
-        </div>
-    </div>
-    <div class="form-group">
         <label asp-for="Branch" class="control-label"></label>
-        <input asp-for="Branch" class="form-control" />
+        <input asp-for="Branch" value="@ViewData["BelongTo"]" readonly="readonly" style="color:red" class="form-control" />
         <span asp-validation-for="Branch" class="text-danger"></span>
     </div>
     <div class="form-group">

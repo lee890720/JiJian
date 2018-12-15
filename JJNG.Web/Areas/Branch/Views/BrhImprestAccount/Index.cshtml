@@ -70,6 +70,9 @@
                                         @Html.DisplayFor(modelItem => item.BelongTo)
                                     </td>
                                     <td>
+                                        <a asp-action="Index" asp-controller="BrhImprestRecord" asp-route-area="Branch" asp-route-id="@item.ImprestAccountsId" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                            <i class="glyphicon glyphicon-plus"></i> 增加明细
+                                        </a>
                                         <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.ImprestAccountsId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
                                             <i class="glyphicon glyphicon-pencil"></i> 编辑
                                         </a>
