@@ -43,6 +43,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         public async Task<IActionResult> Create()
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+
             ViewData["UserName"] = _user.UserName;
             ViewData["BelongTo"] = _user.BelongTo;
 
@@ -101,7 +102,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 }
                 else
                     bfp3.PayAmount = 0;
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
                 brhFrontDeskAccounts.Received = bfp1.PayAmount + bfp2.PayAmount + bfp3.PayAmount;
                 if (brhFrontDeskAccounts.Receivable == brhFrontDeskAccounts.Received)

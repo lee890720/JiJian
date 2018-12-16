@@ -66,10 +66,10 @@ namespace JJNG.Data.Branch
         [Display(Name = "对应关系")]
         public string RelationStaff { get; set; }
         [Required]
-        [Display(Name = "前台审批")]
+        [Display(Name = "前台审核")]
         public bool IsFront { get; set; }
         [Required]
-        [Display(Name = "财务审批")]
+        [Display(Name = "财务审核")]
         public bool IsFinance { get; set; }
         [Required]
         [Display(Name = "分店")]

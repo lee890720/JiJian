@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 namespace JJNG.Web.Areas.Finance.Controllers
 {
     [Area("Finance")]
-    [Authorize(Roles = "Admins,管理员")]
+    [Authorize(Roles = "Admins,财务")]
     public class FncPaymentTypeController : Controller
     {
         private readonly AppDbContext _context;

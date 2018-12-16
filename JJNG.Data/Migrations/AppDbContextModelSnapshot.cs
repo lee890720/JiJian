@@ -105,6 +105,8 @@ namespace JJNG.Data.Migrations
                     b.Property<string>("EnteringStaff")
                         .IsRequired();
 
+                    b.Property<bool>("IsFinance");
+
                     b.Property<string>("Note");
 
                     b.Property<string>("PaymentType")

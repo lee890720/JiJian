@@ -101,8 +101,15 @@
         <input asp-for="Note" class="form-control" />
         <span asp-validation-for="Note" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label asp-for="IsFront" class="control-label"></label>
+        <div class="checkbox icheck">
+            <span><input type="checkbox" class="flat-blue" asp-for="IsFront" /></span>
+        </div>
+    </div>
 </div>
 <script>
+    //#region 功能模块
     function formatDate(date) {
         var myyear = date.getFullYear();
         var mymonth = date.getMonth() + 1;
@@ -135,11 +142,9 @@
         iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24)    //把相差的毫秒数转换为天数
         return iDays
     }
-    var now = new Date();
-    var nowDay = now.getDate();
-    var nowMonth = now.getMonth();
-    var nowYear = now.getFullYear();
-    var tomorrow = new Date(nowYear, nowMonth, nowDay + 1);
+    //#endregion
+
+    //#region 键盘事件
     $('#unitPrice').keyup(function () {
         var startDate = document.getElementById("startDate").value;
         var endDate = document.getElementById("endDate").value;
@@ -162,4 +167,12 @@
         result = result * days;
         $('#totalPrice').val(result.toString());
     });
+    //#endregion
+
+    //#region 细节设置
+    $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
+        checkboxClass: 'icheckbox_flat-blue',
+        radioClass: 'iradio_flat-blue'
+    });
+    //#endregion
 </script>

@@ -31,7 +31,7 @@ namespace JJNG.Data.Branch
         [Display(Name = "录单人")]
         public string EnteringStaff { get; set; }
         [Required]
-        [Display(Name = "财务审批")]
+        [Display(Name = "财务审核")]
         public bool IsFinance { get; set; }
         [Required]
         [Display(Name = "分店")]

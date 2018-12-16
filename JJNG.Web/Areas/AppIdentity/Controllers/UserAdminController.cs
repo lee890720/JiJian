@@ -121,16 +121,17 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
             return View("Index", userManager.Users);
         }
 
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public async Task<IActionResult> Edit(string id)
         {
+            AppIdentityUser user = await userManager.FindByIdAsync(id);
             var list_department = _context.UserDepartment.ToList();
             var list_position = _context.UserPosition.ToList();
             var list_belongto = _context.UserBelongTo.ToList();
-            AppIdentityUser user = await userManager.FindByIdAsync(id);
-            ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName",user.Department.ToString());
-            ViewData["Position"] = new SelectList(list_position, "PositionName", "PositionName",user.Position.ToString());
-            ViewData["BelongTo"] = new SelectList(list_belongto, "BelongToName", "BelongToName",user.BelongTo.ToString());
+            ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName", user.Department.ToString());
+            ViewData["Position"] = new SelectList(list_position, "PositionName", "PositionName", user.Position.ToString());
+            ViewData["BelongTo"] = new SelectList(list_belongto, "BelongToName", "BelongToName", user.BelongTo.ToString());
+
             if (user != null)
             {
                 return PartialView("~/Areas/AppIdentity/Views/UserAdmin/Edit.cshtml", user);
@@ -143,7 +144,7 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public async Task<IActionResult> Edit(string id, string PhoneNumber,string Department,string Position,string BelongTo,string password)
         {
             AppIdentityUser user = await userManager.FindByIdAsync(id);
@@ -169,6 +170,65 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
                     }
                 }
                 if (( validPass == null)|| ( password != string.Empty && validPass.Succeeded))
+                {
+                    IdentityResult result = await userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        //return Redirect("/");
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        AddErrorsFromResult(result);
+                    }
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "User Not Found");
+            }
+            return PartialView("~/Areas/AppIdentity/Views/UserAdmin/Edit.cshtml", user);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Edit2(string id)
+        {
+            AppIdentityUser user = await userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                return PartialView("~/Areas/AppIdentity/Views/UserAdmin/Edit2.cshtml", user);
+
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Edit2(string id, string PhoneNumber,  string password)
+        {
+            AppIdentityUser user = await userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                user.PhoneNumber = PhoneNumber;
+                IdentityResult validPass = null;
+                if (!string.IsNullOrEmpty(password))
+                {
+                    validPass = await passwordValidator.ValidateAsync(userManager,
+                        user, password);
+                    if (validPass.Succeeded)
+                    {
+                        user.PasswordHash = passwordHasher.HashPassword(user,
+                            password);
+                    }
+                    else
+                    {
+                        AddErrorsFromResult(validPass);
+                    }
+                }
+                if ((validPass == null) || (password != string.Empty && validPass.Succeeded))
                 {
                     IdentityResult result = await userManager.UpdateAsync(user);
                     if (result.Succeeded)

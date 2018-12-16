@@ -103,6 +103,12 @@
         <input asp-for="Note" class="form-control" />
         <span asp-validation-for="Note" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label asp-for="IsFront" class="control-label"></label>
+        <div class="checkbox icheck">
+            <span><input type="checkbox" class="flat-blue" asp-for="IsFront" /></span>
+        </div>
+    </div>
 </div>
 <div class="col-md-12 no-margin no-padding">
     <div class="col-md-4">
@@ -149,6 +155,7 @@
     </div>
 </div>
 <script>
+    //#region 功能模块
     function formatDate(date) {
         var myyear = date.getFullYear();
         var mymonth = date.getMonth() + 1;
@@ -181,6 +188,9 @@
         iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24)    //把相差的毫秒数转换为天数
         return iDays
     }
+    //#endregion
+
+    //#region 填充日期
     var now = new Date();
     var nowDay = now.getDate();
     var nowMonth = now.getMonth();
@@ -192,6 +202,9 @@
     $('#createDate4').val(formatDate(now));
     $('#createDate5').val(formatDate(now));
     $('#endDate').val(formatDate(tomorrow));
+    //#endregion
+
+    //#region change/keyup事件
     $('#payamount1').keyup(function () {
         var pay1 = document.getElementById("payamount1").value;
         var pay2 = document.getElementById("payamount2").value;
@@ -253,4 +266,12 @@
         result = result * days;
         $('#totalPrice').val(result.toString());
     });
+    //#endregion
+
+    //#region 细节设置
+    $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
+        checkboxClass: 'icheckbox_flat-blue',
+        radioClass: 'iradio_flat-blue'
+    });
+    //#endregion
 </script>

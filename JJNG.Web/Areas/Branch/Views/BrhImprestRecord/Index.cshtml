@@ -84,46 +84,66 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EnteringDate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ExpendType)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Purpose)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Amount)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PaymentType)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ConnectNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EnteringStaff)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.IsFinance)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Branch)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Note)
-                                    </td>
-                                    <td>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EnteringDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ExpendType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Purpose)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Amount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PaymentType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ConnectNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EnteringStaff)
+                                </td>
+                                @{
+                                    if (item.IsFinance)
+                                    {
+                                        <td style="color:skyblue">
+                                            已审核
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="color:red">
+                                            未审核
+                                        </td>
+                                    }
+                                }
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Branch)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Note)
+                                </td>
+                                <td>
+                                    @if (item.IsFinance)
+                                    {
+                                        <a class="btn-sm btn-default" style="width:70px;margin-right:5px; min-width:50px;">
+                                            <i class="fa fa-lock"></i> 锁定
+                                        </a>
+                                    }
+                                    else
+                                    {
                                         <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.ImprestRecordId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
                                             <i class="glyphicon glyphicon-pencil"></i> 编辑
                                         </a>
                                         <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.ImprestRecordId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
                                             <i class="glyphicon glyphicon-trash"></i> 删除
                                         </a>
-                                    </td>
-                                </tr>
+                                    }
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
