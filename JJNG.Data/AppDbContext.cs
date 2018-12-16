@@ -20,6 +20,7 @@ namespace JJNG.Data
         public virtual DbSet<BrhEarningRecord> BrhEarningRecord { get; set; }
         public virtual DbSet<BrhExpendRecord> BrhExpendRecord { get; set; }
         public virtual DbSet<BrhImprestRecord> BrhImprestRecord { get; set; }
+        public virtual DbSet<BrhMemo> BrhMemo { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

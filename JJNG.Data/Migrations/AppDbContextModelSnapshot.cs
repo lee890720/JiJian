@@ -287,6 +287,30 @@ namespace JJNG.Data.Migrations
                     b.ToTable("Brh_ImprestRecord");
                 });
 
+            modelBuilder.Entity("JJNG.Data.Branch.BrhMemo", b =>
+                {
+                    b.Property<int>("MemoId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Branch")
+                        .IsRequired();
+
+                    b.Property<DateTime>("EnteringDate");
+
+                    b.Property<string>("EnteringStaff")
+                        .IsRequired();
+
+                    b.Property<bool>("IsFinish");
+
+                    b.Property<string>("Memo");
+
+                    b.Property<string>("Note");
+
+                    b.HasKey("MemoId");
+
+                    b.ToTable("Brh_Memo");
+                });
+
             modelBuilder.Entity("JJNG.Data.Finance.FncChannelType", b =>
                 {
                     b.Property<int>("Id")

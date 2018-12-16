@@ -40,7 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Branch\Models\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
@@ -60,6 +59,12 @@
 
   <ItemGroup>
     <Content Update="Areas\AppIdentity\Views\UserAdmin\Edit2.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Branch\Views\BrhCollect\CreateEdit.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Branch\Views\BrhCollect\Delete.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Branch\Views\_ViewImports.cshtml">

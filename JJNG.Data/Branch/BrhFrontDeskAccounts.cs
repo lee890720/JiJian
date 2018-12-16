@@ -16,7 +16,7 @@ namespace JJNG.Data.Branch
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         public long FrontDeskAccountsId { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日HH时mm分}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
         [Display(Name = "录入日期")]
         public DateTime EnteringDate { get; set; }
         [Required]

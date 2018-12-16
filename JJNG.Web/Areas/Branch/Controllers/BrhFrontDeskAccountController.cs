@@ -35,8 +35,29 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
+            ViewData["Position"] = _user.Position;
             ViewData["BelongTo"] = _user.BelongTo;
             return View(await _context.BrhFrontDeskAccounts.Where(x=>x.Branch==_user.BelongTo).ToListAsync());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(List<long> ids)
+        {
+            if (ids.Count > 0)
+            {
+                _context.BrhFrontDeskAccounts.Where(x => ids.Contains(x.FrontDeskAccountsId)&&!x.IsFront).ToList().ForEach(x =>
+                {
+                    x.IsFront = true;
+                    _context.Update(x);
+                });
+                await _context.SaveChangesAsync();
+            }
+            AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+            ViewData["UserName"] = _user.UserName;
+            ViewData["Position"] = _user.Position;
+            ViewData["BelongTo"] = _user.BelongTo;
+            return View(await _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo).ToListAsync());
         }
 
         // GET: Branch/BrhFrontDeskAccount/Create

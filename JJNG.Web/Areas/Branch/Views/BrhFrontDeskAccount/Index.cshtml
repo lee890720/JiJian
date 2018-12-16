@@ -11,215 +11,234 @@
     string path = "/" + areaName + "/" + controllerName;
 }
 <section class="content">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="box">
-                <div class="box-body table-responsive">
-                    <div class="form-group">
-                        <div class="col-md-3 col-sm-6 col-xs-12 no-padding hidden-xs" style="margin-bottom:10px;">
-                            <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-primary" href="@path/Create" style="width:100px;border-radius:0;"><i class="glyphicon glyphicon-plus"></i> 新增</a><a class="btn btn-primary" style="color:yellow;width:150px;border-radius:0;">@ViewData["BelongTo"].ToString()</a><button type="submit" class="btn btn-primary" style="color:yellow;width:100px;border-radius:0;">@ViewData["UserName"].ToString()</button>
+    @using (Html.BeginForm("Index", null, FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-body table-responsive">
+                        <div class="form-group">
+                            <div class="col-md-3 col-sm-6 col-xs-12 no-padding hidden-xs" style="margin-bottom:10px;">
+                                @{
+                                    if (ViewData["Position"].ToString() == "组长")
+                                    {
+                                        <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-primary" href="@path/Create" style="width:70px;border-radius:0;"> 新增</a><a class="btn btn-primary" style="color:yellow;width:120px;border-radius:0;">@ViewData["BelongTo"].ToString()</a><button class="btn btn-primary" style="color:yellow;width:70px;border-radius:0;">@ViewData["UserName"].ToString()</button><button type="submit" class="btn btn-warning" style="width:70px;border-radius:0;"> 审核</button>
+                                    }
+                                    else
+                                    {
+                                        <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-primary" href="@path/Create" style="width:70px;border-radius:0;"> 新增</a><a class="btn btn-primary" style="color:yellow;width:120px;border-radius:0;">@ViewData["BelongTo"].ToString()</a><button class="btn btn-primary" style="color:yellow;width:70px;border-radius:0;">@ViewData["UserName"].ToString()</button>
+                                    }
+                                }
                             </div>
-                        <div class="col-md-9 no-margin no-padding">
-                            <div class="form-group">
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <select id="date_select" class="form-control select2" style="width: 100%;">
-                                        <option value="7">全部</option>
-                                        <option value="0" selected="selected">今天</option>
-                                        <option value="1">昨天</option>
-                                        <option value="2">最后一周</option>
-                                        <option value="3">本月</option>
-                                        <option value="4">上个月</option>
-                                        <option value="5">最后三个月</option>
-                                        <option value="6">最后一年</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepickertemp">
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="结束日期" id="date_end" class="form-control datepickertemp">
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="搜索" id="search" class="form-control">
+                            <div class="col-md-9 no-margin no-padding">
+                                <div class="form-group">
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <select id="date_select" class="form-control select2" style="width: 100%;">
+                                            <option value="7">全部</option>
+                                            <option value="0" selected="selected">今天</option>
+                                            <option value="1">昨天</option>
+                                            <option value="2">最后一周</option>
+                                            <option value="3">本月</option>
+                                            <option value="4">上个月</option>
+                                            <option value="5">最后三个月</option>
+                                            <option value="6">最后一年</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepickertemp">
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <input type="text" placeholder="结束日期" id="date_end" class="form-control datepickertemp">
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <input type="text" placeholder="搜索" id="search" class="form-control">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
-                        <thead>
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.EnteringDate)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.HouseNumber)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.CustomerName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.CustomerCount)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.StartDate)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.EndDate)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Channel)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.UnitPrice)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.TotalPrice)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Receivable)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Received)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.IsFinish)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.IsFront)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.EnteringStaff)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Steward)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.FrontDeskLeader)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.StewardLeader)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.RelationStaff)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.Note)
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.EnteringDate)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.HouseNumber)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.CustomerName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.CustomerCount)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.StartDate)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.EndDate)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Channel)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.UnitPrice)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TotalPrice)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Receivable)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Received)
-                                </td>
-                                @{
-                                    if (item.IsFinish)
-                                    {
-                                        <td style="color:skyblue">
-                                            已结帐
+                        <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.EnteringDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.HouseNumber)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CustomerName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CustomerCount)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.StartDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.EndDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Channel)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.UnitPrice)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.TotalPrice)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Receivable)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Received)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.IsFinish)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.IsFront)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.EnteringStaff)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Steward)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.FrontDeskLeader)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.StewardLeader)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.RelationStaff)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Note)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.EnteringDate)
                                         </td>
-                                    }
-                                    else
-                                    {
-                                        <td style="color:red">
-                                            未结帐
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.HouseNumber)
                                         </td>
-                                    }
-                                    if (item.IsFront)
-                                    {
-                                        <td style="color:skyblue">
-                                            已审核
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CustomerName)
                                         </td>
-                                    }
-                                    else
-                                    {
-                                        <td style="color:red">
-                                            未审核
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CustomerCount)
                                         </td>
-                                    }
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.StartDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.EndDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Channel)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.UnitPrice)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TotalPrice)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Receivable)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Received)
+                                        </td>
+                                        @{
+                                            if (item.IsFinish)
+                                            {
+                                                <td style="color:skyblue">
+                                                    已结帐
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="color:red">
+                                                    未结帐
+                                                </td>
+                                            }
+                                            if (item.IsFront)
+                                            {
+                                                <td style="color:skyblue;vertical-align:middle">
+                                                    @if (ViewData["Position"].ToString() == "组长")
+                                                    {
+                                                        <span><input type="checkbox" class="flat-blue" name="ids" value="@item.FrontDeskAccountsId" checked="@item.IsFront"></span>
+                                                    }
+                                                    已审核
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="color:red;vertical-align:middle">
+                                                    @if (ViewData["Position"].ToString() == "组长")
+                                                    {
+                                                        <span><input type="checkbox" class="flat-blue" name="ids" value="@item.FrontDeskAccountsId" checked="@item.IsFront"></span>
+                                                    }                                                    未审核
+                                                </td>
+                                            }
+                                        }
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.EnteringStaff)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Steward)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.FrontDeskLeader)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.StewardLeader)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RelationStaff)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Note)
+                                        </td>
+                                        <td>
+                                            @if (item.IsFinance)
+                                            {
+                                                <a class="btn-sm btn-default" style="width:70px;margin-right:5px; min-width:50px;">
+                                                    <i class="fa fa-lock"></i> 锁定
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.FrontDeskAccountsId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                                    <i class="glyphicon glyphicon-pencil"></i> 编辑
+                                                </a>
+                                                <a id="detialListModal" data-toggle="modal" asp-action="DetialList" asp-route-id="@item.FrontDeskAccountsId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                                    <i class="fa fa-list-ul"></i> 收款明细
+                                                </a>
+                                                <a id="addDetialModal" data-toggle="modal" asp-action="AddDetial" asp-route-id="@item.FrontDeskAccountsId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                                    <i class="glyphicon glyphicon-plus"></i> 增加收款
+                                                </a>
+                                                <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.FrontDeskAccountsId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
+                                                    <i class="glyphicon glyphicon-trash"></i> 删除
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
                                 }
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.EnteringStaff)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Steward)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.FrontDeskLeader)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.StewardLeader)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.RelationStaff)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Note)
-                                </td>
-                                <td>
-                                    @if (item.IsFinance)
-                                    {
-                                        <a class="btn-sm btn-default" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="fa fa-lock"></i> 锁定
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.FrontDeskAccountsId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-pencil"></i> 编辑
-                                        </a>
-                                        <a id="detialListModal" data-toggle="modal" asp-action="DetialList" asp-route-id="@item.FrontDeskAccountsId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="fa fa-list-ul"></i> 收款明细
-                                        </a>
-                                        <a id="addDetialModal" data-toggle="modal" asp-action="AddDetial" asp-route-id="@item.FrontDeskAccountsId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-plus"></i> 增加收款
-                                        </a>
-                                        <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.FrontDeskAccountsId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-trash"></i> 删除
-                                        </a>
-                                    }
-                                </td>
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 </section>
 @section Scripts{
     <script src="~/js/range_front.js"></script>
@@ -229,7 +248,7 @@
             //#region table1初始化
             var table1 = $('#table-1').dataTable(
                 {
-                    order: [[0, "asc"]],
+                    order: [[1, "asc"]],
                     dom:
                         "<'row'<'col-sm-6'><'col-sm-6'>>" +
                         "<'row'<'col-sm-12'tr>>" +
@@ -265,7 +284,6 @@
             $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
             $("#date_beg,#date_end").keyup(function () { table1.api().draw(); });
             $("#date_beg,#date_end").change(function () { table1.api().draw(); });
-            $("#isFinish").click(function () { table1.api().search("未结帐").draw(); });
             //#endregion
 
             //#region 设置一些细节
@@ -328,7 +346,7 @@
 
             //#region 页面加载时执行的方法
             function initDate() {
-                $('#date_beg').val(getYesterdayDate);
+                $('#date_beg').val(getTodayDate);
                 $('#date_end').val(getCurrentDate);
                 table1.api().draw();
             }
