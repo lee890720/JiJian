@@ -1,0 +1,118 @@
+﻿@model JJNG.Data.Branch.BrhStewardAccounts
+
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input type="hidden" asp-for="StewardAccountsId" />
+<div class="col-md-3">
+    <div class="form-group">
+        <label asp-for="CustomerName" class="control-label"></label>
+        <input asp-for="CustomerName" class="form-control" />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="HouseNumber" class="control-label"></label>
+        <input asp-for="HouseNumber" class="form-control" />
+        <span asp-validation-for="HouseNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ProductType" class="control-label"></label>
+        <input asp-for="ProductType" class="form-control" />
+        <span asp-validation-for="ProductType" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Product" class="control-label"></label>
+        <input asp-for="Product" class="form-control" />
+        <span asp-validation-for="Product" class="text-danger"></span>
+    </div>
+</div>
+<div class="col-md-3">
+    <div class="form-group">
+        <label asp-for="Cost" class="control-label"></label>
+        <input asp-for="Cost" id="cost" class="form-control" />
+        <span asp-validation-for="Cost" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Amount" class="control-label"></label>
+        <input asp-for="Amount" id="amount" class="form-control" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Profit" class="control-label"></label>
+        <input asp-for="Profit" id="profit" readonly="readonly" class="form-control" />
+        <span asp-validation-for="Profit" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Receivable" class="control-label"></label>
+        <input asp-for="Receivable" class="form-control" />
+        <span asp-validation-for="Receivable" class="text-danger"></span>
+    </div>
+</div>
+<div class="col-md-3">
+    <div class="form-group">
+        <label asp-for="Received" class="control-label"></label>
+        <input asp-for="Received" id="received" readonly="readonly" class="form-control" />
+        <span asp-validation-for="Received" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EnteringStaff" class="control-label"></label>
+        <input asp-for="EnteringStaff" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="EnteringStaff" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FrontDesk" class="control-label"></label>
+        <input asp-for="FrontDesk" class="form-control" />
+        <span asp-validation-for="FrontDesk" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FrontDeskLeader" class="control-label"></label>
+        <input asp-for="FrontDeskLeader" class="form-control" />
+        <span asp-validation-for="FrontDeskLeader" class="text-danger"></span>
+    </div>
+</div>
+<div class="col-md-3">
+    <div class="form-group">
+        <label asp-for="StewardLeader" class="control-label"></label>
+        <input asp-for="StewardLeader" class="form-control" />
+        <span asp-validation-for="StewardLeader" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="RelationStaff" class="control-label"></label>
+        <input asp-for="RelationStaff" class="form-control" />
+        <span asp-validation-for="RelationStaff" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Branch" class="control-label"></label>
+        <input asp-for="Branch" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="Branch" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Note" class="control-label"></label>
+        <input asp-for="Note" class="form-control" />
+        <span asp-validation-for="Note" class="text-danger"></span>
+    </div>
+</div>
+
+<script>
+    $('#cost,#amount').keyup(function () {
+        var cost = document.getElementById("cost").value;
+        var amount = document.getElementById("amount").value;
+        var result = 0.00;
+        result = amount - cost;
+        $('#profit').val(result.toString());
+    });
+    //#region 细节设置
+    $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
+        checkboxClass: 'icheckbox_flat-blue',
+        radioClass: 'iradio_flat-blue'
+    });
+    //#endregion
+</script>

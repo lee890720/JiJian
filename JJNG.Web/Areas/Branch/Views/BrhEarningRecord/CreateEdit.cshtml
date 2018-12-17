@@ -17,7 +17,7 @@ else
 {
     <input type="hidden" asp-for="EarningRecordId" />
 }
-<div class="col-md-6">
+<div class="col-md-12">
     <div class="form-group">
         <label asp-for="EarningType" class="control-label"></label>
         @Html.DropDownList("EarningType", ViewData["EarningType"] as SelectList, "请选择", new { @class = "form-control" })
@@ -36,8 +36,6 @@ else
         <label asp-for="PaymentType" class="control-label"></label>
         @Html.DropDownList("PaymentType", ViewData["PaymentType"] as SelectList, "请选择", new { @class = "form-control" })
     </div>
-</div>
-<div class="col-md-6">
     <div class="form-group">
         <label asp-for="EnteringStaff" class="control-label"></label>
         <input asp-for="EnteringStaff" value="@ViewData["UserName"]" readonly="readonly" style="color:red" class="form-control" />

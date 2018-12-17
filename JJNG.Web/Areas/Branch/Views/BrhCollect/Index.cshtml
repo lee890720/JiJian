@@ -9,7 +9,6 @@
     ViewData["Title"] = controllerName;
     string path = "/" + areaName + "/" + controllerName;
 }
-<!--样式-->
 <style>
     .table td.brr {
         text-align: left !important;
@@ -33,21 +32,10 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">基本信息</h3>
                         <div class="box-tools pull-right">
-                            <a title="新增备忘录" id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-box-tool" asp-action="Create"><i class="fa fa-edit"></i></a>
-                            <button title="完成备忘录" type="submit" class="btn btn-box-tool"><i class="fa fa-bookmark-o"></i></button>
+                            <a title="新增备忘录" id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-box-tool" asp-action="Create"> 新增</a>
+                            <button title="完成备忘录" type="submit" class="btn btn-box-tool"> 完成</button>
                             <a title="跳转至交班记录" class="btn btn-box-tool" asp-action="Index" asp-controller="BrhConnectRecord"><i class="fa fa-link"></i></a>
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            @*<div class="btn-group">
-                                    <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店">
-                                        <i class="fa fa-wrench"></i>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        @foreach (var f in Model.Item2)
-                                        {
-                                            <li><a href="@Url.Action("Index", "FrxAnalyze", new { acId = f.Branch })"><i class="fa fa-circle-o text-light-blue"></i>@f.EnteringStaff</a></li>
-                                        }
-                                    </ul>
-                                </div>*@
                             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                         </div>
                     </div>
@@ -96,40 +84,50 @@
                             </table>
                         </div>
                         <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 table-responsive" style="padding:30px">
-                            <table class="table" style="table-layout:fixed">
-                                <tbody>
-                                    <tr>
-                                        <td class="brr" width="25%">早班：</td>
-                                        <td class="brl" width="25%">@Model.Item1.MorningStaff</td>
-                                        <td class="brr" width="25%">晚班：</td>
-                                        <td class="brl" width="25%">@Model.Item1.NigthStaff</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="brr">房费现金：</td>
-                                        <td class="brl">@Model.Item1.HouseCash</td>
-                                        <td class="brr">其它现金：</td>
-                                        <td class="brl">@Model.Item1.OtherCash</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="brr">单据数量： </td>
-                                        <td class="brl">@Model.Item1.BillCount</td>
-                                        <td class="brr">房卡数量： </td>
-                                        <td class="brl">@Model.Item1.CardCount</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="brr">待处理： </td>
-                                        <td class="brl"><strong style="color:coral">@Model.Item2.Count</strong></td>
-                                        <td class="brr">备用金： </td>
-                                        <td class="brl">@Model.Item3.Equity</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="brr">录入人： </td>
-                                        <td class="brl">@Model.Item1.EnteringStaff</td>
-                                        <td class="brr">修改于：</td>
-                                        <td class="brl"><strong style="color:coral">@Model.Item1.EnteringDate.ToString("MM/dd HH:mm")</strong></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            @if (Model.Item1 != null)
+                            {
+                                <table class="table" style="table-layout:fixed">
+                                    <tbody>
+                                        <tr>
+                                            <td class="brr" width="25%">早班：</td>
+                                            <td class="brl" width="25%">@Model.Item1.MorningStaff</td>
+                                            <td class="brr" width="25%">晚班：</td>
+                                            <td class="brl" width="25%">@Model.Item1.NigthStaff</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="brr">房费现金：</td>
+                                            <td class="brl">@Model.Item1.HouseCash</td>
+                                            <td class="brr">其它现金：</td>
+                                            <td class="brl">@Model.Item1.OtherCash</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="brr">单据数量： </td>
+                                            <td class="brl">@Model.Item1.BillCount</td>
+                                            <td class="brr">房卡数量： </td>
+                                            <td class="brl">@Model.Item1.CardCount</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="brr">待处理： </td>
+                                            <td class="brl"><strong style="color:coral">@Model.Item2.Count</strong></td>
+                                            <td class="brr">备用金： </td>
+                                            @if (Model.Item3 != null)
+                                            {
+                                                <td class="brl">@Model.Item3.Equity</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="brl">0</td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="brr">录入人： </td>
+                                            <td class="brl">@Model.Item1.EnteringStaff</td>
+                                            <td class="brr">修改于：</td>
+                                            <td class="brl"><strong style="color:coral">@Model.Item1.EnteringDate.ToString("MM/dd HH:mm")</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            }
                         </div>
                     </div>
                     <div class="box-footer">
@@ -153,226 +151,233 @@
                             <div class="col-md-3">
                                 <div class="description-block border-right">
                                     <h5 class="description-header">@Model.Item5[2].Amount-@Model.Item5[2].Count</h5>
-                                    <a  asp-action="Index" asp-controller="BrhImprestRecord" asp-route-id="@Model.Item3.ImprestAccountsId">
+                                    @if (Model.Item3 != null)
+                                    {
+                                        <a asp-action="Index" asp-controller="BrhImprestRecord" asp-route-id="@Model.Item3.ImprestAccountsId">
+                                            <span class="description-text">备用金支出</span>
+                                        </a>
+                                    }
+                                    else
+                                    {
                                         <span class="description-text">备用金支出</span>
-                                    </a>
+                                    }
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="description-block">
-                                    <h5 class="description-header">@Model.Item5[3].Amount（@Model.Item5[4].Amount-@Model.Item5[4].Count)</h5>
-                                    <a  asp-action="Index" asp-controller="BrhFrontDeskAccount">
-                                        <span class="description-text">本月客房流水</span>
-                                    </a>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="description-block">
+                                        <h5 class="description-header">@Model.Item5[3].Amount（@Model.Item5[4].Amount-@Model.Item5[4].Count)</h5>
+                                        <a asp-action="Index" asp-controller="BrhFrontDeskAccount">
+                                            <span class="description-text">本月客房流水</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    }
-    <div class="row">
-        <div class="col-md-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">今日房态</h3>
-                    <div class="box-tools pull-right">
-                        <a title="跳转至前台帐目表" class="btn btn-box-tool" asp-action="Index" asp-controller="BrhFrontDeskAccount"><i class="fa fa-link"></i></a>
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                    </div>
-                </div>
-                <div class="box-body no-margin">
-                    <table id="table-2" class="table  table-bordered table-striped table-hover" width="100%">
-                        <thead>
-                            <tr>
-                                <th>
-                                    录入日期
-                                </th>
-                                <th>
-                                    房号
-                                </th>
-                                <th>
-                                    入住人
-                                </th>
-                                <th>
-                                    人数
-                                </th>
-                                <th>
-                                    入住日期
-                                </th>
-                                <th>
-                                    离店日期
-                                </th>
-                                <th>
-                                    渠道
-                                </th>
-                                <th>
-                                    应收款
-                                </th>
-                                <th>
-                                    已收款
-                                </th>
-                                <th>
-                                    是否结帐
-                                </th>
-                                <th>
-                                    前台审核
-                                </th>
-                                <th>
-                                    录单人
-                                </th>
-                                <th>
-                                    备注
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Item4)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EnteringDate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.HouseNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.CustomerName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.CustomerCount)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.StartDate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EndDate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Channel)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Receivable)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Received)
-                                    </td>
-                                    @{
-                                        if (item.IsFinish)
-                                        {
-                                            <td style="color:skyblue">
-                                                已结帐
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td style="color:red">
-                                                未结帐
-                                            </td>
-                                        }
-                                        if (item.IsFront)
-                                        {
-                                            <td style="color:skyblue;vertical-align:middle">
-                                                已审核
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td style="color:red;vertical-align:middle">
-                                                未审核
-                                            </td>
-                                        }
-                                    }
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EnteringStaff)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Note)
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+        }
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="box box-primary">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title">今日房态</h3>
+                                                    <div class="box-tools pull-right">
+                                                        <a title="跳转至前台帐目表" class="btn btn-box-tool" asp-action="Index" asp-controller="BrhFrontDeskAccount"><i class="fa fa-link"></i></a>
+                                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                                    </div>
+                                                </div>
+                                                <div class="box-body no-margin">
+                                                    <table id="table-2" class="table  table-bordered table-striped table-hover" width="100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>
+                                                                    录入日期
+                                                                </th>
+                                                                <th>
+                                                                    房号
+                                                                </th>
+                                                                <th>
+                                                                    入住人
+                                                                </th>
+                                                                <th>
+                                                                    人数
+                                                                </th>
+                                                                <th>
+                                                                    入住日期
+                                                                </th>
+                                                                <th>
+                                                                    离店日期
+                                                                </th>
+                                                                <th>
+                                                                    渠道
+                                                                </th>
+                                                                <th>
+                                                                    应收款
+                                                                </th>
+                                                                <th>
+                                                                    已收款
+                                                                </th>
+                                                                <th>
+                                                                    是否结帐
+                                                                </th>
+                                                                <th>
+                                                                    前台审核
+                                                                </th>
+                                                                <th>
+                                                                    录单人
+                                                                </th>
+                                                                <th>
+                                                                    备注
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var item in Model.Item4)
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        @Html.DisplayFor(modelItem => item.EnteringDate)
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.DisplayFor(modelItem => item.HouseNumber)
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.DisplayFor(modelItem => item.CustomerName)
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.DisplayFor(modelItem => item.CustomerCount)
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.DisplayFor(modelItem => item.StartDate)
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.DisplayFor(modelItem => item.Channel)
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.DisplayFor(modelItem => item.Receivable)
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.DisplayFor(modelItem => item.Received)
+                                                                    </td>
+                                                                    @{
+                                                                        if (item.IsFinish)
+                                                                        {
+                                                                            <td style="color:skyblue">
+                                                                                已结帐
+                                                                            </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color:red">
+                                                                                未结帐
+                                                                            </td>
+                                                                        }
+                                                                        if (item.IsFront)
+                                                                        {
+                                                                            <td style="color:skyblue;vertical-align:middle">
+                                                                                已审核
+                                                                            </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color:red;vertical-align:middle">
+                                                                                未审核
+                                                                            </td>
+                                                                        }
+                                                                    }
+                                                                    <td>
+                                                                        @Html.DisplayFor(modelItem => item.EnteringStaff)
+                                                                    </td>
+                                                                    <td>
+                                                                        @Html.DisplayFor(modelItem => item.Note)
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-</section>
-@section Scripts{
-    <script>
-        //#region 初始化table1
-        var table1 = $('#table-1').dataTable(
-            {
-                order: [[0, "desc"]],
-                info: false,
-                paging: false,
-                dom:
-                    "<'row'<'col-sm-6'><'col-sm-6'>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                language: {
-                    processing: "加载中...",
-                    lengthMenu: "每页显示 _MENU_ 条数据",
-                    zeroRecords: "没有匹配结果",
-                    info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
-                    infoEmpty: "显示第 0 至 0 项结果，共 0 项",
-                    infoFiltered: "(由 _MAX_ 项结果过滤)",
-                    infoPostFix: "",
-                    search: "搜索:",
-                    url: "",
-                    emptyTable: "没有匹配结果",
-                    loadingRecords: "载入中...",
-                    thousands: ",",
-                    paginate: {
-                        first: "首页",
-                        previous: "上一页",
-                        next: "下一页",
-                        last: "末页"
-                    },
-                    aria: {
-                        sortAscending: ": 以升序排列此列",
-                        sortDescending: ": 以降序排列此列"
-                    }
-                },
-            });
-        //#endregion
-        //#region table2初始化
-        var table1 = $('#table-2').dataTable(
-            {
-                order: [[1, "asc"]],
-                dom:
-                    "<'row'<'col-sm-6'><'col-sm-6'>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                language: {
-                    processing: "加载中...",
-                    lengthMenu: "每页显示 _MENU_ 条数据",
-                    zeroRecords: "没有匹配结果",
-                    info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
-                    infoEmpty: "显示第 0 至 0 项结果，共 0 项",
-                    infoFiltered: "(由 _MAX_ 项结果过滤)",
-                    infoPostFix: "",
-                    search: "搜索:",
-                    url: "",
-                    emptyTable: "没有匹配结果",
-                    loadingRecords: "载入中...",
-                    thousands: ",",
-                    paginate: {
-                        first: "首页",
-                        previous: "上一页",
-                        next: "下一页",
-                        last: "末页"
-                    },
-                    aria: {
-                        sortAscending: ": 以升序排列此列",
-                        sortDescending: ": 以降序排列此列"
-                    }
-                },
-            });
-                    //#endregion
+                                </section>
+                                @section Scripts{
+                                    <script>
+                                        //#region 初始化table1
+                                        var table1 = $('#table-1').dataTable(
+                                            {
+                                                order: [[0, "desc"]],
+                                                info: false,
+                                                paging: false,
+                                                dom:
+                                                    "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                                                    "<'row'<'col-sm-12'tr>>" +
+                                                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                                language: {
+                                                    processing: "加载中...",
+                                                    lengthMenu: "每页显示 _MENU_ 条数据",
+                                                    zeroRecords: "没有匹配结果",
+                                                    info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                                                    infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                                                    infoFiltered: "(由 _MAX_ 项结果过滤)",
+                                                    infoPostFix: "",
+                                                    search: "搜索:",
+                                                    url: "",
+                                                    emptyTable: "没有匹配结果",
+                                                    loadingRecords: "载入中...",
+                                                    thousands: ",",
+                                                    paginate: {
+                                                        first: "首页",
+                                                        previous: "上一页",
+                                                        next: "下一页",
+                                                        last: "末页"
+                                                    },
+                                                    aria: {
+                                                        sortAscending: ": 以升序排列此列",
+                                                        sortDescending: ": 以降序排列此列"
+                                                    }
+                                                },
+                                            });
+                                        //#endregion
+                                        //#region table2初始化
+                                        var table1 = $('#table-2').dataTable(
+                                            {
+                                                order: [[1, "asc"]],
+                                                dom:
+                                                    "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                                                    "<'row'<'col-sm-12'tr>>" +
+                                                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                                                language: {
+                                                    processing: "加载中...",
+                                                    lengthMenu: "每页显示 _MENU_ 条数据",
+                                                    zeroRecords: "没有匹配结果",
+                                                    info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                                                    infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                                                    infoFiltered: "(由 _MAX_ 项结果过滤)",
+                                                    infoPostFix: "",
+                                                    search: "搜索:",
+                                                    url: "",
+                                                    emptyTable: "没有匹配结果",
+                                                    loadingRecords: "载入中...",
+                                                    thousands: ",",
+                                                    paginate: {
+                                                        first: "首页",
+                                                        previous: "上一页",
+                                                        next: "下一页",
+                                                        last: "末页"
+                                                    },
+                                                    aria: {
+                                                        sortAscending: ": 以升序排列此列",
+                                                        sortDescending: ": 以降序排列此列"
+                                                    }
+                                                },
+                                            });
+                                                            //#endregion
 
-    </script>
-}
+                                    </script>
+                                }

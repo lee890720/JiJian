@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using JJNG.Data;
+﻿using JJNG.Data;
+using JJNG.Data.AppIdentity;
 using JJNG.Data.Branch;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using JJNG.Data.AppIdentity;
 using Microsoft.AspNetCore.Identity;
-using JJNG.Web;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JJNG.Web.Areas.Branch.Controllers
 {
@@ -20,21 +18,22 @@ namespace JJNG.Web.Areas.Branch.Controllers
     public class BrhEarningRecordController : Controller
     {
         private readonly AppDbContext _context;
-        private readonly AppIdentityDbContext _identitycontext;
+        private readonly AppIdentityDbContext _identityContext;
         private UserManager<AppIdentityUser> _userManager;
 
         public BrhEarningRecordController(AppDbContext context, AppIdentityDbContext identitycontext, UserManager<AppIdentityUser> usrMgr)
         {
             _context = context;
-            _identitycontext = identitycontext;
+            _identityContext = identitycontext;
             _userManager = usrMgr;
         }
 
         public async Task<IActionResult> Index()
         {
-         AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+            AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
             ViewData["BelongTo"] = _user.BelongTo;
+
             return View(await _context.BrhEarningRecord.Where(x => x.Branch == _user.BelongTo).ToListAsync());
         }
 
@@ -43,10 +42,12 @@ namespace JJNG.Web.Areas.Branch.Controllers
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
             ViewData["BelongTo"] = _user.BelongTo;
-            var list_paymenttype = _context.FncPaymentType.ToList();
-            ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType");
-            var list_earningtype = _context.FncEarningType.ToList();
-            ViewData["EarningType"]=new SelectList(list_earningtype, "EarningType", "EarningType");
+
+            var list_paymentType = _context.FncPaymentType.ToList();
+            ViewData["PaymentType"] = new SelectList(list_paymentType, "PaymentType", "PaymentType");
+            var list_earningType = _context.FncEarningType.ToList();
+            ViewData["EarningType"] = new SelectList(list_earningType, "EarningType", "EarningType");
+
             return PartialView("~/Areas/Branch/Views/BrhEarningRecord/CreateEdit.cshtml");
         }
 
@@ -61,7 +62,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-         return PartialView("~/Areas/Branch/Views/BrhEarningRecord/CreateEdit.cshtml",brhEarningRecord);
+            return PartialView("~/Areas/Branch/Views/BrhEarningRecord/CreateEdit.cshtml", brhEarningRecord);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -74,15 +75,17 @@ namespace JJNG.Web.Areas.Branch.Controllers
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
             ViewData["BelongTo"] = _user.BelongTo;
-            var list_paymenttype = _context.FncPaymentType.ToList();
-            ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType",brhEarningRecord.PaymentType);
-            var list_earningtype = _context.FncEarningType.ToList();
-            ViewData["EarningType"] = new SelectList(list_earningtype, "EarningType", "EarningType",brhEarningRecord.EarningType);
+
+            var list_paymentType = _context.FncPaymentType.ToList();
+            ViewData["PaymentType"] = new SelectList(list_paymentType, "PaymentType", "PaymentType", brhEarningRecord.PaymentType);
+            var list_earningType = _context.FncEarningType.ToList();
+            ViewData["EarningType"] = new SelectList(list_earningType, "EarningType", "EarningType", brhEarningRecord.EarningType);
+
             if (brhEarningRecord == null)
             {
                 return NotFound();
             }
-        return PartialView("~/Areas/Branch/Views/BrhEarningRecord/CreateEdit.cshtml",brhEarningRecord);
+            return PartialView("~/Areas/Branch/Views/BrhEarningRecord/CreateEdit.cshtml", brhEarningRecord);
         }
 
         [HttpPost]
@@ -115,7 +118,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-         return PartialView("~/Areas/Branch/Views/BrhEarningRecord/CreateEdit.cshtml",brhEarningRecord);
+            return PartialView("~/Areas/Branch/Views/BrhEarningRecord/CreateEdit.cshtml", brhEarningRecord);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -132,7 +135,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 return NotFound();
             }
 
-         return PartialView("~/Areas/Branch/Views/BrhEarningRecord/Delete.cshtml", "这条记录");
+            return PartialView("~/Areas/Branch/Views/BrhEarningRecord/Delete.cshtml", "这条记录");
         }
 
         [HttpPost]

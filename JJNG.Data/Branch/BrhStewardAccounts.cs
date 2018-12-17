@@ -10,13 +10,13 @@ namespace JJNG.Data.Branch
     {
         public BrhStewardAccounts()
         {
-            BrhFrontPaymentDetial = new HashSet<BrhFrontPaymentDetial>();
+            BrhStewardPaymentDetial = new HashSet<BrhStewardPaymentDetial>();
         }
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         public long StewardAccountsId { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日HH时mm分}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
         [Display(Name = "录入日期")]
         public DateTime EnteringDate { get; set; }
         [Display(Name = "房号")]
@@ -25,25 +25,20 @@ namespace JJNG.Data.Branch
         [Display(Name = "客户名称")]
         public string CustomerName { get; set; }
         [Required]
-        [Display(Name = "入住人数")]
-        public int CustomerCount { get; set; }
+        [Display(Name = "外销分类")]
+        public string ProductType { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-        [Display(Name = "入住日期")]
-        public DateTime StartDate { get; set; }
+        [Display(Name = "外销名称")]
+        public string Product { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-        [Display(Name = "离店日期")]
-        public DateTime EndDate { get; set; }
+        [Display(Name = "成本")]
+        public double Cost { get; set; }
         [Required]
-        [Display(Name = "订房渠道")]
-        public string Channel { get; set; }
+        [Display(Name = "销售金额")]
+        public double Amount { get; set; }
         [Required]
-        [Display(Name = "单价")]
-        public double UnitPrice { get; set; }
-        [Required]
-        [Display(Name = "总价")]
-        public double TotalPrice { get; set; }
+        [Display(Name = "利润")]
+        public double Profit { get; set; }
         [Required]
         [Display(Name = "应收款")]
         public double Receivable { get; set; }
@@ -56,21 +51,25 @@ namespace JJNG.Data.Branch
         [Required]
         [Display(Name = "录单人")]
         public string EnteringStaff { get; set; }
-        [Display(Name = "管家")]
-        public string Steward { get; set; }
+        [Display(Name = "前台")]
+        public string FrontDesk { get; set; }
+        [Display(Name = "前台小组长")]
+        public string FrontDeskLeader { get; set; }
+        [Display(Name = "管家小组长")]
+        public string StewardLeader { get; set; }
         [Display(Name = "对应关系")]
         public string RelationStaff { get; set; }
         [Required]
-        [Display(Name = "前台审批")]
-        public bool IsFront { get; set; }
+        [Display(Name = "管家审核")]
+        public bool IsSteward { get; set; }
         [Required]
-        [Display(Name = "财务审批")]
+        [Display(Name = "财务审核")]
         public bool IsFinance { get; set; }
         [Required]
         [Display(Name = "分店")]
         public string Branch { get; set; }
         [Display(Name = "备注")]
         public string Note { get; set; }
-        public ICollection<BrhFrontPaymentDetial> BrhFrontPaymentDetial { get; set; }
+        public ICollection<BrhStewardPaymentDetial> BrhStewardPaymentDetial { get; set; }
     }
 }

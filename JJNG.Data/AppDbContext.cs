@@ -15,6 +15,8 @@ namespace JJNG.Data
         public virtual DbSet<FncEarningType> FncEarningType { get; set; }
         public virtual DbSet<BrhFrontDeskAccounts> BrhFrontDeskAccounts { get; set; }
         public virtual DbSet<BrhFrontPaymentDetial> BrhFrontPaymentDetials { get; set; }
+        public virtual DbSet<BrhStewardAccounts> BrhStewardAccounts { get; set; }
+        public virtual DbSet<BrhStewardPaymentDetial> BrhStewardPaymentDetial { get; set; }
         public virtual DbSet<BrhImprestAccounts> BrhImprestAccounts { get; set; }
         public virtual DbSet<BrhConnectRecord> BrhConnectRecord { get; set; }
         public virtual DbSet<BrhEarningRecord> BrhEarningRecord { get; set; }

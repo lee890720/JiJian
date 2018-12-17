@@ -13,36 +13,39 @@
 <section class="content">
     <div class="row">
         <div class="col-md-12">
-            <div class="box">
+            <div class="box  box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">收入明细<small style="color:red">&emsp; @ViewData["BelongTo"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <div class="box-tools pull-right">
+                        <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-box-tool" asp-action="Create"> 新增</a>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
                 <div class="box-body table-responsive">
                     <div class="form-group">
-                        <div class="col-md-3 col-sm-6 col-xs-12 no-padding hidden-xs" style="margin-bottom:10px;">
-                            <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-primary" href="@path/Create"><i class="glyphicon glyphicon-plus"></i> 新增</a>
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <select id="date_select" class="form-control select2" style="width: 100%;">
+                                <option value="7">全部</option>
+                                <option value="0">今天</option>
+                                <option value="1">昨天</option>
+                                <option value="2">最后一周</option>
+                                <option value="3">本月</option>
+                                <option value="4">上个月</option>
+                                <option value="5">最后三个月</option>
+                                <option value="6">最后一年</option>
+                            </select>
                         </div>
-                        <div class="col-md-9 no-margin no-padding">
-                            <div class="form-group">
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="搜索" id="search" class="form-control">
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <select id="date_select" class="form-control select2" style="width: 100%;">
-                                        <option value="7">全部</option>
-                                        <option value="0">今天</option>
-                                        <option value="1">昨天</option>
-                                        <option value="2">最后一周</option>
-                                        <option value="3">本月</option>
-                                        <option value="4">上个月</option>
-                                        <option value="5">最后三个月</option>
-                                        <option value="6">最后一年</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepickertemp">
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="结束日期" id="date_end" class="form-control datepickertemp">
-                                </div>
-                            </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepickertemp">
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <input type="text" placeholder="结束日期" id="date_end" class="form-control datepickertemp">
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <input type="text" placeholder="搜索" id="search" class="form-control">
                         </div>
                     </div>
                     <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
@@ -81,63 +84,63 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.EnteringDate)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.EarningType)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Source)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Amount)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PaymentType)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.EnteringStaff)
-                                </td>
-                                @{
-                                    if (item.IsFinance)
-                                    {
-                                        <td style="color:skyblue">
-                                            已审核
-                                        </td>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EnteringDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EarningType)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Source)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Amount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PaymentType)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EnteringStaff)
+                                    </td>
+                                    @{
+                                        if (item.IsFinance)
+                                        {
+                                            <td style="color:skyblue">
+                                                已审核
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td style="color:red">
+                                                未审核
+                                            </td>
+                                        }
                                     }
-                                    else
-                                    {
-                                        <td style="color:red">
-                                            未审核
-                                        </td>
-                                    }
-                                }
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Branch)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Note)
-                                </td>
-                                <td>
-                                    @if (item.IsFinance)
-                                    {
-                                        <a class="btn-sm btn-default" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="fa fa-lock"></i> 锁定
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.EarningRecordId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-pencil"></i> 编辑
-                                        </a>
-                                        <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.EarningRecordId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-trash"></i> 删除
-                                        </a>
-                                    }
-                                </td>
-                            </tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Branch)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Note)
+                                    </td>
+                                    <td>
+                                        @if (item.IsFinance)
+                                        {
+                                            <a class="btn-sm btn-default" style="width:70px;margin-right:5px; min-width:50px;">
+                                                <i class="fa fa-lock"></i> 锁定
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.EarningRecordId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                                <i class="glyphicon glyphicon-pencil"></i> 编辑
+                                            </a>
+                                            <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.EarningRecordId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
+                                                <i class="glyphicon glyphicon-trash"></i> 删除
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -154,7 +157,7 @@
             //#region table1初始化
             var table1 = $('#table-1').dataTable(
                 {
-                    order: [[0, "asc"]],
+                    order: [[0, "desc"]],
                     dom:
                         "<'row'<'col-sm-6'><'col-sm-6'>>" +
                         "<'row'<'col-sm-12'tr>>" +

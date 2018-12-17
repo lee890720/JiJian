@@ -1,0 +1,52 @@
+﻿@model IEnumerable<BrhFrontPaymentDetial>
+
+@{
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                    @await Html.PartialAsync("_ModalHeader", new ModalHeader { Heading = "点击右侧或按ESC退出" })
+                    <div class="box-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PayDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PayWay)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PayAmount)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PayDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PayWay)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PayAmount)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+        </div>
+    </div>
+</section>

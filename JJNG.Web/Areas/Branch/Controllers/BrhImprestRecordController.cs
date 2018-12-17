@@ -36,8 +36,8 @@ namespace JJNG.Web.Areas.Branch.Controllers
             ViewData["UserName"] = _user.UserName;
             ViewData["BelongTo"] = _user.BelongTo;
             ViewData["ImprestAccountsId"] = id;
-            var appDbContext = _context.BrhImprestRecord.Include(b => b.BrhImprestAccounts).Where(x=>x.ImprestAccountsId==id);
-            return View(await appDbContext.ToListAsync());
+            var brhImprestReord = await _context.BrhImprestRecord.Include(b => b.BrhImprestAccounts).Where(x=>x.ImprestAccountsId==id&&!x.IsFinance).ToListAsync();
+            return View(brhImprestReord);
         }
 
         public async Task<IActionResult> Create(int? id)
@@ -62,7 +62,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 brhImprestRecord.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                 _context.Add(brhImprestRecord);
                 await _context.SaveChangesAsync();
-                var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId).Sum(x => x.Amount);
+                var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId&&!x.IsFinance).Sum(x => x.Amount);
                 var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId);
                 brhImprestAccount.Equity = brhImprestAccount.Balance - total;
                 _context.Update(brhImprestAccount);
@@ -109,7 +109,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                     brhImprestRecord.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                     _context.Update(brhImprestRecord);
                     await _context.SaveChangesAsync();
-                    var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId).Sum(x => x.Amount);
+                    var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId&&!x.IsFinance).Sum(x => x.Amount);
                     var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId);
                     brhImprestAccount.Equity = brhImprestAccount.Balance - total;
                     _context.Update(brhImprestAccount);

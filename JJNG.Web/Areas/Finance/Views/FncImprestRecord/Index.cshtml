@@ -1,0 +1,262 @@
+﻿@model IEnumerable<BrhImprestRecord>
+
+@{
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+    ViewData["Title"] = controllerName;
+    string path = "/" + areaName + "/" + controllerName;
+}
+<section class="content">
+    @using (Html.BeginForm("Index", null, FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">备用金明细<small style="color:skyblue">&emsp; @ViewData["BelongTo"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                        <div class="box-tools pull-right">
+                            <button title="审核" type="submit" class="btn btn-box-tool">审核</button>
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body table-responsive">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <select id="date_select" class="form-control select2" style="width: 100%;">
+                                        <option value="7">全部</option>
+                                        <option value="0">今天</option>
+                                        <option value="1">昨天</option>
+                                        <option value="2">最后一周</option>
+                                        <option value="3">本月</option>
+                                        <option value="4">上个月</option>
+                                        <option value="5">最后三个月</option>
+                                        <option value="6">最后一年</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepickertemp">
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <input type="text" placeholder="结束日期" id="date_end" class="form-control datepickertemp">
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <input type="text" placeholder="搜索" id="search" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        录入日期
+                                    </th>
+                                    <th>
+                                        收入分类
+                                    </th>
+                                    <th>
+                                        来源
+                                    </th>
+                                    <th>
+                                        金额
+                                    </th>
+                                    <th>
+                                        付款方式
+                                    </th>
+                                    <th>
+                                        审批单号
+                                    </th>
+                                    <th>
+                                        录单人
+                                    </th>
+                                    <th>
+                                        财务审核
+                                    </th>
+                                    <th>
+                                        分店
+                                    </th>
+                                    <th>
+                                        备注
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.EnteringDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ExpendType)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Purpose)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Amount)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PaymentType)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ConnectNumber)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.EnteringStaff)
+                                        </td>
+                                        @{
+                                            if (item.IsFinance)
+                                            {
+                                                <td style="color:skyblue;">
+                                                    <span><input type="checkbox" class="flat-blue" name="ids" value="@item.ImprestRecordId" checked="@item.IsFinance"></span>
+                                                    已审核
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="color:red;">
+                                                    <span><input type="checkbox" class="flat-blue" name="ids" value="@item.ImprestRecordId" checked="@item.IsFinance"></span>
+                                                    未审核
+                                                </td>
+                                            }
+                                        }
+                                        <td style="color:red">
+                                            @Html.DisplayFor(modelItem => item.Branch)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Note)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</section>
+@section Scripts{
+    <script src="~/js/range_dates.js"></script>
+    <script src="~/js/dateRangeSelector.js"></script>
+    <script>
+        $(function () {
+            //#region table1初始化
+            var table1 = $('#table-1').dataTable(
+                {
+                    order: [[0, "desc"]],
+                    dom:
+                        "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    language: {
+                        processing: "加载中...",
+                        lengthMenu: "每页显示 _MENU_ 条数据",
+                        zeroRecords: "没有匹配结果",
+                        info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                        infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                        infoFiltered: "(由 _MAX_ 项结果过滤)",
+                        infoPostFix: "",
+                        search: "搜索:",
+                        url: "",
+                        emptyTable: "没有匹配结果",
+                        loadingRecords: "载入中...",
+                        thousands: ",",
+                        paginate: {
+                            first: "首页",
+                            previous: "上一页",
+                            next: "下一页",
+                            last: "末页"
+                        },
+                        aria: {
+                            sortAscending: ": 以升序排列此列",
+                            sortDescending: ": 以降序排列此列"
+                        }
+                    },
+                    columnDefs: [
+                        {
+                            targets: "col-visible",
+                            visible: false,
+                        },
+                        {
+                            targets: [-1, -2],
+                            orderable: false,
+                        },
+                    ],
+                });
+            //#endregion
+
+            //#region table1点击事件
+            $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
+            $("#date_beg,#date_end").keyup(function () { table1.api().draw(); });
+            $("#date_beg,#date_end").change(function () { table1.api().draw(); });
+            //#endregion
+
+            //#region 设置一些细节
+            $('.datepickertemp').datepicker({
+                autoclose: true,
+                format: 'yyyy-mm-dd',
+            });
+
+            //Select2
+            $('.select2').select2();
+            //#endregion
+
+            //#region 日期区间选择事件
+            $("#date_select").change(function () {
+                var flag = parseInt($("#date_select").val());
+                switch (flag) {
+                    // 当天
+                    case 0:
+                        $('#date_beg').val(getTodayDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    // 昨天
+                    case 1:
+                        $('#date_beg').val(getYesterdayDate);
+                        $('#date_end').val(getTodayDate);
+                        break;
+                    // 本周
+                    case 2:
+                        $('#date_beg').val(getWeekStartDate);
+                        $('#date_end').val(getWeekEndDate);
+                        break;
+                    // 当月
+                    case 3:
+                        $('#date_beg').val(getMonthStartDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    // 上个月
+                    case 4:
+                        $('#date_beg').val(getPreMonthStartDate);
+                        $('#date_end').val(getMonthStartDate);
+                        break;
+                    // 最近三月
+                    case 5:
+                        $('#date_beg').val(getTreeMonthStartDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    // 最近一年
+                    case 6:
+                        $('#date_beg').val(getYearStartDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    default:
+                        $('#date_beg').val("");
+                        $('#date_end').val("");
+                        break;
+                }
+                table1.api().draw();
+            });
+            //#endregion
+        });
+    </script>
+}

@@ -29,9 +29,6 @@ namespace JJNG.Data.Branch
         [Display(Name = "其他现金")]
         public double OtherCash { get; set; }
         [Required]
-        [Display(Name = "备用金")]
-        public double RevolvingFund { get; set; }
-        [Required]
         [Display(Name = "房卡数量")]
         public int CardCount { get; set; }
         [Required]

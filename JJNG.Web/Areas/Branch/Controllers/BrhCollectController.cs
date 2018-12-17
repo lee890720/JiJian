@@ -91,18 +91,9 @@ namespace JJNG.Web.Areas.Branch.Controllers
                     _context.Update(x);
                 });
                 await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            //AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
-            //ViewData["UserName"] = _user.UserName;
-            //ViewData["Department"] = _user.Department;
-            //ViewData["BelongTo"] = _user.BelongTo;
-            //var now = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
-
-            //var connectRecord = _context.BrhConnectRecord.Where(x => x.Branch == _user.BelongTo).OrderByDescending(x => x.EnteringDate).LastOrDefault();
-            //var brhMemoList = _context.BrhMemo.Where(x => x.Branch == _user.BelongTo && x.IsFinish == false).ToList();
-            //var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.Department == _user.Department && x.BelongTo == _user.BelongTo && string.IsNullOrEmpty(x.Manager));
-            //var brhFrontDeskAccounts = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.StartDate, now) <= 0 && DateTime.Compare(x.EndDate, now) > 0).ToList();
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Create()

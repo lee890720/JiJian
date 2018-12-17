@@ -60,7 +60,7 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
                     Position=model.Position,
                     BelongTo=model.BelongTo,
                     RegisterDate = DateTime.Now,
-                    UserImage="/images/既见.jpg"
+                    UserImage="/images/JiJian.jpg"
                 };
                 IdentityResult result
                     = await userManager.CreateAsync(user, model.Password);

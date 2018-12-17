@@ -16,8 +16,8 @@ namespace JJNG.Web.Controllers
         }
         public IActionResult Index()
         {
-            if (User.IsInRole("Forex"))
-                return Redirect("/Forex/FrxUserAccount");
+            if (User.IsInRole("前台"))
+                return Redirect("/Branch/BrhCollect");
             return View();
         }
 

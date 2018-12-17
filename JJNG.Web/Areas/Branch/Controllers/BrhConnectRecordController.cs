@@ -48,7 +48,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ConnectRecordId,EnteringDate,MorningStaff,NigthStaff,BillCount,HouseCash,OtherCash,RevolvingFund,CardCount,EnteringStaff,Branch,Note")] BrhConnectRecord brhConnectRecord)
+        public async Task<IActionResult> Create([Bind("ConnectRecordId,EnteringDate,MorningStaff,NigthStaff,BillCount,HouseCash,OtherCash,CardCount,EnteringStaff,Branch,Note")] BrhConnectRecord brhConnectRecord)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +79,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ConnectRecordId,EnteringDate,MorningStaff,NigthStaff,BillCount,HouseCash,OtherCash,RevolvingFund,CardCount,EnteringStaff,Branch,Note")] BrhConnectRecord brhConnectRecord)
+        public async Task<IActionResult> Edit(int id, [Bind("ConnectRecordId,EnteringDate,MorningStaff,NigthStaff,BillCount,HouseCash,OtherCash,CardCount,EnteringStaff,Branch,Note")] BrhConnectRecord brhConnectRecord)
         {
             if (id != brhConnectRecord.ConnectRecordId)
             {

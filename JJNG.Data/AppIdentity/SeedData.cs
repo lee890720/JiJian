@@ -75,7 +75,7 @@ namespace JJNG.Data.AppIdentity
             context.Users.AddRange(
                 new AppIdentityUser
                 {
-                    UserName = "jjng_8888",
+                    UserName = "JiJian",
                     Email = "jjng_8888@126.com"
                 });
             context.SaveChanges();

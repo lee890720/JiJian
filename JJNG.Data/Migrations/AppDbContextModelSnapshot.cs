@@ -81,8 +81,6 @@ namespace JJNG.Data.Migrations
 
                     b.Property<double>("OtherCash");
 
-                    b.Property<double>("RevolvingFund");
-
                     b.HasKey("ConnectRecordId");
 
                     b.ToTable("Brh_ConnectRecord");
@@ -311,6 +309,81 @@ namespace JJNG.Data.Migrations
                     b.ToTable("Brh_Memo");
                 });
 
+            modelBuilder.Entity("JJNG.Data.Branch.BrhStewardAccounts", b =>
+                {
+                    b.Property<long>("StewardAccountsId");
+
+                    b.Property<double>("Amount");
+
+                    b.Property<string>("Branch")
+                        .IsRequired();
+
+                    b.Property<double>("Cost");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired();
+
+                    b.Property<DateTime>("EnteringDate");
+
+                    b.Property<string>("EnteringStaff")
+                        .IsRequired();
+
+                    b.Property<string>("FrontDesk");
+
+                    b.Property<string>("FrontDeskLeader");
+
+                    b.Property<int>("HouseNumber");
+
+                    b.Property<bool>("IsFinance");
+
+                    b.Property<bool>("IsFinish");
+
+                    b.Property<bool>("IsSteward");
+
+                    b.Property<string>("Note");
+
+                    b.Property<string>("Product")
+                        .IsRequired();
+
+                    b.Property<string>("ProductType")
+                        .IsRequired();
+
+                    b.Property<double>("Profit");
+
+                    b.Property<double>("Receivable");
+
+                    b.Property<double>("Received");
+
+                    b.Property<string>("RelationStaff");
+
+                    b.Property<string>("StewardLeader");
+
+                    b.HasKey("StewardAccountsId");
+
+                    b.ToTable("Brh_StewardAccounts");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Branch.BrhStewardPaymentDetial", b =>
+                {
+                    b.Property<int>("StewardPaymentDetialId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<double>("PayAmount");
+
+                    b.Property<DateTime>("PayDate");
+
+                    b.Property<string>("PayWay")
+                        .IsRequired();
+
+                    b.Property<long>("StewardAccountsId");
+
+                    b.HasKey("StewardPaymentDetialId");
+
+                    b.HasIndex("StewardAccountsId");
+
+                    b.ToTable("Brh_StewardPaymentDetial");
+                });
+
             modelBuilder.Entity("JJNG.Data.Finance.FncChannelType", b =>
                 {
                     b.Property<int>("Id")
@@ -380,6 +453,14 @@ namespace JJNG.Data.Migrations
                     b.HasOne("JJNG.Data.Branch.BrhImprestAccounts", "BrhImprestAccounts")
                         .WithMany("BrhImprestRecord")
                         .HasForeignKey("ImprestAccountsId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("JJNG.Data.Branch.BrhStewardPaymentDetial", b =>
+                {
+                    b.HasOne("JJNG.Data.Branch.BrhStewardAccounts", "BrhStewardAccounts")
+                        .WithMany("BrhStewardPaymentDetial")
+                        .HasForeignKey("StewardAccountsId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

@@ -58,6 +58,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             if (ModelState.IsValid)
             {
+                brhImprestAccounts.Equity = brhImprestAccounts.Balance;
                 _context.Add(brhImprestAccounts);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -97,7 +98,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             {
                 try
                 {
-                    var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestAccounts.ImprestAccountsId).Sum(x => x.Amount);
+                    var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestAccounts.ImprestAccountsId&&!x.IsFinance).Sum(x => x.Amount);
                     brhImprestAccounts.Equity = brhImprestAccounts.Balance - total;
                     _context.Update(brhImprestAccounts);
                     await _context.SaveChangesAsync();

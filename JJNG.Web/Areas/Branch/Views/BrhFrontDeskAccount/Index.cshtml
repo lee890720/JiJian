@@ -15,44 +15,56 @@
     {
         <div class="row">
             <div class="col-md-12">
-                <div class="box">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">前台账目<small style="color:red">&emsp; @ViewData["BelongTo"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                        <div class="box-tools pull-right">
+                            <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-box-tool" asp-action="Create"> 新增</a>
+                            @if (ViewData["Position"].ToString() == "组长")
+                            {
+                                <button title="审核" type="submit" class="btn btn-box-tool"> 审核</button>
+                            }
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <div class="btn-group  hidden-xs" style="padding-top:1px">
+                                <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="显示隐藏列">
+                                    <i class="fa fa-bars"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-left" role="menu" style="padding-left:10px">
+                                    <li><input type="checkbox" class="toggle-vis" data-column="14" />&nbsp;<small>对应管家</small></li>
+                                    <li><input type="checkbox" class="toggle-vis" data-column="15" />&nbsp;<small>前台组长</small></li>
+                                    <li><input type="checkbox" class="toggle-vis" data-column="16" />&nbsp;<small>管家组长</small></li>
+                                    <li><input type="checkbox" class="toggle-vis" data-column="17" />&nbsp;<small>对应关系</small></li>
+
+                                </ul>
+                            </div>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
                     <div class="box-body table-responsive">
                         <div class="form-group">
-                            <div class="col-md-3 col-sm-6 col-xs-12 no-padding hidden-xs" style="margin-bottom:10px;">
-                                @{
-                                    if (ViewData["Position"].ToString() == "组长")
-                                    {
-                                        <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-primary" href="@path/Create" style="width:70px;border-radius:0;"> 新增</a><a class="btn btn-primary" style="color:yellow;width:120px;border-radius:0;">@ViewData["BelongTo"].ToString()</a><button class="btn btn-primary" style="color:yellow;width:70px;border-radius:0;">@ViewData["UserName"].ToString()</button><button type="submit" class="btn btn-warning" style="width:70px;border-radius:0;"> 审核</button>
-                                    }
-                                    else
-                                    {
-                                        <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-primary" href="@path/Create" style="width:70px;border-radius:0;"> 新增</a><a class="btn btn-primary" style="color:yellow;width:120px;border-radius:0;">@ViewData["BelongTo"].ToString()</a><button class="btn btn-primary" style="color:yellow;width:70px;border-radius:0;">@ViewData["UserName"].ToString()</button>
-                                    }
-                                }
-                            </div>
-                            <div class="col-md-9 no-margin no-padding">
-                                <div class="form-group">
-                                    <div class="col-md-3 col-sm-6 col-xs-12">
-                                        <select id="date_select" class="form-control select2" style="width: 100%;">
-                                            <option value="7">全部</option>
-                                            <option value="0" selected="selected">今天</option>
-                                            <option value="1">昨天</option>
-                                            <option value="2">最后一周</option>
-                                            <option value="3">本月</option>
-                                            <option value="4">上个月</option>
-                                            <option value="5">最后三个月</option>
-                                            <option value="6">最后一年</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6 col-xs-12">
-                                        <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepickertemp">
-                                    </div>
-                                    <div class="col-md-3 col-sm-6 col-xs-12">
-                                        <input type="text" placeholder="结束日期" id="date_end" class="form-control datepickertemp">
-                                    </div>
-                                    <div class="col-md-3 col-sm-6 col-xs-12">
-                                        <input type="text" placeholder="搜索" id="search" class="form-control">
-                                    </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <select id="date_select" class="form-control select2" style="width: 100%;">
+                                        <option value="7">全部</option>
+                                        <option value="0">今天</option>
+                                        <option value="1">昨天</option>
+                                        <option value="2">最后一周</option>
+                                        <option value="3">本月</option>
+                                        <option value="4">上个月</option>
+                                        <option value="5">最后三个月</option>
+                                        <option value="6">最后一年</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepickertemp">
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <input type="text" placeholder="结束日期" id="date_end" class="form-control datepickertemp">
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <input type="text" placeholder="搜索" id="search" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -101,16 +113,16 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.EnteringStaff)
                                     </th>
-                                    <th>
+                                    <th class="col-visible">
                                         @Html.DisplayNameFor(model => model.Steward)
                                     </th>
-                                    <th>
+                                    <th class="col-visible">
                                         @Html.DisplayNameFor(model => model.FrontDeskLeader)
                                     </th>
-                                    <th>
+                                    <th class="col-visible">
                                         @Html.DisplayNameFor(model => model.StewardLeader)
                                     </th>
-                                    <th>
+                                    <th class="col-visible">
                                         @Html.DisplayNameFor(model => model.RelationStaff)
                                     </th>
                                     <th>
@@ -248,7 +260,7 @@
             //#region table1初始化
             var table1 = $('#table-1').dataTable(
                 {
-                    order: [[1, "asc"]],
+                    order: [[0, "desc"]],
                     dom:
                         "<'row'<'col-sm-6'><'col-sm-6'>>" +
                         "<'row'<'col-sm-12'tr>>" +
@@ -277,6 +289,16 @@
                             sortDescending: ": 以降序排列此列"
                         }
                     },
+                    columnDefs: [
+                        {
+                            targets: "col-visible",
+                            visible: false,
+                        },
+                        {
+                            targets: [-1, -2],
+                            orderable: false,
+                        },
+                    ],
                 });
             //#endregion
 
@@ -294,6 +316,15 @@
 
             //Select2
             $('.select2').select2();
+            //#endregion
+
+            //#region 显示隐藏列
+            $('.toggle-vis').on('change', function (e) {
+                e.preventDefault();
+                console.log($(this).attr('data-column'));
+                var column = table1.api().column($(this).attr('data-column'));
+                column.visible(!column.visible());
+            });
             //#endregion
 
             //#region 日期区间选择事件
@@ -342,15 +373,6 @@
                 }
                 table1.api().draw();
             });
-            //#endregion
-
-            //#region 页面加载时执行的方法
-            function initDate() {
-                $('#date_beg').val(getTodayDate);
-                $('#date_end').val(getCurrentDate);
-                table1.api().draw();
-            }
-            initDate();
             //#endregion
         });
     </script>

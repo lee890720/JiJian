@@ -1,0 +1,53 @@
+﻿@model JJNG.Data.Branch.BrhStewardPaymentDetial
+
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="form-group">
+    <input type="hidden" asp-for="StewardAccountsId" value="@ViewData["StewardAccountsId"]" class="form-control" />
+</div>
+<div class="col-md-12">
+    <div class="form-group">
+        <label asp-for="PayWay" class="control-label"></label>
+        @Html.DropDownList("PayWay", ViewData["PaymentType"] as SelectList, "请选择", new { @class = "form-control" })
+
+    </div>
+    <div class="form-group">
+        <label asp-for="PayDate" class="control-label"></label>
+        <input asp-for="PayDate" type="date" id="startDate" class="form-control" />
+        <span asp-validation-for="PayDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PayAmount" class="control-label"></label>
+        <input asp-for="PayAmount" class="form-control" />
+        <span asp-validation-for="PayAmount" class="text-danger"></span>
+    </div>
+</div>
+<script>
+    function formatDate(date) {
+        var myyear = date.getFullYear();
+        var mymonth = date.getMonth() + 1;
+        var myweekday = date.getDate();
+
+        if (mymonth < 10) {
+            mymonth = "0" + mymonth;
+        }
+        if (myweekday < 10) {
+            myweekday = "0" + myweekday;
+        }
+        return (myyear + "-" + mymonth + "-" + myweekday);
+    }
+    var now = new Date();
+    var nowDay = now.getDate();
+    var nowMonth = now.getMonth();
+    var nowYear = now.getFullYear();
+    $('#startDate').val(formatDate(now));
+</script>
