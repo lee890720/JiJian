@@ -1,4 +1,4 @@
-﻿@model JJNG.Data.Branch.BrhFrontDeskAccounts
+﻿@model BrhFrontModel
 
 @{
     Layout = "_CreateEditLayout";
@@ -17,12 +17,13 @@
 <div class="col-md-4">
     <div class="form-group">
         <label asp-for="StartDate" class="control-label"></label>
-        <input asp-for="StartDate" type="date" id="startDate" class="form-control" />
+        <input asp-for="StartDate" type="text" id="startDate" class="form-control datepicker" />
         <span asp-validation-for="StartDate" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="HouseNumber" class="control-label"></label>
-        @Html.DropDownList("HouseNumber", ViewData["HouseNumber"] as SelectList, "请选择", new { @class = "form-control" })
+        <select asp-for="HouseNumber" asp-items="ViewBag.HouseNumber" class="form-control"></select>
+        <span asp-validation-for="HouseNumber" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="CustomerName" class="control-label"></label>
@@ -36,8 +37,8 @@
     </div>
     <div class="form-group">
         <label asp-for="Channel" class="control-label"></label>
-        @Html.DropDownList("Channel", ViewData["ChannelType"] as SelectList, "请选择", new { @class = "form-control" })
-
+        <select asp-for="Channel" asp-items="ViewBag.ChannelType" class="form-control"></select>
+        <span asp-validation-for="Channel" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="EnteringStaff" class="control-label"></label>
@@ -48,27 +49,41 @@
 <div class="col-md-4">
     <div class="form-group">
         <label asp-for="EndDate" class="control-label"></label>
-        <input asp-for="EndDate" type="date" id="endDate" class="form-control" />
+        <input asp-for="EndDate" type="text" id="endDate" class="form-control datepicker" />
         <span asp-validation-for="EndDate" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="UnitPrice" class="control-label"></label>
-        <input asp-for="UnitPrice" id="unitPrice" class="form-control" />
+        <div class="row">
+            <div class="col-md-6">
+                <input asp-for="UnitPrice" readonly="readonly" id="unitPrice" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <input id="unitPrice2" class="form-control" />
+            </div>
+        </div>
         <span asp-validation-for="UnitPrice" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="TotalPrice" class="control-label"></label>
-        <input asp-for="TotalPrice" readonly="readonly" id="totalPrice" class="form-control" />
+        <div class="row">
+            <div class="col-md-6">
+                <input asp-for="TotalPrice" readonly="readonly" id="totalPrice" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <input id="totalPrice2" class="form-control" />
+            </div>
+        </div>
         <span asp-validation-for="TotalPrice" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Receivable" class="control-label"></label>
-        <input asp-for="Receivable" value="0" class="form-control" />
+        <input asp-for="Receivable"  class="form-control" />
         <span asp-validation-for="Receivable" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Received" class="control-label"></label>
-        <input asp-for="Received" value="0" id="received" readonly="readonly" class="form-control" />
+        <input asp-for="Received" value="0"  id="received" readonly="readonly" class="form-control" />
         <span asp-validation-for="Received" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -100,75 +115,87 @@
     </div>
     <div class="form-group">
         <label asp-for="Note" class="control-label"></label>
-        <input asp-for="Note" class="form-control" />
+        <textarea asp-for="Note" rows="4" class="form-control"></textarea>
         <span asp-validation-for="Note" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="IsFront" class="control-label"></label>
-        <div class="checkbox icheck">
-            <span><input type="checkbox" class="flat-blue" asp-for="IsFront" /></span>
-        </div>
     </div>
 </div>
 <div class="col-md-12 no-margin no-padding">
     <div class="col-md-4">
         <div class="form-group">
             <label class="control-label">付款方式1</label>
-            @Html.DropDownList("payway1", ViewData["PaymentType"] as SelectList, "请选择", new { @class = "form-control" })
+            <select asp-for="PayWay1" asp-items="ViewBag.PaymentType" name="payway1" class="form-control"></select>
+            <span asp-validation-for="PayWay1" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label class="control-label">付款方式2</label>
-            @Html.DropDownList("payway2", ViewData["PaymentType"] as SelectList, "请选择", new { @class = "form-control" })
+            <select asp-for="PayWay2" asp-items="ViewBag.PaymentType" name="payway2" class="form-control"></select>
+            <span asp-validation-for="PayWay2" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label class="control-label">付款方式3</label>
-            @Html.DropDownList("payway3", ViewData["PaymentType"] as SelectList, "请选择", new { @class = "form-control" })
+            <select asp-for="PayWay3" asp-items="ViewBag.PaymentType" name="payway3" class="form-control"></select>
+            <span asp-validation-for="PayWay3" class="text-danger"></span>
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label class="control-label">付款日期</label>
-            <input name="paydate1" id="createDate3" type="date" class="form-control" />
+            <input asp-for="PayDate1" name="paydate1"  type="text" class="form-control datetimepicker" />
+            <span asp-validation-for="PayDate1" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label class="control-label">付款日期</label>
-            <input name="paydate2" id="createDate4" type="date" class="form-control" />
+            <input asp-for="PayDate2" name="paydate2"  type="text" class="form-control datetimepicker" />
+            <span asp-validation-for="PayDate2" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label class="control-label">付款日期</label>
-            <input name="paydate3" id="createDate5" type="date" class="form-control" />
+            <input asp-for="PayDate3" name="paydate3"  type="text" class="form-control datetimepicker" />
+            <span asp-validation-for="PayDate3" class="text-danger"></span>
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label class="control-label">付款金额</label>
-            <input name="payamount1" id="payamount1" type="text" class="form-control" />
+            <input asp-for="PayAmount1" name="payamount1" id="payamount1" value="0" type="text" class="form-control" />
+            <span asp-validation-for="PayAmount1" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label class="control-label">付款金额</label>
-            <input name="payamount2" id="payamount2" type="text" class="form-control" />
+            <input asp-for="PayAmount2" name="payamount2" id="payamount2" value="0" type="text" class="form-control" />
+            <span asp-validation-for="PayAmount2" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label class="control-label">付款金额</label>
-            <input name="payamount3" id="payamount3" type="text" class="form-control" />
+            <input asp-for="PayAmount3" name="payamount3" id="payamount3" value="0" type="text" class="form-control" />
+            <span asp-validation-for="PayAmount3" class="text-danger"></span>
         </div>
     </div>
 </div>
-<script>
-    //#region 功能模块
-    function formatDate(date) {
-        var myyear = date.getFullYear();
-        var mymonth = date.getMonth() + 1;
-        var myweekday = date.getDate();
 
-        if (mymonth < 10) {
-            mymonth = "0" + mymonth;
-        }
-        if (myweekday < 10) {
-            myweekday = "0" + myweekday;
-        }
-        return (myyear + "-" + mymonth + "-" + myweekday);
-    }
+@Html.Partial("_ValidationScriptsPartial")
+
+<script>
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        language: "zh-CN",
+        todayBtn: 'linked',
+        todayHighlight: true,
+    });
+    $('#startDate').datepicker('setDate', new Date());
+    $('#endDate').datepicker('setDate', '+1d');
+
+    $('.datetimepicker').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii',
+        autoclose: true,
+        language: "zh-CN",
+        todayBtn: 'linked',
+        todayHighlight: true,
+    });
+    $('.datetimepicker').datetimepicker('setDate', new Date());
+
+    //#region 功能模块
     function checkIsDouble(checkString) {
 
         var reg = /^[0-9,.]*$/;
@@ -176,7 +203,7 @@
         if (reg.test(checkString)) {
             return true;
         }
-        alert("输入数字");
+        //alert("输入数字");
         return false;
     }
     function DateDiff(sDate1, sDate2) {    //sDate1和sDate2是2002-12-18格式
@@ -188,20 +215,6 @@
         iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24)    //把相差的毫秒数转换为天数
         return iDays
     }
-    //#endregion
-
-    //#region 填充日期
-    var now = new Date();
-    var nowDay = now.getDate();
-    var nowMonth = now.getMonth();
-    var nowYear = now.getFullYear();
-    var tomorrow = new Date(nowYear, nowMonth, nowDay + 1);
-    $('#createDate1').val(formatDate(now));
-    $('#startDate').val(formatDate(now));
-    $('#createDate3').val(formatDate(now));
-    $('#createDate4').val(formatDate(now));
-    $('#createDate5').val(formatDate(now));
-    $('#endDate').val(formatDate(tomorrow));
     //#endregion
 
     //#region change/keyup事件
@@ -244,34 +257,47 @@
             result += parseFloat(pay2);
         $('#received').val(result.toString());
     });
-    $('#unitPrice').keyup(function () {
+
+    $('#unitPrice2').keyup(function () {
         var startDate = document.getElementById("startDate").value;
         var endDate = document.getElementById("endDate").value;
-        var unitPrice = document.getElementById("unitPrice").value;
+        var unitPrice = document.getElementById("unitPrice2").value;
         var result = 0.00;
         if (checkIsDouble(unitPrice))
             result = parseFloat(unitPrice);
         var days = DateDiff(startDate, endDate);
         result = result * days;
         $('#totalPrice').val(result.toString());
+        $('#totalPrice2').val(result.toString());
+        $('#unitPrice').val(unitPrice.toString());
+    });
+    $('#totalPrice2').keyup(function () {
+        var startDate = document.getElementById("startDate").value;
+        var endDate = document.getElementById("endDate").value;
+        var totalPrice = document.getElementById("totalPrice2").value;
+        var result = 0.00;
+        if (checkIsDouble(totalPrice))
+            result = parseFloat(totalPrice);
+        var days = DateDiff(startDate, endDate);
+        if (parseFloat(days) > 0)
+            result = result / days;
+        $('#totalPrice').val(totalPrice.toString());
+        $('#unitPrice2').val(result.toString());
+        $('#unitPrice').val(result.toString());
     });
     $('#startDate,#endDate').change(function () {
         var startDate = document.getElementById("startDate").value;
         var endDate = document.getElementById("endDate").value;
-        var unitPrice = document.getElementById("unitPrice").value;
+        var unitPrice = document.getElementById("unitPrice2").value;
+        var totalPrice = document.getElementById("totalPrice2").value;
+
         var result = 0.00;
         if (parseFloat(unitPrice) > 0)
             result = parseFloat(unitPrice);
         var days = DateDiff(startDate, endDate);
         result = result * days;
         $('#totalPrice').val(result.toString());
-    });
-    //#endregion
-
-    //#region 细节设置
-    $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
-        checkboxClass: 'icheckbox_flat-blue',
-        radioClass: 'iradio_flat-blue'
+        $('#totalPrice2').val(result.toString());
     });
     //#endregion
 </script>

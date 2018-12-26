@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 using JJNG.Data.AppIdentity;
 using Microsoft.AspNetCore.Identity;
 using JJNG.Web;
-using JJNG.Web.Areas.Branch.Model;
+using JJNG.Web.Areas.Branch.Models;
 
 namespace JJNG.Web.Areas.Branch.Controllers
 {
@@ -45,35 +45,85 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
             List<BrhCollectModel> brhCollectModel = new List<BrhCollectModel>();
             var typename = "";
-            var amount = 0.00;
+            decimal amount = 0.00M;
             var count = 0;
             var year = now.Year;
             var month = now.Month;
             var newdate = new DateTime(year, month, 1);
             var templist1 = _context.BrhEarningRecord.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.EnteringDate, newdate) >= 0).ToList();
-            typename = "Earning";
-            amount = templist1.Sum(x => x.Amount);
+            typename = "Earning_M";
+            amount = (decimal)templist1.Sum(x => x.Amount);
             count = templist1.Count;
             brhCollectModel.Add(new BrhCollectModel { Type=typename, Amount=amount, Count=count });
-            var templist2=_context.BrhExpendRecord.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.EnteringDate, newdate) >= 0).ToList();
-            typename = "Expend";
-            amount = templist2.Sum(x => x.Amount);
+            var templist1d = _context.BrhEarningRecord.Where(x => x.Branch == _user.BelongTo && x.EnteringDate.Date == DateTime.Now.Date).ToList();
+            typename = "Earning_D";
+            amount = (decimal)templist1d.Sum(x => x.Amount);
+            count = templist1d.Count;
+            brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
+
+            var templist2 =_context.BrhExpendRecord.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.EnteringDate, newdate) >= 0).ToList();
+            typename = "Expend_M";
+            amount = (decimal)templist2.Sum(x => x.Amount);
             count = templist2.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
-            var templist3 = _context.BrhImprestRecord.Where(x => x.Branch == _user.BelongTo && !x.IsFinance).ToList();
+            var templist2d = _context.BrhExpendRecord.Where(x => x.Branch == _user.BelongTo && x.EnteringDate.Date == DateTime.Now.Date).ToList();
+            typename = "Expend_D";
+            amount = (decimal)templist2d.Sum(x => x.Amount);
+            count = templist2d.Count;
+            brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
+
+            var templist3 = _context.BrhImprestRecord.Include(x=>x.BrhImprestAccounts).Where(x => x.Branch == _user.BelongTo && !x.IsFinance&&string.IsNullOrEmpty(x.BrhImprestAccounts.Manager)).ToList();
             typename = "Imprest";
-            amount = templist3.Sum(x => x.Amount);
+            amount = (decimal)templist3.Sum(x => x.Amount);
             count = templist3.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
-            var templist4 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.EnteringDate, newdate) >= 0).ToList();
-            typename = "Front";
-            amount = templist4.Sum(x => x.Receivable);
-            count = templist4.Count;
+
+            var templist4 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.StartDate, newdate) >= 0).ToList();
+            var templist4d = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.StartDate, DateTime.Now.Date) <= 0 && DateTime.Compare(x.EndDate, DateTime.Now.Date) > 0).ToList();
+            var houselist = _identitycontext.UserBelongToDetial.Where(x => x.UserBelongTo.BelongToName == _user.BelongTo).ToList();
+            var housenum = houselist.Count;
+            var housetotal = housenum * DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+            decimal day_rate = 0;
+            decimal month_rate = 0;
+            if(housenum!=0)
+             day_rate = (decimal)templist4d.Count / (decimal)housenum*100;
+            if(housetotal!=0)
+             month_rate = (decimal)templist4.Count / (decimal)housetotal*100;
+            typename = "MonthRate";
+            amount = Math.Round(month_rate, 2);
+            count = 0;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
-            var templist5 = templist4.Where(x => !x.IsFinish).ToList();
-            typename = "FrontIsFinish";
+            typename = "DayRate";
+            amount = Math.Round(day_rate,2);
+            count = 0;
+            brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
+
+            var templist5 = _context.BrhStewardAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.EnteringDate, newdate) >= 0).ToList();
+            typename = "Steward_M";
             amount = templist5.Sum(x => x.Receivable);
             count = templist5.Count;
+            brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
+            var templist5d = _context.BrhStewardAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.EnteringDate.Date, DateTime.Now.Date) == 0).ToList();
+            typename = "Steward_D";
+            amount = templist5d.Sum(x => x.Receivable);
+            count = templist5d.Count;
+            brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
+
+            var templist6 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.StartDate, newdate) >= 0).ToList();
+            typename = "Front_M";
+            amount = templist6.Sum(x => x.TotalPrice);
+            count = templist6.Count;
+            brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
+            var templist6d = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.StartDate, DateTime.Now.Date) <= 0 && DateTime.Compare(x.EndDate, DateTime.Now.Date) > 0).ToList();
+            typename = "Front_D";
+            amount = templist6d.Sum(x => x.UnitPrice);
+            count = templist6d.Count;
+            brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
+
+            var templist7 = _context.BrhFrontDeskAccounts.Where(x => !x.IsFinish||x.UnitPrice==0).ToList();
+            typename = "FrontIsFinish";
+            amount = templist7.Sum(x => x.Receivable);
+            count = templist7.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
 
             return View(Tuple.Create<BrhConnectRecord,List<BrhMemo>,BrhImprestAccounts,List<BrhFrontDeskAccounts>,List<BrhCollectModel>>(connectRecord,brhMemoList,brhImprestAccount,brhFrontDeskAccounts,brhCollectModel));

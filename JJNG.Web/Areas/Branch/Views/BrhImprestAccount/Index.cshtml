@@ -83,6 +83,13 @@
                                 </tr>
                             }
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="1" style="text-align:right !important">合计:</th>
+                                <th>@ViewData["Total"]</th>
+                                <th colspan="5"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -125,16 +132,10 @@
                             sortAscending: ": 以升序排列此列",
                             sortDescending: ": 以降序排列此列"
                         }
-                    },
+                    },  
                 });
             $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
             //#endregion
-
-            //#region 设置一些细节
-            $('.datepickertemp').datepicker({
-                autoclose: true,
-                format: 'yyyy-mm-dd',
-            });
 
             //Select2
             $('.select2').select2();

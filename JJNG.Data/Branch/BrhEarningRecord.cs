@@ -21,7 +21,7 @@ namespace JJNG.Data.Branch
         public string Source { get; set; }
         [Required]
         [Display(Name = "金额")]
-        public double  Amount{ get; set; }
+        public decimal  Amount{ get; set; }
         [Required]
         [Display(Name = "收款方式")]
         public string PaymentType { get; set; }

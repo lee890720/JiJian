@@ -39,10 +39,10 @@
                             </select>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
-                            <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepickertemp">
+                            <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepicker">
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
-                            <input type="text" placeholder="结束日期" id="date_end" class="form-control datepickertemp">
+                            <input type="text" placeholder="结束日期" id="date_end" class="form-control datepicker">
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <input type="text" placeholder="搜索" id="search" class="form-control">
@@ -149,6 +149,13 @@
                                 </tr>
                             }
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" style="text-align:right !important">合计:</th>
+                                <th></th>
+                                <th colspan="7"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -158,6 +165,7 @@
 @section Scripts{
     <script src="~/js/range_dates.js"></script>
     <script src="~/js/dateRangeSelector.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
     <script>
         $(function () {
             //#region table1初始化
@@ -192,14 +200,39 @@
                             sortDescending: ": 以降序排列此列"
                         }
                     },
+                    footerCallback: function (tfoot, data, start, end, display) {
+                        var api = this.api(), data;
+
+                        // Remove the formatting to get integer data for summation
+                        var intVal = function (i) { return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0; };
+
+                        // Total over all pages
+                        total = api.column(3).data().reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        // Total over this page
+                        pageTotal = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                        // Update footer
+                        $(api.column(3).footer()).html('￥' + pageTotal.toFixed(2) + "/" + '￥' + total.toFixed(2));
+                    }
                 });
             $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
+            $("#date_beg,#date_end").keyup(function () { table1.api().draw(); });
+            $("#date_beg,#date_end").change(function () { table1.api().draw(); });
             //#endregion
 
             //#region 设置一些细节
-            $('.datepickertemp').datepicker({
-                autoclose: true,
+            $(".datepicker").datepicker({
                 format: 'yyyy-mm-dd',
+                autoclose: true,
+                language: "zh-CN",
+                todayBtn: 'linked',
+                todayHighlight: true,
+                //initialDate:'now',
             });
 
             //Select2

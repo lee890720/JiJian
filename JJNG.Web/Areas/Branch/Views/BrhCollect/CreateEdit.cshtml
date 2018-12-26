@@ -16,22 +16,25 @@ else
 {
     <input type="hidden" asp-for="MemoId" />
 }
-    <div class="col-md-12">
-        <div class="form-group">
-            <label asp-for="Memo" class="control-label"></label>
-            <input asp-for="Memo" class="form-control" />
-            <span asp-validation-for="Memo" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="EnteringStaff" class="control-label"></label>
-            <input asp-for="EnteringStaff" value="@ViewData["UserName"]" readonly="readonly" style="color:red" class="form-control" />
-            <span asp-validation-for="EnteringStaff" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Branch" class="control-label"></label>
-            <input asp-for="Branch" value="@ViewData["BelongTo"]" readonly="readonly" style="color:red" class="form-control" />
-            <span asp-validation-for="Branch" class="text-danger"></span>
-        </div>
+<div class="col-md-12">
+    <div class="form-group">
+        <label asp-for="Memo" class="control-label"></label>
+        <input asp-for="Memo" class="form-control" />
+        <span asp-validation-for="Memo" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label asp-for="EnteringStaff" class="control-label"></label>
+        <input asp-for="EnteringStaff" value="@ViewData["UserName"]" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="EnteringStaff" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Branch" class="control-label"></label>
+        <input asp-for="Branch" value="@ViewData["BelongTo"]" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="Branch" class="text-danger"></span>
+    </div>
+</div>
+
+@Html.Partial("_ValidationScriptsPartial")
+
 
 

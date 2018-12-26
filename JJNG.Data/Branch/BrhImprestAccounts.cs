@@ -18,9 +18,9 @@ namespace JJNG.Data.Branch
         [Display(Name = "备用金名称")]
         public string ImprestAccountsName { get; set; }
         [Display(Name = "初始额度")]
-        public double Balance { get; set; }
+        public decimal Balance { get; set; }
         [Display(Name = "剩余额度")]
-        public double Equity { get; set; }
+        public decimal Equity { get; set; }
         [Display(Name = "管理人")]
         public string Manager { get; set; }
         [Display(Name = "部门")]

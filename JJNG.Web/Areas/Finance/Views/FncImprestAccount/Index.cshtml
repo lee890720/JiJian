@@ -90,6 +90,13 @@
                                 </tr>
                             }
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="1" style="text-align:right !important">合计:</th>
+                                <th>@ViewData["Total"]</th>
+                                <th colspan="5"></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -99,12 +106,13 @@
 @section Scripts{
     <script src="~/js/range_dates.js"></script>
     <script src="~/js/dateRangeSelector.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
     <script>
         $(function () {
             //#region table1初始化
             var table1 = $('#table-1').dataTable(
                 {
-                    order: [[0, "asc"]],
+                    order: [[0, "desc"]],
                     dom:
                         "<'row'<'col-sm-6'><'col-sm-6'>>" +
                         "<'row'<'col-sm-12'tr>>" +
@@ -136,12 +144,6 @@
                 });
             $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
             //#endregion
-
-            //#region 设置一些细节
-            $('.datepickertemp').datepicker({
-                autoclose: true,
-                format: 'yyyy-mm-dd',
-            });
 
             //Select2
             $('.select2').select2();

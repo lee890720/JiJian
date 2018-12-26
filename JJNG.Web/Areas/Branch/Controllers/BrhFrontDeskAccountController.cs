@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JJNG.Web.Areas.Branch.Models;
 
 namespace JJNG.Web.Areas.Branch.Controllers
 {
@@ -79,7 +80,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FrontDeskAccountsId,EnteringDate,HouseNumber,CustomerName,CustomerCount,StartDate,EndDate,Channel,UnitPrice,TotalPrice,Receivable,Received,IsFinish,EnteringStaff,Steward,FrontDeskLeader,StewardLeader,RelationStaff,IsFront,IsFinance,Branch,Note")] BrhFrontDeskAccounts brhFrontDeskAccounts, string payway1, DateTime? paydate1, double? payamount1, string payway2, DateTime? paydate2, double? payamount2, string payway3, DateTime? paydate3, double? payamount3)
+        public async Task<IActionResult> Create([Bind("FrontDeskAccountsId,EnteringDate,HouseNumber,CustomerName,CustomerCount,StartDate,EndDate,Channel,UnitPrice,TotalPrice,Receivable,Received,IsFinish,EnteringStaff,Steward,FrontDeskLeader,StewardLeader,RelationStaff,IsFront,IsFinance,Branch,Note,PayWay1,PayDate1,PayAmount1,PayWay2,PayDate2,PayAmount2,PayWay3,PayDate3,PayAmount3")]BrhFrontModel brhFrontModel)
         {
             if (ModelState.IsValid)
             {
@@ -87,38 +88,58 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 BrhFrontPaymentDetial bfp2 = new BrhFrontPaymentDetial();
                 BrhFrontPaymentDetial bfp3 = new BrhFrontPaymentDetial();
 
-                if (!string.IsNullOrEmpty(payway1) && !double.IsNaN((double)payamount1))
+                if (brhFrontModel.PayAmount1!=0)
                 {
-                    bfp1.FrontDeskAccountsId = brhFrontDeskAccounts.FrontDeskAccountsId;
-                    bfp1.PayWay = payway1;
-                    bfp1.PayDate = (DateTime)paydate1;
-                    bfp1.PayAmount = (double)payamount1;
+                    bfp1.FrontDeskAccountsId = brhFrontModel.FrontDeskAccountsId;
+                    bfp1.PayWay = brhFrontModel.PayWay1;
+                    bfp1.PayDate = brhFrontModel.PayDate1;
+                    bfp1.PayAmount =brhFrontModel.PayAmount1;
                     _context.Add(bfp1);
                 }
                 else
                     bfp1.PayAmount = 0;
 
-                if (!string.IsNullOrEmpty(payway2) && !double.IsNaN((double)payamount2))
+                if (brhFrontModel.PayAmount2 != 0)
                 {
-                    bfp2.FrontDeskAccountsId = brhFrontDeskAccounts.FrontDeskAccountsId;
-                    bfp2.PayWay = payway2;
-                    bfp2.PayDate = (DateTime)paydate2;
-                    bfp2.PayAmount = (double)payamount2;
+                    bfp2.FrontDeskAccountsId = brhFrontModel.FrontDeskAccountsId;
+                    bfp2.PayWay = brhFrontModel.PayWay2;
+                    bfp2.PayDate = brhFrontModel.PayDate2;
+                    bfp2.PayAmount = brhFrontModel.PayAmount2;
                     _context.Add(bfp2);
                 }
                 else
                     bfp2.PayAmount = 0;
 
-                if (!string.IsNullOrEmpty(payway3) && !double.IsNaN((double)payamount3))
+                if (brhFrontModel.PayAmount3 != 0)
                 {
-                    bfp3.FrontDeskAccountsId = brhFrontDeskAccounts.FrontDeskAccountsId;
-                    bfp3.PayWay = payway3;
-                    bfp3.PayDate = (DateTime)paydate3;
-                    bfp3.PayAmount = (double)payamount3;
+                    bfp3.FrontDeskAccountsId = brhFrontModel.FrontDeskAccountsId;
+                    bfp3.PayWay = brhFrontModel.PayWay3;
+                    bfp3.PayDate = brhFrontModel.PayDate3;
+                    bfp3.PayAmount = brhFrontModel.PayAmount3;
                     _context.Add(bfp3);
                 }
                 else
                     bfp3.PayAmount = 0;
+
+                BrhFrontDeskAccounts brhFrontDeskAccounts = new BrhFrontDeskAccounts();
+                brhFrontDeskAccounts.HouseNumber = brhFrontModel.HouseNumber;
+                brhFrontDeskAccounts.Branch = brhFrontModel.Branch;
+                brhFrontDeskAccounts.Channel = brhFrontModel.Channel;
+                brhFrontDeskAccounts.CustomerName = brhFrontModel.CustomerName;
+                brhFrontDeskAccounts.CustomerCount = brhFrontModel.CustomerCount;
+                brhFrontDeskAccounts.EndDate = brhFrontModel.EndDate;
+                brhFrontDeskAccounts.EnteringStaff = brhFrontModel.EnteringStaff;
+                brhFrontDeskAccounts.FrontDeskAccountsId = brhFrontModel.FrontDeskAccountsId;
+                brhFrontDeskAccounts.FrontDeskLeader= brhFrontModel.FrontDeskLeader;
+                brhFrontDeskAccounts.HouseNumber = brhFrontModel.HouseNumber;
+                brhFrontDeskAccounts.Note = brhFrontModel.Note;
+                brhFrontDeskAccounts.Receivable= brhFrontModel.Receivable;
+                brhFrontDeskAccounts.RelationStaff = brhFrontModel.RelationStaff;
+                brhFrontDeskAccounts.StartDate= brhFrontModel.StartDate;
+                brhFrontDeskAccounts.Steward = brhFrontModel.Steward;
+                brhFrontDeskAccounts.StewardLeader= brhFrontModel.StewardLeader;
+                brhFrontDeskAccounts.TotalPrice = brhFrontModel.TotalPrice;
+                brhFrontDeskAccounts.UnitPrice= brhFrontModel.UnitPrice;
 
                 brhFrontDeskAccounts.Received = bfp1.PayAmount + bfp2.PayAmount + bfp3.PayAmount;
 
@@ -131,7 +152,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return PartialView("~/Areas/Branch/Views/BrhFrontDeskAccount/Create.cshtml", brhFrontDeskAccounts);
+            return PartialView("~/Areas/Branch/Views/BrhFrontDeskAccount/Create.cshtml",brhFrontModel);
         }
 
         public async Task<IActionResult> Edit(long? id)
@@ -154,7 +175,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             ViewData["HouseNumber"] = new SelectList(list_houseNumber, "HouseNumber", "HouseNumber", brhFrontDeskAccounts.HouseNumber);
 
             var list_channelType = _context.FncChannelType.ToList();
-            ViewData["ChannelType"] = new SelectList(list_channelType, "ChannelType", "ChannelType");
+            ViewData["ChannelType"] = new SelectList(list_channelType, "ChannelType", "ChannelType",brhFrontDeskAccounts.Channel);
 
             return PartialView("~/Areas/Branch/Views/BrhFrontDeskAccount/Edit.cshtml", brhFrontDeskAccounts);
         }
@@ -175,7 +196,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                     if (brhFrontDeskAccounts.Receivable == brhFrontDeskAccounts.Received)
                         brhFrontDeskAccounts.IsFinish = true;
 
-                    brhFrontDeskAccounts.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
+                    //brhFrontDeskAccounts.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
 
                     _context.Update(brhFrontDeskAccounts);
                     await _context.SaveChangesAsync();
@@ -238,13 +259,14 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             if (ModelState.IsValid)
             {
+                brhFrontPaymentDetial.PayAmount = brhFrontPaymentDetial.PayAmount;
                 _context.Add(brhFrontPaymentDetial);
                 await _context.SaveChangesAsync();
 
                 var total = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == brhFrontPaymentDetial.FrontDeskAccountsId).Sum(x => x.PayAmount);
                 var brhaccount = _context.BrhFrontDeskAccounts.SingleOrDefault(x => x.FrontDeskAccountsId == brhFrontPaymentDetial.FrontDeskAccountsId);
                 brhaccount.Received = total;
-                if (brhaccount.Received == brhaccount.Receivable)
+                    if (brhaccount.Received == brhaccount.Receivable)
                     brhaccount.IsFinish = true;
                 else
                     brhaccount.IsFinish = false;

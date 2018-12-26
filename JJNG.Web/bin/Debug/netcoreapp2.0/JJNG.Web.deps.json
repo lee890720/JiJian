@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "c82f7aa396bf906c87efbd356ada423a00fb273d"
+    "signature": "beffe77656ebb51679754d96c8f4ae91223af462"
   },
   "compilationOptions": {
     "defines": [
@@ -31,7 +31,8 @@
           "Microsoft.AspNetCore.All": "2.0.6",
           "Microsoft.NETCore.App": "2.0.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.0.3",
-          "Microsoft.jQuery.Unobtrusive.Ajax": "3.2.5"
+          "Microsoft.jQuery.Unobtrusive.Ajax": "3.2.5",
+          "Microsoft.jQuery.Unobtrusive.Validation": "3.2.11"
         },
         "runtime": {
           "JJNG.Web.dll": {}
@@ -56,6 +57,11 @@
         }
       },
       "jQuery/1.8.0": {},
+      "jQuery.Validation/1.8.0.1": {
+        "dependencies": {
+          "jQuery": "1.8.0"
+        }
+      },
       "Libuv/1.10.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "2.0.0"
@@ -2753,6 +2759,12 @@
           "jQuery": "1.8.0"
         }
       },
+      "Microsoft.jQuery.Unobtrusive.Validation/3.2.11": {
+        "dependencies": {
+          "jQuery": "1.8.0",
+          "jQuery.Validation": "1.8.0.1"
+        }
+      },
       "Microsoft.Net.Http.Headers/2.0.2": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "2.0.0",
@@ -4853,6 +4865,13 @@
       "path": "jquery/1.8.0",
       "hashPath": "jquery.1.8.0.nupkg.sha512"
     },
+    "jQuery.Validation/1.8.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AZuOrSSmGTRqXOxoQ1nAOxJM77WXdH5mNE3jSlYrW1OdmbGCFvCF1gXJHTZuyG8L8sgpGhdVkSAegKUK7es9sQ==",
+      "path": "jquery.validation/1.8.0.1",
+      "hashPath": "jquery.validation.1.8.0.1.nupkg.sha512"
+    },
     "Libuv/1.10.0": {
       "type": "package",
       "serviceable": true,
@@ -5958,6 +5977,13 @@
       "sha512": "sha512-NBjWsx9UwnDbyFzZHQSi79VAWLzFwB3kdmd2OMg7xvSemQoM1KK5Pu2AisyGucC22igqjlPQZiv2c82Agzlsuw==",
       "path": "microsoft.jquery.unobtrusive.ajax/3.2.5",
       "hashPath": "microsoft.jquery.unobtrusive.ajax.3.2.5.nupkg.sha512"
+    },
+    "Microsoft.jQuery.Unobtrusive.Validation/3.2.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-u2y+fTB8b1LwdX5O4D8tYsmwvY542WJwe5ZG47Pb0qBfKgWEI73R1G1+BLlTM2qvUIzH2jubqh1Oufw/W34quA==",
+      "path": "microsoft.jquery.unobtrusive.validation/3.2.11",
+      "hashPath": "microsoft.jquery.unobtrusive.validation.3.2.11.nupkg.sha512"
     },
     "Microsoft.Net.Http.Headers/2.0.2": {
       "type": "package",

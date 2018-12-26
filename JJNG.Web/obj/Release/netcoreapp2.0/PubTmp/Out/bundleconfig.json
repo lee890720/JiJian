@@ -12,6 +12,7 @@
       "wwwroot/lib/font-awesome/css/font-awesome.min.css",
       "wwwroot/lib/Ionicons/css/ionicons.min.css",
       "wwwroot/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css",
+      "wwwroot/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css",
       "wwwroot/lib/datatables.net-bs/css/dataTables.bootstrap.min.css",
       "wwwroot/lib/iCheck/flat/_all.css",
       "wwwroot/lib/iCheck/minimal/_all.css",
@@ -37,7 +38,13 @@
       "wwwroot/lib/bootstrap/dist/js/bootstrap.min.js",
       "wwwroot/lib/jquery-slimscroll/jquery.slimscroll.min.js",
       "wwwroot/lib/fastclick/lib/fastclick.js",
+      "wwwroot/lib/input-mask/jquery.inputmask.js",
+      "wwwroot/lib/input-mask/jquery.inputmask.date.extensions.js",
+      "wwwroot/lib/input-mask/jquery.inputmask.extensions.js",
       "wwwroot/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js",
+      "wwwroot/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js",
+      "wwwroot/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js",
+      "wwwroot/lib/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js",
       "wwwroot/lib/echart/echarts.min.js",
       "wwwroot/lib/datatables.net/js/jquery.dataTables.min.js",
       "wwwroot/lib/datatables.net-bs/js/dataTables.bootstrap.min.js",
@@ -50,5 +57,11 @@
       "enabled": true,
       "renameLocals": true
     }
+  },
+  {
+    "outputFileName": "wwwroot/lib/jquery-validation/dist/jquery.validate.min.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery-validation/dist/jquery.validate.js"
+    ]
   }
 ]

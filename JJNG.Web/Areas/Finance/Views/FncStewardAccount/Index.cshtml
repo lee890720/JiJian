@@ -65,10 +65,10 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepickertemp">
+                                    <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepicker">
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="结束日期" id="date_end" class="form-control datepickertemp">
+                                    <input type="text" placeholder="结束日期" id="date_end" class="form-control datepicker">
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-xs-12">
                                     <input type="text" placeholder="搜索" id="search" class="form-control">
@@ -254,6 +254,7 @@
 @section Scripts{
     <script src="~/js/range_dates.js"></script>
     <script src="~/js/dateRangeSelector.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
     <script>
         $(function () {
             //#region table1初始化
@@ -317,9 +318,12 @@
             //#endregion
 
             //#region 设置一些细节
-            $('.datepickertemp').datepicker({
-                autoclose: true,
+            $('.datepicker').datepicker({
                 format: 'yyyy-mm-dd',
+                autoclose: true,
+                language: "zh-CN",
+                todayBtn: 'linked',
+                todayHighlight: true,
             });
 
             //Select2

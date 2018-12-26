@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JJNG.Web.Areas.Branch.Models;
 
 namespace JJNG.Web.Areas.Branch.Controllers
 {
@@ -75,7 +76,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StewardAccountsId,EnteringDate,HouseNumber,CustomerName,ProductType,Product,Cost,Amount,Profit,Receivable,Received,IsFinish,EnteringStaff,FrontDesk,FrontDeskLeader,StewardLeader,RelationStaff,IsSteward,IsFinance,Branch,Note")] BrhStewardAccounts brhStewardAccounts, string payway1, DateTime? paydate1, double? payamount1, string payway2, DateTime? paydate2, double? payamount2, string payway3, DateTime? paydate3, double? payamount3)
+        public async Task<IActionResult> Create([Bind("StewardAccountsId,EnteringDate,HouseNumber,CustomerName,ProductType,Product,Cost,Amount,Profit,Receivable,Received,IsFinish,EnteringStaff,FrontDesk,FrontDeskLeader,StewardLeader,RelationStaff,IsSteward,IsFinance,Branch,Note,PayWay1,PayDate1,PayAmount1,PayWay2,PayDate2,PayAmount2,PayWay3,PayDate3,PayAmount3")]BrhStewardModel brhStewardModel)
         {
             if (ModelState.IsValid)
             {
@@ -83,38 +84,56 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 BrhStewardPaymentDetial bfp2 = new BrhStewardPaymentDetial();
                 BrhStewardPaymentDetial bfp3 = new BrhStewardPaymentDetial();
 
-                if (!string.IsNullOrEmpty(payway1) && !double.IsNaN((double)payamount1))
+                if (brhStewardModel.PayAmount1!=0)
                 {
-                    bfp1.StewardAccountsId = brhStewardAccounts.StewardAccountsId;
-                    bfp1.PayWay = payway1;
-                    bfp1.PayDate = (DateTime)paydate1;
-                    bfp1.PayAmount = (double)payamount1;
+                    bfp1.StewardAccountsId = brhStewardModel.StewardAccountsId;
+                    bfp1.PayWay = brhStewardModel.PayWay1;
+                    bfp1.PayDate = brhStewardModel.PayDate1;
+                    bfp1.PayAmount = brhStewardModel.PayAmount1;
                     _context.Add(bfp1);
                 }
                 else
                     bfp1.PayAmount = 0;
 
-                if (!string.IsNullOrEmpty(payway2) && !double.IsNaN((double)payamount2))
+                if (brhStewardModel.PayAmount2 != 0)
                 {
-                    bfp2.StewardAccountsId = brhStewardAccounts.StewardAccountsId;
-                    bfp2.PayWay = payway2;
-                    bfp2.PayDate = (DateTime)paydate2;
-                    bfp2.PayAmount = (double)payamount2;
+                    bfp2.StewardAccountsId = brhStewardModel.StewardAccountsId;
+                    bfp2.PayWay = brhStewardModel.PayWay2;
+                    bfp2.PayDate = brhStewardModel.PayDate2;
+                    bfp2.PayAmount = brhStewardModel.PayAmount2;
                     _context.Add(bfp2);
                 }
                 else
                     bfp2.PayAmount = 0;
 
-                if (!string.IsNullOrEmpty(payway3) && !double.IsNaN((double)payamount3))
+                if (brhStewardModel.PayAmount3 != 0)
                 {
-                    bfp3.StewardAccountsId = brhStewardAccounts.StewardAccountsId;
-                    bfp3.PayWay = payway3;
-                    bfp3.PayDate = (DateTime)paydate3;
-                    bfp3.PayAmount = (double)payamount3;
+                    bfp3.StewardAccountsId = brhStewardModel.StewardAccountsId;
+                    bfp3.PayWay = brhStewardModel.PayWay3;
+                    bfp3.PayDate = brhStewardModel.PayDate3;
+                    bfp3.PayAmount = brhStewardModel.PayAmount3;
                     _context.Add(bfp3);
                 }
                 else
                     bfp3.PayAmount = 0;
+
+                BrhStewardAccounts brhStewardAccounts = new BrhStewardAccounts();
+                brhStewardAccounts.Amount = brhStewardModel.Amount;
+                brhStewardAccounts.Branch = brhStewardModel.Branch;
+                brhStewardAccounts.Cost = brhStewardModel.Cost;
+                brhStewardAccounts.CustomerName = brhStewardModel.CustomerName;
+                brhStewardAccounts.EnteringStaff = brhStewardModel.EnteringStaff;
+                brhStewardAccounts.FrontDesk = brhStewardModel.FrontDesk;
+                brhStewardAccounts.FrontDeskLeader = brhStewardModel.FrontDeskLeader;
+                brhStewardAccounts.HouseNumber = brhStewardModel.HouseNumber;
+                brhStewardAccounts.Note = brhStewardModel.Note;
+                brhStewardAccounts.Product = brhStewardModel.Product;
+                brhStewardAccounts.ProductType = brhStewardModel.ProductType;
+                brhStewardAccounts.Profit = brhStewardModel.Profit;
+                brhStewardAccounts.Receivable = brhStewardModel.Receivable;
+                brhStewardAccounts.RelationStaff = brhStewardModel.RelationStaff;
+                brhStewardAccounts.StewardAccountsId = brhStewardModel.StewardAccountsId;
+                brhStewardAccounts.StewardLeader = brhStewardModel.StewardLeader;
 
                 brhStewardAccounts.Received = bfp1.PayAmount + bfp2.PayAmount + bfp3.PayAmount;
 
@@ -127,7 +146,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return PartialView("~/Areas/Branch/Views/BrhStewardAccount/Create.cshtml", brhStewardAccounts);
+            return PartialView("~/Areas/Branch/Views/BrhStewardAccount/Create.cshtml",brhStewardModel);
         }
 
         public async Task<IActionResult> Edit(long? id)

@@ -32,19 +32,19 @@ namespace JJNG.Data.Branch
         public string Product { get; set; }
         [Required]
         [Display(Name = "成本")]
-        public double Cost { get; set; }
+        public decimal Cost { get; set; }
         [Required]
         [Display(Name = "销售金额")]
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
         [Required]
         [Display(Name = "利润")]
-        public double Profit { get; set; }
+        public decimal Profit { get; set; }
         [Required]
         [Display(Name = "应收款")]
-        public double Receivable { get; set; }
+        public decimal Receivable { get; set; }
         [Required]
         [Display(Name = "已收款")]
-        public double Received { get; set; }
+        public decimal Received { get; set; }
         [Required]
         [Display(Name = "是否结账")]
         public bool IsFinish { get; set; }

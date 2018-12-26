@@ -48,12 +48,16 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhFrontDeskAccount\DetialList.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhFrontDeskAccount\Edit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhFrontDeskAccount\Index.cshtml
---file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestAccount\CreateEdit.cshtml
---file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestAccount\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestAccount\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestRecord\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestRecord\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestRecord\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\AddDetial.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\Create.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\DetialList.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\Edit.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\_ViewImports.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\_ViewStart.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncChannelType\CreateEdit.cshtml
@@ -76,6 +80,8 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncStewardAccount\DetialList.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncStewardAccount\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncTypeCollect\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\_ViewImports.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\_ViewStart.cshtml
@@ -91,5 +97,6 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Views\Shared\_Modal.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_ModalFooter.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_ModalHeader.cshtml
+--file=D:\JiJian\JJNG.Web\Views\Shared\_ValidationScriptsPartial.cshtml
 --file=D:\JiJian\JJNG.Web\Views\_ViewImports.cshtml
 --file=D:\JiJian\JJNG.Web\Views\_ViewStart.cshtml

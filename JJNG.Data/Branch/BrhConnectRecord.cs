@@ -24,10 +24,10 @@ namespace JJNG.Data.Branch
         public int BillCount { get; set; }
         [Required]
         [Display(Name = "房费现金")]
-        public double HouseCash { get; set; }
+        public decimal HouseCash { get; set; }
         [Required]
         [Display(Name = "其他现金")]
-        public double OtherCash { get; set; }
+        public decimal OtherCash { get; set; }
         [Required]
         [Display(Name = "房卡数量")]
         public int CardCount { get; set; }

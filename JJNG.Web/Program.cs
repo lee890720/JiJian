@@ -22,7 +22,7 @@ namespace ContactManager
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<AppIdentityDbContext>();
-                context.Database.Migrate();
+                //context.Database.Migrate();
 
                 // requires using Microsoft.Extensions.Configuration;
                 var config = host.Services.GetRequiredService<IConfiguration>();

@@ -156,6 +156,12 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var brhImprestRecord = await _context.BrhImprestRecord.SingleOrDefaultAsync(m => m.ImprestRecordId == id);
             _context.BrhImprestRecord.Remove(brhImprestRecord);
             await _context.SaveChangesAsync();
+
+            var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId && !x.IsFinance).Sum(x => x.Amount);
+            var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId);
+            brhImprestAccount.Equity = brhImprestAccount.Balance - total;
+            _context.Update(brhImprestAccount);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index), new { id = brhImprestRecord.ImprestAccountsId });
         }
 

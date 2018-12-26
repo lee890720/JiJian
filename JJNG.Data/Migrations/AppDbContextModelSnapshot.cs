@@ -71,7 +71,7 @@ namespace JJNG.Data.Migrations
                     b.Property<string>("EnteringStaff")
                         .IsRequired();
 
-                    b.Property<double>("HouseCash");
+                    b.Property<decimal>("HouseCash");
 
                     b.Property<string>("MorningStaff");
 
@@ -79,7 +79,7 @@ namespace JJNG.Data.Migrations
 
                     b.Property<string>("Note");
 
-                    b.Property<double>("OtherCash");
+                    b.Property<decimal>("OtherCash");
 
                     b.HasKey("ConnectRecordId");
 
@@ -91,7 +91,7 @@ namespace JJNG.Data.Migrations
                     b.Property<int>("EarningRecordId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("Amount");
+                    b.Property<decimal>("Amount");
 
                     b.Property<string>("Branch")
                         .IsRequired();
@@ -122,7 +122,7 @@ namespace JJNG.Data.Migrations
                     b.Property<int>("ExpendRecordId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("Amount");
+                    b.Property<decimal>("Amount");
 
                     b.Property<string>("Branch")
                         .IsRequired();
@@ -184,9 +184,9 @@ namespace JJNG.Data.Migrations
 
                     b.Property<string>("Note");
 
-                    b.Property<double>("Receivable");
+                    b.Property<decimal>("Receivable");
 
-                    b.Property<double>("Received");
+                    b.Property<decimal>("Received");
 
                     b.Property<string>("RelationStaff");
 
@@ -196,9 +196,9 @@ namespace JJNG.Data.Migrations
 
                     b.Property<string>("StewardLeader");
 
-                    b.Property<double>("TotalPrice");
+                    b.Property<decimal>("TotalPrice");
 
-                    b.Property<double>("UnitPrice");
+                    b.Property<decimal>("UnitPrice");
 
                     b.HasKey("FrontDeskAccountsId");
 
@@ -212,7 +212,7 @@ namespace JJNG.Data.Migrations
 
                     b.Property<long>("FrontDeskAccountsId");
 
-                    b.Property<double>("PayAmount");
+                    b.Property<decimal>("PayAmount");
 
                     b.Property<DateTime>("PayDate");
 
@@ -231,13 +231,13 @@ namespace JJNG.Data.Migrations
                     b.Property<int>("ImprestAccountsId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("Balance");
+                    b.Property<decimal>("Balance");
 
                     b.Property<string>("BelongTo");
 
                     b.Property<string>("Department");
 
-                    b.Property<double>("Equity");
+                    b.Property<decimal>("Equity");
 
                     b.Property<string>("ImprestAccountsName");
 
@@ -253,7 +253,7 @@ namespace JJNG.Data.Migrations
                     b.Property<int>("ImprestRecordId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("Amount");
+                    b.Property<decimal>("Amount");
 
                     b.Property<string>("Branch")
                         .IsRequired();
@@ -313,12 +313,12 @@ namespace JJNG.Data.Migrations
                 {
                     b.Property<long>("StewardAccountsId");
 
-                    b.Property<double>("Amount");
+                    b.Property<decimal>("Amount");
 
                     b.Property<string>("Branch")
                         .IsRequired();
 
-                    b.Property<double>("Cost");
+                    b.Property<decimal>("Cost");
 
                     b.Property<string>("CustomerName")
                         .IsRequired();
@@ -348,11 +348,11 @@ namespace JJNG.Data.Migrations
                     b.Property<string>("ProductType")
                         .IsRequired();
 
-                    b.Property<double>("Profit");
+                    b.Property<decimal>("Profit");
 
-                    b.Property<double>("Receivable");
+                    b.Property<decimal>("Receivable");
 
-                    b.Property<double>("Received");
+                    b.Property<decimal>("Received");
 
                     b.Property<string>("RelationStaff");
 
@@ -368,7 +368,7 @@ namespace JJNG.Data.Migrations
                     b.Property<int>("StewardPaymentDetialId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("PayAmount");
+                    b.Property<decimal>("PayAmount");
 
                     b.Property<DateTime>("PayDate");
 

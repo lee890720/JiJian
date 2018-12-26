@@ -23,7 +23,7 @@ namespace JJNG.Data.Branch
         public string PayWay { get; set; }
         [Required]
         [Display(Name = "付款金额")]
-        public double PayAmount { get; set; }
+        public decimal PayAmount { get; set; }
         public BrhStewardAccounts BrhStewardAccounts { get; set; }
     }
 }

@@ -24,7 +24,7 @@
         <header class="main-header">
             <a asp-action="Index" asp-controller="Home" asp-area="" class="logo">
                 <span class="logo-mini"><b>既见</b></span>
-                <span class="logo-lg" style="font-family:'Sakkal Majalla'"><b>既见</b>MEET</span>
+                <span class="logo-lg"><b>既见</b>MEET</span>
             </a>
             <nav class="navbar navbar-static-top" role="navigation">
                 <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
@@ -137,7 +137,8 @@
         </aside>
         <div class="control-sidebar-bg"></div>
     </div>
-    @Html.Partial("_Modal", new BootstrapModel { ID = "modal-action", AreaLabeledId = "modal-action-label", Size = ModalSize.Medium })
+    @Html.Partial("_ValidationScriptsPartial")
+    @Html.Partial("_Modal", new BootstrapModel { ID = "modal-action", AreaLabeledId = "modal-action-label", Size = ModalSize.Large })
     <script src="~/js/adminlte.min.js"></script>
     <script src="~/js/dateFormat.js"></script>
     <script src="~/js/site.min.js"></script>

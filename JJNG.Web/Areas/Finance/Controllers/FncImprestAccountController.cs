@@ -33,8 +33,9 @@ namespace JJNG.Web.Areas.Finance.Controllers
             ViewData["UserName"] = _user.UserName;
             ViewData["BelongTo"] = _user.BelongTo;
             ViewData["Department"] = _user.Department;
-            var brhImprestAccounts = _context.BrhImprestAccounts;
-            return View(await brhImprestAccounts.ToListAsync());
+            var brhImprestAccounts = await _context.BrhImprestAccounts.ToListAsync();
+            ViewData["Total"] = brhImprestAccounts.Sum(x => x.Balance);
+            return View( brhImprestAccounts);
         }
 
         public async Task<IActionResult> Create()

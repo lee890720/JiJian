@@ -1,4 +1,4 @@
-﻿@model JJNG.Data.Branch.BrhFrontDeskAccounts
+﻿@model BrhFrontDeskAccounts
 
 @{
     Layout = "_CreateEditLayout";
@@ -12,15 +12,17 @@
 
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <input type="hidden" asp-for="FrontDeskAccountsId" />
+<input type="hidden" asp-for="EnteringDate" />
 <div class="col-md-4">
     <div class="form-group">
         <label asp-for="StartDate" class="control-label"></label>
-        <input asp-for="StartDate" type="date" id="startDate" class="form-control" />
+        <input asp-for="StartDate" type="text" id="startDate" class="form-control datepicker" />
         <span asp-validation-for="StartDate" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="HouseNumber" class="control-label"></label>
-        @Html.DropDownList("HouseNumber", ViewData["HouseNumber"] as SelectList, "请选择", new { @class = "form-control" })
+        <select asp-for="HouseNumber" asp-items="ViewBag.HouseNumber" class="form-control"></select>
+        <span asp-validation-for="HouseNumber" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="CustomerName" class="control-label"></label>
@@ -34,8 +36,8 @@
     </div>
     <div class="form-group">
         <label asp-for="Channel" class="control-label"></label>
-        @Html.DropDownList("Channel", ViewData["ChannelType"] as SelectList, "请选择", new { @class = "form-control" })
-
+        <select asp-for="Channel" asp-items="ViewBag.ChannelType" class="form-control"></select>
+        <span asp-validation-for="Channel" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="EnteringStaff" class="control-label"></label>
@@ -46,17 +48,31 @@
 <div class="col-md-4">
     <div class="form-group">
         <label asp-for="EndDate" class="control-label"></label>
-        <input asp-for="EndDate" type="date" id="endDate" class="form-control" />
+        <input asp-for="EndDate" type="text" id="endDate" class="form-control datepicker" />
         <span asp-validation-for="EndDate" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="UnitPrice" class="control-label"></label>
-        <input asp-for="UnitPrice" id="unitPrice" class="form-control" />
+        <div class="row">
+            <div class="col-md-6">
+                <input asp-for="UnitPrice" readonly="readonly" id="unitPrice" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <input id="unitPrice2" class="form-control" />
+            </div>
+        </div>
         <span asp-validation-for="UnitPrice" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="TotalPrice" class="control-label"></label>
-        <input asp-for="TotalPrice" readonly="readonly" id="totalPrice" class="form-control" />
+        <div class="row">
+            <div class="col-md-6">
+                <input asp-for="TotalPrice" readonly="readonly" id="totalPrice" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <input id="totalPrice2" class="form-control" />
+            </div>
+        </div>
         <span asp-validation-for="TotalPrice" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -98,31 +114,15 @@
     </div>
     <div class="form-group">
         <label asp-for="Note" class="control-label"></label>
-        <input asp-for="Note" class="form-control" />
+        <textarea asp-for="Note" rows="4" class="form-control"></textarea>
         <span asp-validation-for="Note" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="IsFront" class="control-label"></label>
-        <div class="checkbox icheck">
-            <span><input type="checkbox" class="flat-blue" asp-for="IsFront" /></span>
-        </div>
-    </div>
 </div>
+
+@Html.Partial("_ValidationScriptsPartial")
+
 <script>
     //#region 功能模块
-    function formatDate(date) {
-        var myyear = date.getFullYear();
-        var mymonth = date.getMonth() + 1;
-        var myweekday = date.getDate();
-
-        if (mymonth < 10) {
-            mymonth = "0" + mymonth;
-        }
-        if (myweekday < 10) {
-            myweekday = "0" + myweekday;
-        }
-        return (myyear + "-" + mymonth + "-" + myweekday);
-    }
     function checkIsDouble(checkString) {
 
         var reg = /^[0-9,.]*$/;
@@ -130,7 +130,7 @@
         if (reg.test(checkString)) {
             return true;
         }
-        alert("输入数字");
+        //alert("输入数字");
         return false;
     }
     function DateDiff(sDate1, sDate2) {    //sDate1和sDate2是2002-12-18格式
@@ -144,35 +144,55 @@
     }
     //#endregion
 
-    //#region 键盘事件
-    $('#unitPrice').keyup(function () {
+    //#region change/keyup事件
+    $('#unitPrice2').keyup(function () {
         var startDate = document.getElementById("startDate").value;
         var endDate = document.getElementById("endDate").value;
-        var unitPrice = document.getElementById("unitPrice").value;
+        var unitPrice = document.getElementById("unitPrice2").value;
         var result = 0.00;
         if (checkIsDouble(unitPrice))
             result = parseFloat(unitPrice);
         var days = DateDiff(startDate, endDate);
         result = result * days;
         $('#totalPrice').val(result.toString());
+        $('#totalPrice2').val(result.toString());
+        $('#unitPrice').val(unitPrice.toString());
+    });
+    $('#totalPrice2').keyup(function () {
+        var startDate = document.getElementById("startDate").value;
+        var endDate = document.getElementById("endDate").value;
+        var totalPrice = document.getElementById("totalPrice2").value;
+        var result = 0.00;
+        if (checkIsDouble(totalPrice))
+            result = parseFloat(totalPrice);
+        var days = DateDiff(startDate, endDate);
+        if (parseFloat(days) > 0)
+            result = result / days;
+        $('#totalPrice').val(totalPrice.toString());
+        $('#unitPrice2').val(result.toString());
+        $('#unitPrice').val(result.toString());
     });
     $('#startDate,#endDate').change(function () {
         var startDate = document.getElementById("startDate").value;
         var endDate = document.getElementById("endDate").value;
         var unitPrice = document.getElementById("unitPrice").value;
+
         var result = 0.00;
         if (parseFloat(unitPrice) > 0)
             result = parseFloat(unitPrice);
         var days = DateDiff(startDate, endDate);
         result = result * days;
+        $('#unitPrice2').val(unitPrice.toString());
         $('#totalPrice').val(result.toString());
+        $('#totalPrice2').val(result.toString());
     });
     //#endregion
 
-    //#region 细节设置
-    $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
-        checkboxClass: 'icheckbox_flat-blue',
-        radioClass: 'iradio_flat-blue'
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        language: "zh-CN",
+        todayBtn: 'linked',
+        todayHighlight: true,
     });
-    //#endregion
 </script>
