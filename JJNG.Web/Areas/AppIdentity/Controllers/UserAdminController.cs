@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace JJNG.Web.Areas.AppIdentity.Controllers
 {
     [Area("AppIdentity")]
-    [Authorize(Roles = "Admins,管理员")]
+    [Authorize(Roles = "Admins,管理员,人事")]
     public class UserAdminController : Controller
     {
         private UserManager<AppIdentityUser> userManager;

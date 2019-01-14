@@ -1,0 +1,63 @@
+﻿@model JJNG.Data.Personnel.PsnNote
+
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+@if (ViewData["action"].ToString() == "Create")
+{
+    <div class="form-group">
+        <input type="hidden" asp-for="NoteAccountId" value="@ViewData["NoteAccountId"]" class="form-control" />
+    </div>
+}
+else
+{
+    <input type="hidden" asp-for="NoteId" />
+    <input type="hidden" asp-for="NoteAccountId" />
+}
+    <div class="col-md-12">
+        <div class="form-group">
+            <label asp-for="Account" class="control-label"></label>
+            <input asp-for="Account" class="form-control" />
+            <span asp-validation-for="Account" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Password" class="control-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Platform" class="control-label"></label>
+            <input asp-for="Platform" class="form-control" />
+            <span asp-validation-for="Platform" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Phone" class="control-label"></label>
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="EnteringStaff" class="control-label"></label>
+            <input asp-for="EnteringStaff" class="form-control" />
+            <span asp-validation-for="EnteringStaff" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Branch" class="control-label"></label>
+            <input asp-for="Branch" class="form-control" />
+            <span asp-validation-for="Branch" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Note" class="control-label"></label>
+            <input asp-for="Note" class="form-control" />
+            <span asp-validation-for="Note" class="text-danger"></span>
+        </div>
+    </div>
+
+@Html.Partial("_ValidationScriptsPartial")
+

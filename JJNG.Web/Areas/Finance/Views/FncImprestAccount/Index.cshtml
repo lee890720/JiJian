@@ -104,9 +104,6 @@
     </div>
 </section>
 @section Scripts{
-    <script src="~/js/range_dates.js"></script>
-    <script src="~/js/dateRangeSelector.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
     <script>
         $(function () {
             //#region table1初始化
@@ -143,58 +140,6 @@
                     },
                 });
             $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
-            //#endregion
-
-            //Select2
-            $('.select2').select2();
-            //#endregion
-
-            //#region 日期区间选择事件
-            $("#date_select").change(function () {
-                var flag = parseInt($("#date_select").val());
-                switch (flag) {
-                    // 当天
-                    case 0:
-                        $('#date_beg').val(getTodayDate);
-                        $('#date_end').val(getCurrentDate);
-                        break;
-                    // 昨天
-                    case 1:
-                        $('#date_beg').val(getYesterdayDate);
-                        $('#date_end').val(getTodayDate);
-                        break;
-                    // 本周
-                    case 2:
-                        $('#date_beg').val(getWeekStartDate);
-                        $('#date_end').val(getWeekEndDate);
-                        break;
-                    // 当月
-                    case 3:
-                        $('#date_beg').val(getMonthStartDate);
-                        $('#date_end').val(getCurrentDate);
-                        break;
-                    // 上个月
-                    case 4:
-                        $('#date_beg').val(getPreMonthStartDate);
-                        $('#date_end').val(getMonthStartDate);
-                        break;
-                    // 最近三月
-                    case 5:
-                        $('#date_beg').val(getTreeMonthStartDate);
-                        $('#date_end').val(getCurrentDate);
-                        break;
-                    // 最近一年
-                    case 6:
-                        $('#date_beg').val(getYearStartDate);
-                        $('#date_end').val(getCurrentDate);
-                        break;
-                    default:
-                        $('#date_beg').val("");
-                        $('#date_end').val("");
-                        break;
-                }
-                table1.api().draw();
-            });
             //#endregion
         });
     </script>

@@ -1,6 +1,7 @@
 ﻿using System;
 using JJNG.Data.Branch;
 using JJNG.Data.Finance;
+using JJNG.Data.Personnel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -23,6 +24,11 @@ namespace JJNG.Data
         public virtual DbSet<BrhExpendRecord> BrhExpendRecord { get; set; }
         public virtual DbSet<BrhImprestRecord> BrhImprestRecord { get; set; }
         public virtual DbSet<BrhMemo> BrhMemo { get; set; }
+        public virtual DbSet<BrhClient> BrhClient { get; set; }
+        public virtual DbSet<PsnNote> PsnNote { get; set; }
+        public virtual DbSet<PsnAddress> PsnAddress { get; set; }
+        public virtual DbSet<PsnNoteAccount> PsnNoteAccount { get; set; }
+        public virtual DbSet<PsnAddressAccount> PsnAddressAccount { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

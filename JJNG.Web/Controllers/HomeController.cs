@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace JJNG.Web.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HomeController : Controller
     {
         private readonly AppDbContext _context;
@@ -18,6 +18,14 @@ namespace JJNG.Web.Controllers
         {
             if (User.IsInRole("前台"))
                 return Redirect("/Branch/BrhCollect");
+            if (User.IsInRole("管家"))
+                return Redirect("/Branch/BrhStewardAccount");
+            if (User.IsInRole("财务"))
+                return Redirect("/Finance/FncCollect");
+            if (User.IsInRole("人事"))
+                return Redirect("/AppIdentity/UserAdmin");
+            if (User.IsInRole("Admins"))
+                return Redirect("/AppIdentity/UserAdmin");
             return View();
         }
 

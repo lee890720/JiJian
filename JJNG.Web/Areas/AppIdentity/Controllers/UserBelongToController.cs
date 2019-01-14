@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 namespace JJNG.Web.Areas.AppIdentity.Controllers
 {
     [Area("AppIdentity")]
-    [Authorize(Roles = "Admins,管理员")]
+    [Authorize(Roles = "Admins,管理员,人事")]
     public class UserBelongToController : Controller
     {
         private readonly AppIdentityDbContext _context;

@@ -1,0 +1,72 @@
+﻿@model JJNG.Data.Branch.BrhClient
+
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+@if (ViewData["action"].ToString() == "Create")
+{ }
+else
+{
+    <input type="hidden" asp-for="ClientId" />
+}
+<div class="col-md-6">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Follow" class="control-label"></label>
+        <textarea asp-for="Follow" in rows="8" class="form-control" runat="server">
+            @Model.Follow
+        </textarea>
+        <span asp-validation-for="Follow" class="text-danger"></span>
+    </div>
+
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+        <label asp-for="EnteringStaff" class="control-label"></label>
+        <input asp-for="EnteringStaff" value="@ViewData["UserName"]" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="EnteringStaff" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Branch" class="control-label"></label>
+        <input asp-for="Branch" value="@ViewData["BelongTo"]" readonly="readonly" style="color:red" class="form-control" />
+        <span asp-validation-for="Branch" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Note" class="control-label"></label>
+        <input asp-for="Note" class="form-control" />
+        <span asp-validation-for="Note" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label class="control-label no-padding no-margin">
+            <span class="col-md-6">好评</span>
+            <span class="col-md-6">外销</span>
+        </label>
+        <div class="checkbox icheck">
+            <span class="col-md-2">
+                <input type="checkbox" class="flat-blue" asp-for="IsGood" />
+            </span>
+            <span class="col-md-10">
+                <input type="checkbox" class="flat-blue" asp-for="IsSale" />
+            </span>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_ValidationScriptsPartial")
+<script>
+    $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
+        checkboxClass: 'icheckbox_flat-blue',
+        radioClass: 'iradio_flat-blue'
+    })
+</script>

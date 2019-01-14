@@ -27,7 +27,7 @@
                 <div class="box-body table-responsive">
                     <div class="form-group">
                         <div class="col-md-12" style="margin-bottom:10px;">
-                            <input type="text" placeholder="搜索" id="search" class="form-control">
+                            <input type="text" placeholder="搜索" id="search1" class="form-control">
                         </div>
                     </div>
                     <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
@@ -73,7 +73,7 @@
                 <div class="box-body table-responsive">
                     <div class="form-group">
                         <div class="col-md-12" style="margin-bottom:10px;">
-                            <input type="text" placeholder="搜索" id="search" class="form-control">
+                            <input type="text" placeholder="搜索" id="search2" class="form-control">
                         </div>
                     </div>
                     <table id="table-2" class="table  table-bordered table-striped table-hover" width="100%">
@@ -119,7 +119,7 @@
                 <div class="box-body table-responsive">
                     <div class="form-group">
                         <div class="col-md-12" style="margin-bottom:10px;">
-                            <input type="text" placeholder="搜索" id="search" class="form-control">
+                            <input type="text" placeholder="搜索" id="search3" class="form-control">
                         </div>
                     </div>
                     <table id="table-3" class="table  table-bordered table-striped table-hover" width="100%">
@@ -165,7 +165,7 @@
                 <div class="box-body table-responsive">
                     <div class="form-group">
                         <div class="col-md-12" style="margin-bottom:10px;">
-                            <input type="text" placeholder="搜索" id="search" class="form-control">
+                            <input type="text" placeholder="搜索" id="search4" class="form-control">
                         </div>
                     </div>
                     <table id="table-4" class="table  table-bordered table-striped table-hover" width="100%">
@@ -234,7 +234,7 @@
                         }
                     },
                 });
-            $("#search").keyup(function () { table1.search($("#search").val()).draw(); });
+            $("#search1").keyup(function () { table1.search($("#search1").val()).draw(); });
             var table2 = $('#table-2').DataTable(
                 {
                     order: [[1, "asc"]],
@@ -268,7 +268,7 @@
                         }
                     },
                 });
-            $("#search").keyup(function () { table2.search($("#search").val()).draw(); });
+            $("#search2").keyup(function () { table2.search($("#search2").val()).draw(); });
             var table3 = $('#table-3').DataTable(
                 {
                     order: [[1, "asc"]],
@@ -302,7 +302,7 @@
                         }
                     },
                 });
-            $("#search").keyup(function () { table3.search($("#search").val()).draw(); });
+            $("#search3").keyup(function () { table3.search($("#search3").val()).draw(); });
             var table4 = $('#table-4').DataTable(
                 {
                     order: [[1, "asc"]],
@@ -336,7 +336,7 @@
                         }
                     },
                 });
-            $("#search").keyup(function () { table4.search($("#search").val()).draw(); });
+            $("#search4").keyup(function () { table4.search($("#search4").val()).draw(); });
         });
     </script>
 }

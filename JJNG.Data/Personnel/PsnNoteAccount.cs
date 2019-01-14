@@ -1,0 +1,29 @@
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace JJNG.Data.Personnel
+{
+    [Table("Psn_NoteAccount")]
+    public partial class PsnNoteAccount
+    {
+        public PsnNoteAccount()
+        {
+            PsnNote = new HashSet<PsnNote>();
+        }
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int NoteAccountId { get; set; }
+
+        [Display(Name = "名称")]
+        public string AccountName { get; set; }
+        [Display(Name = "管理人")]
+        public string Manager { get; set; }
+        [Display(Name = "部门")]
+        public string Department { get; set; }
+        [Display(Name = "隶属")]
+        public string BelongTo { get; set; }
+
+        public ICollection<PsnNote> PsnNote { get; set; }
+    }
+}

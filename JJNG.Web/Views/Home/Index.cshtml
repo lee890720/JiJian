@@ -1,1 +1,527 @@
-﻿
+﻿@{ 
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tinyinn</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Favicons
+        ================================================== -->
+    <link rel="shortcut icon" href="~/front/img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="~/front/img/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/front/img/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/front/img/apple-touch-icon-114x114.png">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="~/front/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="~/front/fonts/font-awesome/css/font-awesome.css">
+
+    <!-- Slider
+        ================================================== -->
+    <link href="~/front/css/owl.carousel.css" rel="stylesheet" media="screen">
+    <link href="~/front/css/owl.theme.css" rel="stylesheet" media="screen">
+
+    <!-- Stylesheet
+        ================================================== -->
+    <link rel="stylesheet" type="text/css" href="~/front/css/style.css">
+    <link rel="stylesheet" type="text/css" href="~/front/css/prettyPhoto.css">
+    <link href='http://fonts.useso.com/css?family=Lato:400,700,900,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:400,700,800,600,300' rel='stylesheet' type='text/css'>
+    <!--<script type="text/javascript" src="~/front/js/modernizr.custom.js"></script>-->
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+</head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+    <!-- Navigation -->
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">
+                    <i class="fa fa-terminal"></i>  Tinyinn
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#services" style="color:#F4D03F">町隐学院</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#works" style="color:#F4D03F">既见民宿</a>
+                    </li>
+                    @*<li>
+                        <a class="page-scroll" href="#about">文化产品</a>
+                    </li>*@
+                    <li>
+                        <a class="page-scroll" href="#team" style="color:#F4D03F">团队精英</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#testimonials" style="color:#F4D03F">品牌故事</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact" style="color:#F4D03F">联系我们</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" style="color:#F4D03F" asp-action="Login" asp-controller="Account" asp-area="AppIdentity">登录</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Header -->
+    <header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h1>町 隐  <span class="brand-heading"><strong style="color:darkolivegreen">·</strong> 既 见</span></h1>
+                        @*<br />
+                        <p class="intro-text" style=" font-size:30px"><strong style="color:#F4D03F"> 町隐</strong>南山&emsp;&emsp;风云<strong style="color:#F4D03F">既见</strong></p>*@
+                        <a href="#services" class="btn btn-circle page-scroll">
+                            <i class="fa fa-angle-double-down animated"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Services Section -->
+    <div id="services" class="text-center">
+        <div class="container">
+            <div class="section-title center">
+                <h2>町 隐 学 院 </h2>
+                <hr>
+            </div>
+            <div class="space"></div>
+            <div class="row">
+                <div class="col-md-3 col-sm-6 service">
+                    <i class="fa fa-laptop"></i>
+                    <h4><strong>民宿培训</strong></h4>
+                    @*<p>Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam.</p>*@
+                </div>
+                <div class="col-md-3 col-sm-6 service">
+                    <i class="fa fa-code"></i>
+                    <h4><strong>酒店管理</strong></h4>
+                    @*<p>Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque.</p>*@
+                </div>
+                <div class="col-md-3 col-sm-6 service">
+                    <i class="fa fa-rocket"></i>
+                    <h4><strong>文化旅游</strong></h4>
+                    @*<p>Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam.</p>*@
+                </div>
+                <div class="col-md-3 col-sm-6 service">
+                    <i class="fa fa-bullseye"></i>
+                    <h4><strong>社群活动</strong></h4>
+                    @*<p>Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque.</p>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Portfolio Section -->
+    <div id="works">
+        <div class="container">
+            <!-- Container -->
+            <div class="section-title text-center center">
+                <h2>既见民宿</h2>
+                <hr>
+                <div class="clearfix"></div>
+                <p>既见君子&emsp;云胡不喜</p>
+            </div>
+            <div class="categories">
+                <ul class="cat">
+                    <li>
+                        <ol class="type">
+                            @*<li><a href="#" data-filter="*" class="active">全部</a></li>*@
+                            <li><a href="#" data-filter=".nanguo">既见·南国</a></li>
+                            <li><a href="#" data-filter=".dashe">既见·达舍</a></li>
+                            <li><a href="#" data-filter=".huanxi">既见·欢喜</a></li>
+                            <li><a href="#" data-filter=".canghai">既见·苍海</a></li>
+
+                        </ol>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="row">
+                <div class="portfolio-items">
+                    <div class="col-sm-6 col-md-3 col-lg-3 nanguo">
+                        <div class="portfolio-item">
+                            <div class="hover-bg">
+                                <a href="~/front/img/portfolio/01.jpg" title="既见·南国" rel="prettyPhoto">
+                                    <div class="hover-text">
+                                        <h4>既见·南国</h4>
+                                        <small></small>
+                                        <div class="clearfix"></div>
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <img src="~/front/img/portfolio/01.jpg" class="img-responsive" alt="既见·南国">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 nanguo">
+                        <div class="portfolio-item">
+                            <div class="hover-bg">
+                                <a href="~/front/img/portfolio/02.jpg" title="既见·南国" rel="prettyPhoto">
+                                    <div class="hover-text">
+                                        <h4>既见·南国</h4>
+                                        <small></small>
+                                        <div class="clearfix"></div>
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <img src="~/front/img/portfolio/02.jpg" class="img-responsive" alt="既见·南国">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 dashe">
+                        <div class="portfolio-item">
+                            <div class="hover-bg">
+                                <a href="~/front/img/portfolio/03.jpg" title="既见·达舍" rel="prettyPhoto">
+                                    <div class="hover-text">
+                                        <h4>既见·达舍</h4>
+                                        <small></small>
+                                        <div class="clearfix"></div>
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <img src="~/front/img/portfolio/03.jpg" class="img-responsive" alt="既见·达舍">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 dashe">
+                        <div class="portfolio-item">
+                            <div class="hover-bg">
+                                <a href="~/front/img/portfolio/04.jpg" title="既见·达舍" rel="prettyPhoto">
+                                    <div class="hover-text">
+                                        <h4>既见·达舍</h4>
+                                        <small></small>
+                                        <div class="clearfix"></div>
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <img src="~/front/img/portfolio/04.jpg" class="img-responsive" alt="既见·达舍">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 huanxi">
+                        <div class="portfolio-item">
+                            <div class="hover-bg">
+                                <a href="~/front/img/portfolio/05.jpg" title="既见·欢喜" rel="prettyPhoto">
+                                    <div class="hover-text">
+                                        <h4>既见·欢喜</h4>
+                                        <small></small>
+                                        <div class="clearfix"></div>
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <img src="~/front/img/portfolio/05.jpg" class="img-responsive" alt="既见·欢喜">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 huanxi">
+                        <div class="portfolio-item">
+                            <div class="hover-bg">
+                                <a href="~/front/img/portfolio/06.jpg" title="既见·欢喜" rel="prettyPhoto">
+                                    <div class="hover-text">
+                                        <h4>既见·欢喜</h4>
+                                        <small></small>
+                                        <div class="clearfix"></div>
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <img src="~/front/img/portfolio/06.jpg" class="img-responsive" alt="既见·欢喜">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 canghai">
+                        <div class="portfolio-item">
+                            <div class="hover-bg">
+                                <a href="~/front/img/portfolio/07.jpg" title="既见·苍海" rel="prettyPhoto">
+                                    <div class="hover-text">
+                                        <h4>既见·苍海</h4>
+                                        <small></small>
+                                        <div class="clearfix"></div>
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <img src="~/front/img/portfolio/07.jpg" class="img-responsive" alt="既见·苍海">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 canghai">
+                        <div class="portfolio-item">
+                            <div class="hover-bg">
+                                <a href="~/front/img/portfolio/08.jpg" title="既见·苍海" rel="prettyPhoto">
+                                    <div class="hover-text">
+                                        <h4>既见·苍海</h4>
+                                        <small></small>
+                                        <div class="clearfix"></div>
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                    <img src="~/front/img/portfolio/08.jpg" class="img-responsive" alt="既见·苍海">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About Section -->
+    @*<div id="about">
+        <div class="container">
+            <div class="section-title text-center center">
+                <h2>文化产品</h2>
+                <hr>
+            </div>
+            <div class="row">
+                <div class="col-md-6"> <img src="~/front/img/about.png" class="img-responsive"> </div>
+                <div class="col-md-6">
+                    <div class="about-text">
+                        <i class="fa fa-users"></i>
+                        <div class="padding-left">
+                            <h4>Who We Are</h4>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam. Sed commodo nibh ante facilisis bibendum dolor feugiat at. Duis sed dapibus leo nec ornare diam commodo nibh.</p>
+                        </div>
+                        <i class="fa fa-magic"></i>
+                        <div class="padding-left">
+                            <h4>What We Do</h4>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam. Sed commodo nibh ante facilisis bibendum dolor feugiat at. Duis sed dapibus leo nec ornare diam.</p>
+                        </div>
+                        <i class="fa fa-check-square-o"></i>
+                        <div class="padding-left">
+                            <h4>Why Choose Us</h4>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam. Sed commodo nibh ante facilisis bibendum dolor feugiat at.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+    @*<div id="achivements" class="section dark-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-3">
+                    <div class="achivement-box">
+                        <i class="fa fa-smile-o"></i>
+                        <span class="count">120</span>
+                        <h4>Happy clients</h4>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                    <div class="achivement-box">
+                        <i class="fa fa-code"></i>
+                        <span class="count">7,800</span>
+                        <h4>Working hours</h4>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                    <div class="achivement-box">
+                        <i class="fa fa-check-square-o"></i>
+                        <span class="count">340</span>
+                        <h4>Projects completed</h4>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                    <div class="achivement-box">
+                        <i class="fa fa-trophy"></i>
+                        <span class="count">25</span>
+                        <h4>Awards won</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+    <!-- Team Section -->
+    <div id="team" class="text-center">
+        <div class="container">
+            <div class="section-title center">
+                <h2>团队精英</h2>
+                <hr>
+                @*<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diamcommodo nibh ante facilisis.</p>*@
+            </div>
+            <div id="row">
+                <div class="col-md-3 col-sm-6">
+                    <div class="thumbnail">
+                        <img src="~/front/img/team/01.jpg" alt="..." class="img-circle team-img">
+                        <div class="caption">
+                            <h3>刘汉捷</h3>
+                            <p>町隐民宿学院创始人</p>
+                            <p>既见民宿品牌创始人</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="thumbnail">
+                        <img src="~/front/img/team/02.jpg" alt="..." class="img-circle team-img">
+                        <div class="caption">
+                            <h3>李&nbsp;虹</h3>
+                            <p>町隐民宿学院院长</p>
+                            <p>大理远方的家创始人</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="thumbnail">
+                        <img src="~/front/img/team/03.jpg" alt="..." class="img-circle team-img">
+                        <div class="caption">
+                            <h3>戴&nbsp;雷</h3>
+                            <p>町隐民宿学院咨询项目负责人</p>
+                            <p>曾任职于SMART度假产业专委会</p>
+                            <p>毕业于约翰斯霍普金斯大学</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="thumbnail">
+                        <img src="~/front/img/team/04.jpg" alt="..." class="img-circle team-img">
+                        <div class="caption">
+                            <h3>谢&nbsp;雪</h3>
+                            <p>[要火呀]民宿平台创始人</p>
+                            <p>去哪儿酒店杂志专栏作者</p>
+                            <p>町隐民宿学院讲师</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Testimonials Section -->
+    <div id="testimonials" class="text-center">
+        <div class="container">
+            <div class="section-title center">
+                <h2 style="color:#F4D03F">品牌故事</h2>
+                <hr>
+            </div>
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div id="testimonial" class="owl-carousel owl-theme">
+                        <div class="item">
+                            <p style="color:brown">町隐民宿学院致力于民宿行业人才培养及输出，成立两年来开展民宿管家店长培训二十多期，民宿沙龙二十多场，举办政府及文旅企业招商，行业论坛多次。并与赢商网共同组建云南民宿行业联盟，是国内最具影响力的民宿行业培训机构之一，目前已经有大理本部，町隐·江南民宿学院，町隐·巴蜀民宿学院，町隐·广西民宿学院，町隐·八闽民宿学院等六个分院。</p>
+                            <p style="font-size:20px;color:#F4D03F">町隐 · 民宿学院</p>
+                        </div>
+                        <div class="item">
+                            <p style="color:brown">既见语出《诗经》“既见君子，云胡不喜”，是公司旗下自营的个性化住宿品牌。以运营中心+连锁店的模式，针对中高端客群提供品质住宿及在地化旅行体验。目前有既见欢喜、既见达舍、既见南国、既见苍海四个分店。</p>
+                            <p style="font-size:20px;color:#F4D03F">既见 · 非标民宿</p>
+                        </div>
+                        <div class="item">
+                            <p style="color:brown">小即是美依托町隐民宿学院说沉淀行业资源，为民宿行业提供媒体服务支持，并为乡建文旅项目提供民宿集群的咨询和行业资源导入。</p>
+                            <p style="font-size:20px;color:#F4D03F">小即是美 · 文化传播</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div id="contact" class="text-center">
+        <div class="container">
+            <div class="section-title center">
+                <h2><strong>联系</strong>我们</h2>
+                <hr>
+                <p>学习 成就 民宿</p>
+            </div>
+            <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-4">
+                    <i class="fa fa-map-marker fa-2x"></i>
+                    <p>
+                        云南省大理市<br>
+                        蜜湾小镇B18栋
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <i class="fa fa-envelope-o fa-2x"></i>
+                    <p>lhj8814@126.com</p>
+                </div>
+                <div class="col-md-4">
+                    <i class="fa fa-phone fa-2x"></i>
+                    <p> 136 9137 0675</p>
+                </div>
+                <hr>
+                <div class="clearfix"></div>
+            </div>
+            <div class="col-md-8 col-md-offset-2">
+                <hr>
+                <h3>给我们留言</h3>
+                <form name="sentMessage" id="contactForm" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" id="name" class="form-control" placeholder="姓名" required="required">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="email" id="email" class="form-control" placeholder="邮箱" required="required">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" id="message" class="form-control" rows="4" placeholder="留言" required></textarea>
+                        <p class="help-block text-danger"></p>
+                    </div>
+                    <div id="success"></div>
+                    <button type="submit" class="btn btn-default">发送</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+    <nav id="footer">
+        <div class="container">
+            <div class="pull-left fnav">
+                <p>Copyright &copy; 2017 Company Name All Rights Reserved. </p>
+            </div>
+            @*<div class="pull-right fnav">
+                <ul class="footer-social">
+                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+            </div>*@
+        </div>
+    </nav>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script type="text/javascript" src="~/front/js/bootstrap.js"></script>
+    <script type="text/javascript" src="~/front/js/SmoothScroll.js"></script>
+    <script type="text/javascript" src="~/front/js/jquery.prettyPhoto.js"></script>
+    <script type="text/javascript" src="~/front/js/jquery.isotope.js"></script>
+    <script type="text/javascript" src="~/front/js/jquery.counterup.js"></script>
+    <script type="text/javascript" src="~/front/js/waypoints.js"></script>
+    <script type="text/javascript" src="~/front/js/jqBootstrapValidation.js"></script>
+    <script type="text/javascript" src="~/front/js/contact_me.js"></script>
+    <script src="~/front/js/owl.carousel.js"></script>
+
+    <!-- Javascripts
+        ================================================== -->
+    <script type="text/javascript" src="~/front/js/main.js"></script>
+</body>
+</html>

@@ -16,7 +16,7 @@ namespace JJNG.Web.Areas.Branch.Models
 
         [Required]
         [Display(Name = "房号")]
-        public int HouseNumber { get; set; }
+        public string HouseNumber { get; set; }
 
         [Required]
         [Display(Name = "入住人")]
@@ -103,5 +103,14 @@ namespace JJNG.Web.Areas.Branch.Models
         public string PayWay3 { get; set; }
         [Required]
         public decimal PayAmount3 { get; set; }
+    }
+
+    public class BrhGroupModel
+    {
+        public string PayWay { get; set; }
+        public decimal FrontAmount { get; set; }
+        public decimal StewardAmount { get; set; }
+        public decimal EarningAmount { get; set; }
+        public decimal Total { get; set; }
     }
 }

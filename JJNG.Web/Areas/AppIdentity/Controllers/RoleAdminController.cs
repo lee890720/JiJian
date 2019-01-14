@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 namespace JJNG.Web.Areas.AppIdentity.Controllers
 {
     [Area("AppIdentity")]
-    [Authorize(Roles = "管理员,Admins")]
+    [Authorize(Roles = "管理员,Admins,人事")]
     public class RoleAdminController : Controller
     {
         private RoleManager<IdentityRole> roleManager;

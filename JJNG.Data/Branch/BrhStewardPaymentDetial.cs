@@ -15,7 +15,7 @@ namespace JJNG.Data.Branch
         [Display(Name = "付款明细Id")]
         public long StewardAccountsId { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
         [Display(Name = "付款日期")]
         public DateTime PayDate { get; set; }
         [Required]

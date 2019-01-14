@@ -14,7 +14,7 @@ namespace JJNG.Web.Areas.Branch.Models
         [Display(Name = "录入日期")]
         public DateTime EnteringDate { get; set; }
         [Display(Name = "房号")]
-        public int HouseNumber { get; set; }
+        public string HouseNumber { get; set; }
         [Required]
         [Display(Name = "客户名称")]
         public string CustomerName { get; set; }

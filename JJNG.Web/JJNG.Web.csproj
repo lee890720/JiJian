@@ -8,6 +8,7 @@
     <UserSecretsId>5f4d2584-1243-4c24-9f7b-f82f9af89e85</UserSecretsId>
     <ApplicationInsightsResourceId>/subscriptions/8bce1bd5-2bac-4c43-b041-49cf3f1e5c09/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/JJNG.Web</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/8bce1bd5-2bac-4c43-b041-49cf3f1e5c09/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/JJNG.Web</ApplicationInsightsAnnotationResourceId>
+    <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,7 +43,9 @@
 
   <ItemGroup>
     <Folder Include="Areas\Finance\Models\" />
+    <Folder Include="Areas\Personnel\Models\" />
     <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="wwwroot\lib\icomoon\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -114,6 +117,18 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Finance\Views\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Personnel\_ViewImports.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Personnel\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Shared\_Layout2.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Shared\_ModalM.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

@@ -1,0 +1,436 @@
+﻿@model Tuple<Params, List<UserBelongTo>>
+@{
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+    ViewData["Title"] = controllerName;
+    string path = "/" + areaName + "/" + controllerName;
+}
+<style>
+    .table td.brr {
+        text-align: left !important;
+    }
+
+    .table td.brl {
+        text-align: right !important;
+    }
+
+    .description-header {
+        color: coral;
+    }
+</style>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">今日收入</h3>
+                    <div class="box-tools pull-right">
+                        <button id="Yesterday" title="昨日" type="button" class="btn btn-box-tool  hidden-xs">昨日</button>
+                        <button id="Today" title="今日" type="button" class="btn btn-box-tool hidden-xs">今日</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                <li><a asp-action="Index"><i class="fa fa-circle-o text-light-blue"></i>全部</a></li>
+                                @foreach (var u in Model.Item2)
+                                {
+                                    <li><a asp-action="Index" asp-route-branch="@u.BelongToName"><i class="fa fa-circle-o text-light-blue"></i>@u.BelongToName</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div id="brhGroup-body" class="box-body" style="margin:30px">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
+                            <div class="table-responsive">
+                                <table id="table-brhGroup" class="table table-hover" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>付款方式</th>
+                                            <th>客房收入</th>
+                                            <th>外销收入</th>
+                                            <th>其它收入</th>
+                                            <th>汇总</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th style="text-align:right !important">合计:</th>
+                                            <th style="color:coral"></th>
+                                            <th style="color:coral"></th>
+                                            <th style="color:coral"></th>
+                                            <th style="color:coral"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 hidden-xs">
+                            <div id="brhGroupChart" style="height:300px"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="description-block border-right">
+                                <h5 id="earning" class="description-header"></h5>
+                                <a asp-action="Index" asp-controller="FncEarningRecord">
+                                    <span class="description-text">月/日收入</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="description-block border-right">
+                                <h5 id="expend" class="description-header"></h5>
+                                <a asp-action="Index" asp-controller="FncExpendRecord">
+                                    <span class="description-text">月/日支出</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="description-block border-right">
+                                <h5 id="imprest" class="description-header"></h5>
+                                    <a asp-action="Index" asp-controller="FncImprestAccount">
+                                        <span class="description-text">备用金支出</span>
+                                    </a>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="description-block border-right">
+                                <h5 id="rate" class="description-header"></h5>
+                                <a>
+                                    <span class="description-text">月/日出租率</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="description-block border-right">
+                                <h5 id="steward" class="description-header"></h5>
+                                <a asp-action="Index" asp-controller="FncStewardAccount">
+                                    <span class="description-text">月/日外销流水</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="description-block">
+                                <h5 id="frontdesk" class="description-header"></h5>
+                                <a asp-action="Index" asp-controller="FncFrontDeskAccount">
+                                    <span class="description-text">月/日客房流水</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts{
+<script>
+        $(function () {
+            //初始化参数
+            var _connect =@Html.Raw(Json.Serialize(Model.Item1));
+            var brhGroupChart = echarts.init(document.getElementById('brhGroupChart'));
+            var legendData = [];
+            var seriesData = [];
+            var legendDataY = [];
+            var seriesDataY = [];
+            var _brhGroup = [];
+            var _brhGroupY = [];
+            var _brhCollect = [];
+
+            //#region 计算显示账号的数据
+            function CalculateAccount(data) {
+                if (data != null) {
+                    $("#earning").text(data[0].amount + "-" + data[0].count + " / " + data[1].amount + "-" +data[1].count);
+                    $("#expend").text(data[2].amount + "-" + data[2].count + " / " + data[3].amount + "-" + data[3].count);
+                    $("#imprest").text(data[4].amount + "-" + data[4].count);
+                    $("#rate").text(data[5].amount + " % / " + data[6].amount + " %");
+                    $("#steward").text(data[7].amount + "-" + data[7].count + " / " +  data[8].amount + "-" + data[8].count);
+                    $("#frontdesk").text(data[9].amount + "-" + data[9].count + " / " +  data[10].amount + "-" + data[10].count);
+                }
+            };
+            //#endregion
+
+            //#region Ajax optionAjax
+            var optionAjax = {
+                type: "post",
+                async: true,
+                url: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: {},
+                success: function (result) {
+                },
+            };
+            //#endregion
+
+            //#region Ajax GetGroup
+            function GetGroup() {
+                optionAjax.url = "/Finance/FncCollect/GetGroup";
+                optionAjax.data = JSON.stringify({ branch:_connect.branch});
+                optionAjax.success = function (result) {
+                    //获取数据
+                    _brhGroup = result.brhGroup;
+                    _brhGroupY = result.brhGroupY;
+                    _brhCollect = result.brhCollectModel;
+
+                    CalculateAccount(_brhCollect);
+
+                    for (var i = 0; i < _brhGroup.length; i++) {
+                        var _name = _brhGroup[i].payWay;
+                        var _value = parseFloat(_brhGroup[i].total).toFixed(2);
+                        legendData.push(_name);
+                        seriesData.push({ name: _name, value: _value });
+                    }
+                    for (var i = 0; i < _brhGroupY.length; i++) {
+                        var _name = _brhGroupY[i].payWay;
+                        var _value = parseFloat(_brhGroupY[i].total).toFixed(2);
+                        legendDataY.push(_name);
+                        seriesDataY.push({ name: _name, value: _value });
+                    }
+                    //初始化图表
+                    var legendShow = false;
+                    var centerValue = ['50%', '50%'];
+                    if (document.body.clientWidth > 1200) {
+                        legendShow = true;
+                        centerValue = ['40%', '50%'];
+                    }
+                    brhGroupChart.hideLoading();
+                    brhGroupChart.setOption({
+                        legend: {
+                            show:legendShow,
+                            data: legendData
+                        },
+                        series: [
+                            {
+                                name: 'SymbolCode',
+                                center:centerValue,
+                                data: seriesData
+                            }
+                        ]
+                    });
+                    //初始化表
+                    table_brhGroup.api().clear();
+                    table_brhGroup.api().rows.add(_brhGroup).draw();
+                };
+
+                $.ajax(optionAjax);
+            };
+            //#endregion
+
+            //#region brhGroupChart设置
+            brhGroupChart.setOption({
+                title: {
+                    text: 'Positions',
+                    show: false
+                },
+                tooltip: {
+                    show:false,
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    show:true,
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 10,
+                    bottom: 10,
+                    data: legendData
+                },
+                series: [
+                    {
+                        name: 'SymbolCode',
+                        type: 'pie',
+                        radius: ['50%', '75%'],
+                        center: ['40%', '50%'],
+                        avoidLabelOverlap: false,
+                        data: seriesData,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center',
+                                formatter: '{b} : {c} ({d}%)',
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '12',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            });
+            brhGroupChart.showLoading();
+            //#endregion
+
+            //#region 初始化table_brhGroup
+            var table_brhGroup = $('#table-brhGroup').dataTable(
+                {
+                    order: [[0, "asc"]],
+                    info: false,
+                    paging: false,
+                    dom:
+                        "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    processing: true,
+                    data: [],
+                    language: {
+                        processing: "加载中...",
+                        lengthMenu: "每页显示 _MENU_ 条数据",
+                        zeroRecords: "没有匹配结果",
+                        info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                        infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                        infoFiltered: "(由 _MAX_ 项结果过滤)",
+                        infoPostFix: "",
+                        search: "搜索:",
+                        url: "",
+                        emptyTable: "没有匹配结果",
+                        loadingRecords: "载入中...",
+                        thousands: ",",
+                        paginate: {
+                            first: "首页",
+                            previous: "上一页",
+                            next: "下一页",
+                            last: "末页"
+                        },
+                        aria: {
+                            sortAscending: ": 以升序排列此列",
+                            sortDescending: ": 以降序排列此列"
+                        }
+                    },
+                    columns: [
+                        { data: "payWay" },
+                        { data: "frontAmount" },
+                        { data: "stewardAmount" },
+                        { data: "earningAmount" },
+                                { data: "total" },
+                    ],
+                    footerCallback: function (tfoot, data, start, end, display) {
+                        var api = this.api(), data;
+
+                        // Remove the formatting to get integer data for summation
+                        var intVal = function (i) { return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0; };
+
+                        // Total over all pages
+                        total1 = api.column(1).data().reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                        // Update footer
+                        $(api.column(1).footer()).html(total1.toFixed(2));
+                        // Total over all pages
+                        total2 = api.column(2).data().reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                        // Update footer
+                        $(api.column(2).footer()).html(total2.toFixed(2));
+                        // Total over all pages
+                        total3 = api.column(3).data().reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                        // Update footer
+                        $(api.column(3).footer()).html(total3.toFixed(2));
+                        // Total over all pages
+                        total4 = api.column(4).data().reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                        // Update footer
+                        $(api.column(4).footer()).html(total4.toFixed(2));
+                    }
+                });
+            //#endregion
+
+
+            $("#Yesterday").click(function () {
+                //初始化图表
+                var legendShow = false;
+                var centerValue = ['50%', '50%'];
+                if (document.body.clientWidth > 1200) {
+                    legendShow = true;
+                    centerValue = ['40%', '50%'];
+                }
+                brhGroupChart.hideLoading();
+                brhGroupChart.setOption({
+                    legend: {
+                        show: legendShow,
+                        data: legendDataY
+                    },
+                    series: [
+                        {
+                            name: 'SymbolCode',
+                            center: centerValue,
+                            data: seriesDataY
+                        }
+                    ]
+                });
+                //初始化表
+                table_brhGroup.api().clear();
+                table_brhGroup.api().rows.add(_brhGroupY).draw();
+            });
+            $("#Today").click(function () {
+                //初始化图表
+                var legendShow = false;
+                var centerValue = ['50%', '50%'];
+                if (document.body.clientWidth > 1200) {
+                    legendShow = true;
+                    centerValue = ['40%', '50%'];
+                }
+                brhGroupChart.hideLoading();
+                brhGroupChart.setOption({
+                    legend: {
+                        show: legendShow,
+                        data: legendData
+                    },
+                    series: [
+                        {
+                            name: 'SymbolCode',
+                            center: centerValue,
+                            data: seriesData
+                        }
+                    ]
+                });
+                //初始化表
+                table_brhGroup.api().clear();
+                table_brhGroup.api().rows.add(_brhGroup).draw();
+            });
+            //#region 页面加载时执行的方法
+            GetGroup();
+            setTimeout(function () {
+                window.onresize = function () {
+                    brhGroupChart.resize();
+                }
+            }, 200);
+            if (document.body.clientWidth < 768) {
+                $("#brhGroup-body").css("margin", "0");
+                $(".description-block").removeClass("border-right");
+            }
+            //#endregion
+        });
+</script>
+}

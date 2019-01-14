@@ -27,6 +27,16 @@
                             <button type="button" class="btn btn-box-tool" data-widget="collapse">
                                 <i class="fa fa-minus"></i>
                             </button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="改变显示行数" style="padding-bottom:6px"><i class="fa fa-sort-numeric-asc"></i></button>
+                                <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                    <li><a id="page-10"><i class="fa fa-circle-o text-light-blue"></i>10</a></li>
+                                    <li><a id="page-15"><i class="fa fa-circle-o text-light-blue"></i>15</a></li>
+                                    <li><a id="page-20"><i class="fa fa-circle-o text-light-blue"></i>20</a></li>
+                                    <li><a id="page-30"><i class="fa fa-circle-o text-light-blue"></i>30</a></li>
+                                    <li><a id="page-all"><i class="fa fa-circle-o text-light-blue"></i>全部</a></li>
+                                </ul>
+                            </div>
                             <div class="btn-group  hidden-xs" style="padding-top:1px">
                                 <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="显示隐藏列">
                                     <i class="fa fa-bars"></i>
@@ -59,10 +69,10 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepicker">
+                                    <input type="text" placeholder="开始日期" id="date_beg" class="form-control">
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="结束日期" id="date_end" class="form-control datepicker">
+                                    <input type="text" placeholder="结束日期" id="date_end" class="form-control">
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-xs-12">
                                     <input type="text" placeholder="搜索" id="search" class="form-control">
@@ -249,15 +259,13 @@
     }
 </section>
 @section Scripts{
-    <script src="~/js/range_dates.js"></script>
-    <script src="~/js/dateRangeSelector.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
     <script>
         $(function () {
             //#region table1初始化
             var table1 = $('#table-1').dataTable(
                 {
                     order: [[0, "desc"]],
+                    pageLength: 10,
                     dom:
                         "<'row'<'col-sm-6'><'col-sm-6'>>" +
                         "<'row'<'col-sm-12'tr>>" +
@@ -292,7 +300,7 @@
                             visible: false,
                         },
                         {
-                            targets: [-1, -2],
+                            targets: [-1],
                             orderable: false,
                         },
                     ],
@@ -303,17 +311,20 @@
             $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
             $("#date_beg,#date_end").keyup(function () { table1.api().draw(); });
             $("#date_beg,#date_end").change(function () { table1.api().draw(); });
+            $("#page-10").click(function () { table1.api().page.len(10).draw(); });
+            $("#page-15").click(function () { table1.api().page.len(15).draw(); });
+            $("#page-20").click(function () { table1.api().page.len(20).draw(); });
+            $("#page-30").click(function () { table1.api().page.len(30).draw(); });
+            $("#page-all").click(function () { table1.api().page.len(-1).draw(); });
             //#endregion
-
             //#region 设置一些细节
-            $('.datepicker').datepicker({
+            $("#date_beg,#date_end").datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
                 language: "zh-CN",
                 todayBtn: 'linked',
                 todayHighlight: true,
             });
-
             //Select2
             $('.select2').select2();
             //#endregion

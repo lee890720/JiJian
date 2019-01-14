@@ -1,6 +1,7 @@
 ﻿using JJNG.Data;
 using JJNG.Data.AppIdentity;
 using JJNG.Data.Branch;
+using JJNG.Web.Areas.Branch.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,12 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using JJNG.Web.Areas.Branch.Models;
 
 namespace JJNG.Web.Areas.Branch.Controllers
 {
     [Area("Branch")]
-    [Authorize(Roles = "Admins,前台")]
+    [Authorize(Roles = "Admins,管家")]
     public class BrhStewardAccountController : Controller
     {
         private readonly AppDbContext _context;
@@ -36,7 +36,6 @@ namespace JJNG.Web.Areas.Branch.Controllers
             ViewData["UserName"] = _user.UserName;
             ViewData["Position"] = _user.Position;
             ViewData["BelongTo"] = _user.BelongTo;
-
             return View(await _context.BrhStewardAccounts.Where(x => x.Branch == _user.BelongTo).ToListAsync());
         }
 
@@ -84,7 +83,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 BrhStewardPaymentDetial bfp2 = new BrhStewardPaymentDetial();
                 BrhStewardPaymentDetial bfp3 = new BrhStewardPaymentDetial();
 
-                if (brhStewardModel.PayAmount1!=0)
+                if (brhStewardModel.PayAmount1 != 0)
                 {
                     bfp1.StewardAccountsId = brhStewardModel.StewardAccountsId;
                     bfp1.PayWay = brhStewardModel.PayWay1;
@@ -146,7 +145,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return PartialView("~/Areas/Branch/Views/BrhStewardAccount/Create.cshtml",brhStewardModel);
+            return PartialView("~/Areas/Branch/Views/BrhStewardAccount/Create.cshtml", brhStewardModel);
         }
 
         public async Task<IActionResult> Edit(long? id)

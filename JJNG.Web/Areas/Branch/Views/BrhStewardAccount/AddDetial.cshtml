@@ -22,7 +22,7 @@
     </div>
     <div class="form-group">
         <label asp-for="PayDate" class="control-label"></label>
-        <input asp-for="PayDate" type="date" id="startDate" class="form-control  datepicker" />
+        <input asp-for="PayDate" type="text" id="startDate" class="form-control  datetimepicker" />
         <span asp-validation-for="PayDate" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -52,7 +52,7 @@
     var nowDay = now.getDate();
     var nowMonth = now.getMonth();
     var nowYear = now.getFullYear();
-    $('#startDate').val(formatDate(now));
+    //$('#startDate').val(formatDate(now));
 
     $('.datepicker').datepicker({
         format: 'yyyy-mm-dd',
@@ -61,4 +61,12 @@
         todayBtn: 'linked',
         todayHighlight: true,
     });
+    $('#startDate').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii',
+        autoclose: true,
+        language: "zh-CN",
+        todayBtn: 'linked',
+        todayHighlight: true,
+    });
+    $('#startDate').datetimepicker('setDate', new Date());
 </script>

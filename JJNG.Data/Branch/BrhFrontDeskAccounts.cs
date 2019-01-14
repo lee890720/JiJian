@@ -23,7 +23,7 @@ namespace JJNG.Data.Branch
 
         [Required]
         [Display(Name = "房号")]
-        public int HouseNumber { get; set; }
+        public string HouseNumber { get; set; }
 
         [Required]
         [Display(Name = "入住人")]

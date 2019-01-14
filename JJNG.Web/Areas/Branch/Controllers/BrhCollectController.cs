@@ -249,6 +249,64 @@ namespace JJNG.Web.Areas.Branch.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<JsonResult> GetGroup()
+        {
+            AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var now = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time")).Date;
+            var frontDetials = _context.BrhFrontPaymentDetials.Include(x => x.BrhFrontDeskAccounts).Where(x =>x.BrhFrontDeskAccounts.Branch==_user.BelongTo&& x.PayDate.Date == now).ToList();
+            List<BrhGroupModel> brhGroup = new List<BrhGroupModel>();
+            var frontGroup = frontDetials.GroupBy(x => new { x.PayWay }).Select(s => new
+            {
+                PayWay = s.Key.PayWay,
+                FrontAmount = s.Sum(x => x.PayAmount),
+            }).ToList();
+            var stewardDetials = _context.BrhStewardPaymentDetial.Include(x => x.BrhStewardAccounts).Where(x => x.BrhStewardAccounts.Branch == _user.BelongTo && x.PayDate.Date == now).ToList();
+            var stewardGroup = stewardDetials.GroupBy(x => new { x.PayWay }).Select(s => new
+            {
+                PayWay = s.Key.PayWay,
+                StewardAmount = s.Sum(x => x.PayAmount),
+            }).ToList();
+            var earningDetials = _context.BrhEarningRecord.Where(x => x.Branch == _user.BelongTo && x.EnteringDate.Date == now).ToList();
+            var earningGroup = earningDetials.GroupBy(x => new { x.PaymentType }).Select(s => new
+            {
+                PayWay = s.Key.PaymentType,
+                EarningAmount = s.Sum(x => x.Amount),
+            }).ToList();
+            foreach(var p in _context.FncPaymentType.ToList())
+            {
+                var isAdd = false;
+                var brhG = new BrhGroupModel();
+                if (frontGroup.Where(x=>x.PayWay==p.PaymentType).Count()>0)
+                {
+                    var frontG = frontGroup.SingleOrDefault(x => x.PayWay == p.PaymentType);
+                    brhG.PayWay = p.PaymentType;
+                    brhG.FrontAmount = frontG.FrontAmount;
+                    isAdd = true;
+                }
+                if (stewardGroup.Where(x => x.PayWay == p.PaymentType).Count() > 0)
+                {
+                    var stewardG = stewardGroup.SingleOrDefault(x => x.PayWay == p.PaymentType);
+                    brhG.PayWay = p.PaymentType;
+                    brhG.StewardAmount = stewardG.StewardAmount;
+                    isAdd = true;
+                }
+                if (earningGroup.Where(x => x.PayWay == p.PaymentType).Count() > 0)
+                {
+                    var earningG = earningGroup.SingleOrDefault(x => x.PayWay == p.PaymentType);
+                    brhG.PayWay = p.PaymentType;
+                    brhG.EarningAmount = earningG.EarningAmount;
+                    isAdd = true;
+                }
+                if (isAdd)
+                {
+                    brhG.Total = brhG.FrontAmount + brhG.StewardAmount + brhG.EarningAmount;
+                    brhGroup.Add(brhG);
+                }
+            }
+            return Json(new { brhGroup, brhGroup.Count});
+        }
+
         private bool BrhMemoExists(int id)
         {
             return _context.BrhMemo.Any(e => e.MemoId == id);

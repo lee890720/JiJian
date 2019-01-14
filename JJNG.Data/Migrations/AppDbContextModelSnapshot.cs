@@ -54,6 +54,34 @@ namespace JJNG.Data.Migrations
                     b.ToTable("App_Menu");
                 });
 
+            modelBuilder.Entity("JJNG.Data.Branch.BrhClient", b =>
+                {
+                    b.Property<int>("ClientId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Branch")
+                        .IsRequired();
+
+                    b.Property<DateTime>("EnteringDate");
+
+                    b.Property<string>("EnteringStaff")
+                        .IsRequired();
+
+                    b.Property<string>("Follow");
+
+                    b.Property<bool>("IsGood");
+
+                    b.Property<bool>("IsSale");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Note");
+
+                    b.HasKey("ClientId");
+
+                    b.ToTable("Brh_Client");
+                });
+
             modelBuilder.Entity("JJNG.Data.Branch.BrhConnectRecord", b =>
                 {
                     b.Property<int>("ConnectRecordId")
@@ -174,7 +202,8 @@ namespace JJNG.Data.Migrations
 
                     b.Property<string>("FrontDeskLeader");
 
-                    b.Property<int>("HouseNumber");
+                    b.Property<string>("HouseNumber")
+                        .IsRequired();
 
                     b.Property<bool>("IsFinance");
 
@@ -332,7 +361,7 @@ namespace JJNG.Data.Migrations
 
                     b.Property<string>("FrontDeskLeader");
 
-                    b.Property<int>("HouseNumber");
+                    b.Property<string>("HouseNumber");
 
                     b.Property<bool>("IsFinance");
 
@@ -440,6 +469,100 @@ namespace JJNG.Data.Migrations
                     b.ToTable("Fnc_PaymentType");
                 });
 
+            modelBuilder.Entity("JJNG.Data.Personnel.PsnAddress", b =>
+                {
+                    b.Property<int>("AddressId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AddressAccountId");
+
+                    b.Property<string>("Branch")
+                        .IsRequired();
+
+                    b.Property<string>("EnteringStaff")
+                        .IsRequired();
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Note");
+
+                    b.Property<string>("Phone");
+
+                    b.Property<string>("Purpose");
+
+                    b.HasKey("AddressId");
+
+                    b.HasIndex("AddressAccountId");
+
+                    b.ToTable("Psn_Address");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Personnel.PsnAddressAccount", b =>
+                {
+                    b.Property<int>("AddressAccountId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AccountName");
+
+                    b.Property<string>("BelongTo");
+
+                    b.Property<string>("Department");
+
+                    b.Property<string>("Manager");
+
+                    b.HasKey("AddressAccountId");
+
+                    b.ToTable("Psn_AddressAccount");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Personnel.PsnNote", b =>
+                {
+                    b.Property<int>("NoteId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Account");
+
+                    b.Property<string>("Branch")
+                        .IsRequired();
+
+                    b.Property<string>("EnteringStaff")
+                        .IsRequired();
+
+                    b.Property<string>("Note");
+
+                    b.Property<int>("NoteAccountId");
+
+                    b.Property<string>("Password");
+
+                    b.Property<string>("Phone");
+
+                    b.Property<string>("Platform");
+
+                    b.HasKey("NoteId");
+
+                    b.HasIndex("NoteAccountId");
+
+                    b.ToTable("Psn_Note");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Personnel.PsnNoteAccount", b =>
+                {
+                    b.Property<int>("NoteAccountId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AccountName");
+
+                    b.Property<string>("BelongTo");
+
+                    b.Property<string>("Department");
+
+                    b.Property<string>("Manager");
+
+                    b.HasKey("NoteAccountId");
+
+                    b.ToTable("Psn_NoteAccount");
+                });
+
             modelBuilder.Entity("JJNG.Data.Branch.BrhFrontPaymentDetial", b =>
                 {
                     b.HasOne("JJNG.Data.Branch.BrhFrontDeskAccounts", "BrhFrontDeskAccounts")
@@ -461,6 +584,22 @@ namespace JJNG.Data.Migrations
                     b.HasOne("JJNG.Data.Branch.BrhStewardAccounts", "BrhStewardAccounts")
                         .WithMany("BrhStewardPaymentDetial")
                         .HasForeignKey("StewardAccountsId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("JJNG.Data.Personnel.PsnAddress", b =>
+                {
+                    b.HasOne("JJNG.Data.Personnel.PsnAddressAccount", "PsnAddressAccount")
+                        .WithMany("PsnAddress")
+                        .HasForeignKey("AddressAccountId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("JJNG.Data.Personnel.PsnNote", b =>
+                {
+                    b.HasOne("JJNG.Data.Personnel.PsnNoteAccount", "PsnNoteAccount")
+                        .WithMany("PsnNote")
+                        .HasForeignKey("NoteAccountId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
