@@ -36,6 +36,18 @@ namespace JJNG.Web.Areas.Branch.Controllers
             ViewData["UserName"] = _user.UserName;
             ViewData["Position"] = _user.Position;
             ViewData["BelongTo"] = _user.BelongTo;
+            //var channel = _context.FncChannelType.ToList();
+            //var front = _context.BrhFrontDeskAccounts.ToList();
+            //foreach (var c in channel)
+            //{
+            //    foreach (var f in front)
+            //    {
+            //        if (c.ChannelType == f.Channel)
+            //            f.Color = c.Color;
+            //        _context.Update(f);
+            //    }
+            //}
+            //await _context.SaveChangesAsync();
 
             return View(await _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo).ToListAsync());
         }
@@ -88,12 +100,12 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 BrhFrontPaymentDetial bfp2 = new BrhFrontPaymentDetial();
                 BrhFrontPaymentDetial bfp3 = new BrhFrontPaymentDetial();
 
-                if (brhFrontModel.PayAmount1!=0)
+                if (brhFrontModel.PayAmount1 != 0)
                 {
                     bfp1.FrontDeskAccountsId = brhFrontModel.FrontDeskAccountsId;
                     bfp1.PayWay = brhFrontModel.PayWay1;
                     bfp1.PayDate = brhFrontModel.PayDate1;
-                    bfp1.PayAmount =brhFrontModel.PayAmount1;
+                    bfp1.PayAmount = brhFrontModel.PayAmount1;
                     _context.Add(bfp1);
                 }
                 else
@@ -130,16 +142,16 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 brhFrontDeskAccounts.EndDate = brhFrontModel.EndDate;
                 brhFrontDeskAccounts.EnteringStaff = brhFrontModel.EnteringStaff;
                 brhFrontDeskAccounts.FrontDeskAccountsId = brhFrontModel.FrontDeskAccountsId;
-                brhFrontDeskAccounts.FrontDeskLeader= brhFrontModel.FrontDeskLeader;
+                brhFrontDeskAccounts.FrontDeskLeader = brhFrontModel.FrontDeskLeader;
                 brhFrontDeskAccounts.HouseNumber = brhFrontModel.HouseNumber;
                 brhFrontDeskAccounts.Note = brhFrontModel.Note;
-                brhFrontDeskAccounts.Receivable= brhFrontModel.Receivable;
+                brhFrontDeskAccounts.Receivable = brhFrontModel.Receivable;
                 brhFrontDeskAccounts.RelationStaff = brhFrontModel.RelationStaff;
-                brhFrontDeskAccounts.StartDate= brhFrontModel.StartDate;
+                brhFrontDeskAccounts.StartDate = brhFrontModel.StartDate;
                 brhFrontDeskAccounts.Steward = brhFrontModel.Steward;
-                brhFrontDeskAccounts.StewardLeader= brhFrontModel.StewardLeader;
+                brhFrontDeskAccounts.StewardLeader = brhFrontModel.StewardLeader;
                 brhFrontDeskAccounts.TotalPrice = brhFrontModel.TotalPrice;
-                brhFrontDeskAccounts.UnitPrice= brhFrontModel.UnitPrice;
+                brhFrontDeskAccounts.UnitPrice = brhFrontModel.UnitPrice;
 
                 brhFrontDeskAccounts.Received = bfp1.PayAmount + bfp2.PayAmount + bfp3.PayAmount;
 
@@ -152,7 +164,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return PartialView("~/Areas/Branch/Views/BrhFrontDeskAccount/Create.cshtml",brhFrontModel);
+            return PartialView("~/Areas/Branch/Views/BrhFrontDeskAccount/Create.cshtml", brhFrontModel);
         }
 
         public async Task<IActionResult> Edit(long? id)
@@ -175,7 +187,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             ViewData["HouseNumber"] = new SelectList(list_houseNumber, "HouseNumber", "HouseNumber", brhFrontDeskAccounts.HouseNumber);
 
             var list_channelType = _context.FncChannelType.ToList();
-            ViewData["ChannelType"] = new SelectList(list_channelType, "ChannelType", "ChannelType",brhFrontDeskAccounts.Channel);
+            ViewData["ChannelType"] = new SelectList(list_channelType, "ChannelType", "ChannelType", brhFrontDeskAccounts.Channel);
 
             return PartialView("~/Areas/Branch/Views/BrhFrontDeskAccount/Edit.cshtml", brhFrontDeskAccounts);
         }
@@ -266,7 +278,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 var total = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == brhFrontPaymentDetial.FrontDeskAccountsId).Sum(x => x.PayAmount);
                 var brhaccount = _context.BrhFrontDeskAccounts.SingleOrDefault(x => x.FrontDeskAccountsId == brhFrontPaymentDetial.FrontDeskAccountsId);
                 brhaccount.Received = total;
-                    if (brhaccount.Received == brhaccount.Receivable)
+                if (brhaccount.Received == brhaccount.Receivable)
                     brhaccount.IsFinish = true;
                 else
                     brhaccount.IsFinish = false;
