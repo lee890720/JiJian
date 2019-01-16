@@ -35,7 +35,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ChannelType,Sequence")] FncChannelType fncChannelType)
+        public async Task<IActionResult> Create([Bind("Id,ChannelType,Sequence,Color")] FncChannelType fncChannelType)
         {
             if (ModelState.IsValid)
             {
@@ -63,7 +63,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ChannelType,Sequence")] FncChannelType fncChannelType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ChannelType,Sequence,Color")] FncChannelType fncChannelType)
         {
             if (id != fncChannelType.Id)
             {

@@ -74,6 +74,7 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\Edit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\FrontCalendar\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\FrontCalendar\Index2.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\_ViewImports.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\_ViewStart.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncChannelType\CreateEdit.cshtml
@@ -125,6 +126,7 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Views\Shared\_CreateEditLayout.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_DeletePartial.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_Layout.cshtml
+--file=D:\JiJian\JJNG.Web\Views\Shared\_Layout2.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_Modal.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_ModalFooter.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_ModalHeader.cshtml

@@ -188,6 +188,8 @@ namespace JJNG.Data.Migrations
                     b.Property<string>("Channel")
                         .IsRequired();
 
+                    b.Property<string>("Color");
+
                     b.Property<int>("CustomerCount");
 
                     b.Property<string>("CustomerName")
@@ -419,6 +421,8 @@ namespace JJNG.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ChannelType");
+
+                    b.Property<string>("Color");
 
                     b.Property<int>("Sequence");
 

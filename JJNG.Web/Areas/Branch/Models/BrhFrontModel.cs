@@ -40,6 +40,9 @@ namespace JJNG.Web.Areas.Branch.Models
         [Display(Name = "订房渠道")]
         public string Channel { get; set; }
 
+        [Display(Name = "颜色")]
+        public string Color { get; set; }
+
         [Required]
         [Display(Name = "单价")]
         public decimal UnitPrice { get; set; }

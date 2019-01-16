@@ -1,7 +1,8 @@
-﻿@{
+﻿@model Tuple<AppIdentityUser,List<FncChannelType>>
+
+@{
     Layout = "_Layout2";
 }
-@model AppIdentityUser
 <link href="~/lib/fullcalendar/fullcalendar.min.css" rel="stylesheet" />
 <link href="~/lib/fullcalendar/fullcalendar.print.min.css" rel="stylesheet" media="print" />
 <link href='~/lib/fullcalendar/scheduler/scheduler.min.css' rel='stylesheet' />
@@ -38,13 +39,13 @@
             </div>
             <div class="input-group" style="margin-bottom:10px">
                 <span class="input-group-addon">已收</span>
-                <input id="form-received" type="text" class="form-control clear-data">
+                <input id="form-received" type="text"  class="form-control clear-data">
             </div>
         </div>
         <div class="col-md-6">
             <div class="input-group" style="margin-bottom:10px">
                 <span class="input-group-addon">渠道</span>
-                <input id="form-channel" type="text" class="form-control clear-data">
+                <select id="form-channel" asp-items="ViewBag.ChannelType" class="form-control"></select>
             </div>
             <div class="input-group" style="margin-bottom:10px">
                 <span class="input-group-addon">管家</span>
@@ -67,6 +68,179 @@
                 <input id="form-note" type="text" class="form-control clear-data">
             </div>
         </div>
+        <div class="col-md-12">
+            <div class="input-group" style="margin-bottom:10px">
+                <div class="input-group-btn">
+                    <button id="addpay" type="button" class="btn btn-primary">增加收款</button>
+                    <button id="isfinish" type="button" class="btn btn-primary">未结账</button>
+                </div>
+                @{
+                    if (Model.Item1.Position != "普通员工")
+                    {
+                        <button id="isfront" type="button" class="btn btn-primary">前台未审</button>
+
+                    }
+                    if (Model.Item1.Department == "财务部")
+                    {
+                        <button id="isfinance" type="button" class="btn btn-primary">财务未审</button>
+
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="payway1" class="form-control"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="payway2" class="form-control"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="payway3" class="form-control"></select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="paydate1" type="text" class="form-control datetimepicker" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="paydate2" type="text" class="form-control datetimepicker" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="paydate3" type="text" class="form-control datetimepicker" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="payamount1" type="text" value="0" class="form-control  clear-data" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="payamount2" type="text" value="0" class="form-control  clear-data" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="payamount3" type="text" value="0" class="form-control  clear-data" />
+            </div>
+        </div>
+    </form>
+</div>
+<div id="create-form1" style="display:none">
+    <form class="form-inline">
+        <br />
+        <br />
+        <br />
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">姓名</span>
+            <input id="form1-name" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">人数</span>
+            <input id="form1-count" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">单价</span>
+            <input id="form1-unit" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">总价</span>
+            <input id="form1-total" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">应收</span>
+            <input id="form1-receivable" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">已收</span>
+            <input id="form1-received" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">渠道</span>
+            <input id="form1-channel" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">管家</span>
+            <input id="form1-steward" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">前组</span>
+            <input id="form1-frontleader" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">管组</span>
+            <input id="form1-stewardleader" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">关系</span>
+            <input id="form1-relation" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">备注</span>
+            <input id="form1-note" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <div class="input-group-btn">
+                <button id="1addpay" type="button" class="btn btn-primary">增加收款</button>
+                <button id="1isfinish" type="button" class="btn btn-primary">未结账</button>
+            </div>
+            @{
+                if (Model.Item1.Position != "普通员工")
+                {
+                    <button id="1isfront" type="button" class="btn btn-primary">前台未审</button>
+
+                }
+                if (Model.Item1.Department == "财务部")
+                {
+                    <button id="1isfinance" type="button" class="btn btn-primary">财务未审</button>
+
+                }
+            }
+        </div>
+        <div class="form1">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="1payway1" class="form-control"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="1payway2" class="form-control"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="1payway3" class="form-control"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="1paydate1" type="text" class="form-control datetimepicker" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="1paydate2" type="text" class="form-control datetimepicker" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="1paydate3" type="text" class="form-control datetimepicker" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="1payamount1" type="text" value="0" class="form-control" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="1payamount2" type="text" value="0" class="form-control" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="1payamount3" type="text" value="0" class="form-control" />
+            </div>
+        </div>
     </form>
 </div>
 @section Scripts{
@@ -78,7 +252,9 @@
     <script src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="utf-8"></script>
     <script>
         $(function () {
-            var _connect =@Html.Raw(Json.Serialize(Model));
+            var _connect =@Html.Raw(Json.Serialize(Model.Item1));
+            var _channel =@Html.Raw(Json.Serialize(Model.Item2));
+            var _frontId=11111111;
             var _branch = _connect.belongTo;
             var _userName = _connect.userName;
             var _frontData = [];
@@ -115,12 +291,20 @@
 
                     for (var i = 0; i < _frontData.length; i++) {
                         var _id = _frontData[i].frontDeskAccountsId;
+                        var _color = _frontData[i].color;
                         var _resourceId = _frontData[i].houseNumber;
-                        var _title = _frontData[i].customerName + " " + _frontData[i].channel;
-                        var _allDay = true;
+                        var _title = _frontData[i].customerName+" "+_frontData[i].channel;
                         var _start = moment(_frontData[i].startDate).format("YYYY-MM-DD");
                         var _end = moment(_frontData[i].endDate).format("YYYY-MM-DD");
-                        _eventData.push({ id: _id, resourceId: _resourceId, title: _title, allDay: true, start: _start, end: _end, backgroundColor: '#00c0ef', borderColor: '#00c0ef' });
+                        _eventData.push({
+                            id: _id,
+                            resourceId: _resourceId,
+                            title: _title,
+                            allDay: true,
+                            start: _start,
+                            end: _end,
+                            color: _color,
+                        });
                     };
                     for (var i = 0; i < _branchData.length; i++) {
                         var _id = _branchData[i];
@@ -133,6 +317,7 @@
             };
             //#endregion
 
+            //#region InitCalendar
             function InitCalendar() {
                 $('#calendar').fullCalendar({
                     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
@@ -159,7 +344,264 @@
                     editable: true,
                     selectable: true,
                     selectHelper: true,
+                    dayClick: function (date, allDay, jsEvent, view,resource) {
+                        //$(this).css('background-color', 'red');
+                        $(".clear-data").val("");
+                        $(".form1").hide();
+                        $('#1isfinish').html("未结账");
+                        $('#1isfront').html("前台未审");
+                        $('#1isfinance').html("财务未审");
+                        //#region change/keyup事件
+                        $("#1addpay").on('click', function () {
+                            $(".form1").show();
+                        });
+                        $("#1isfinish").on('click', function () {
+                            var hl = $("#1isfinish").html();
+                            if (hl == "未结账")
+                                $('#1isfinish').html("已结账");
+                            if (hl == "已结账")
+                                $('#1isfinish').html("未结账");
+                        });
+                        $("#1isfront").on('click', function () {
+                            var hl = $("#1isfront").html();
+                            if (hl == "前台未审")
+                                $('#1isfront').html("前台已审");
+                            if (hl == "前台已审")
+                                $('#1isfront').html("前台未审");
+                        });
+                        $("#1isfinance").on('click', function () {
+                            var hl = $("#1isfinance").html();
+                            if (hl == "财务未审")
+                                $('#1isfinance').html("财务已审");
+                            if (hl == "财务已审")
+                                $('#1isfinance').html("财务未审");
+                        });
+                        if (navigator.platform.indexOf('Win32') != -1) {
+                        } else {
+                            //#region change/keyup事件
+                            $('#1payamount1').keyup(function () {
+                                var pay1 = document.getElementById("1payamount1").value;
+                                var pay2 = document.getElementById("1payamount2").value;
+                                var pay3 = document.getElementById("1payamount3").value;
+                                var result = 0.00;
+                                if (checkIsDouble(pay1))
+                                    result += parseFloat(pay1);
+                                if (parseFloat(pay2) > 0)
+                                    result += parseFloat(pay2);
+                                if (parseFloat(pay3) > 0)
+                                    result += parseFloat(pay3);
+                                $('#form1-received').val(result.toString());
+                            });
+                            $('#1payamount2').keyup(function () {
+                                var pay1 = document.getElementById("1payamount1").value;
+                                var pay2 = document.getElementById("1payamount2").value;
+                                var pay3 = document.getElementById("1payamount3").value;
+                                var result = 0.00;
+                                if (checkIsDouble(pay2))
+                                    result += parseFloat(pay2);
+                                if (parseFloat(pay1) > 0)
+                                    result += parseFloat(pay1);
+                                if (parseFloat(pay3) > 0)
+                                    result += parseFloat(pay3);
+                                $('#form1-received').val(result.toString());
+                            });
+                            $('#1payamount3').keyup(function () {
+                                var pay1 = document.getElementById("1payamount1").value;
+                                var pay2 = document.getElementById("1payamount2").value;
+                                var pay3 = document.getElementById("1payamount3").value;
+                                var result = 0.00;
+                                if (checkIsDouble(pay3))
+                                    result += parseFloat(pay3);
+                                if (parseFloat(pay1) > 0)
+                                    result += parseFloat(pay1);
+                                if (parseFloat(pay2) > 0)
+                                    result += parseFloat(pay2);
+                                $('#form1-received').val(result.toString());
+                            });
+
+                            $("#1addpay").on('ifChecked', function () {
+                                $(".form1").show();
+                            });
+                            $("#1addpay").on('ifUnchecked', function () {
+                                $(".form1").hide();
+                            });
+                            $('#form1-unit').keyup(function () {
+                                var unitPrice = document.getElementById("form1-unit").value;
+                                var result = 0.00;
+                                if (checkIsDouble(unitPrice))
+                                    result = parseFloat(unitPrice);
+                                console.log(unitPrice);
+                                var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
+                                console.log(days);
+                                result = result * days;
+                                $('#form1-total').val(result.toString());
+                            });
+                            $('#form1-total').keyup(function () {
+                                var totalPrice = document.getElementById("form1-total").value;
+                                var result = 0.00;
+                                if (checkIsDouble(totalPrice))
+                                    result = parseFloat(totalPrice);
+                                var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
+                                if (parseFloat(days) > 0)
+                                    result = result / days;
+                                $('#form1-unit').val(result.toString());
+                            });
+                        //#endregion
+                            var d = dialog({
+                                title: "新建订单",
+                                content: $("#create-form1"),
+                                okValue: "确定",
+                                ok: function () {
+                                    var title = $('#form1-name').val();
+                                    var count = $('#form1-count').val();
+                                    var unit = $('#form1-unit').val();
+                                    var total = $('#form1-total').val();
+                                    var channel = $('#form1-channel').val();
+                                    var receivable = $('#form1-receivable').val();
+                                    var received = $('#form1-received').val();
+                                    var steward = $("#form1-steward").val();
+                                    var frontleader = $('#form1-frontleader').val();
+                                    var stewardleader = $('#form1-stewardleader').val();
+                                    var relation = $('#form1-relation').val();
+                                    var note = $('#form1-note').val();
+                                    var _data = [];
+                                    $.ajax({
+                                        type: "post",
+                                        async: true,
+                                        url: "/Branch/FrontCalendar/Create",
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        data: JSON.stringify({
+                                            houseNumber: resource.id,
+                                            customerName: title,
+                                            customerCount: count,
+                                            startDate: moment(date).format("YYYY-MM-DD"),
+                                            endDate: moment(date).format("YYYY-MM-DD"),
+                                            channel: channel,
+                                            unitPrice: unit,
+                                            totalPrice: total,
+                                            receivable: receivable,
+                                            received: received,
+                                            enteringStaff: _userName,
+                                            steward: steward,
+                                            frontDeskLeader: frontleader,
+                                            stewardLeader: stewardleader,
+                                            relationStaff: relation,
+                                            branch: _branch,
+                                            note: note,
+                                        }),
+                                        success: function (data) {
+                                            var rid = parseInt(resource.id);
+                                            _data.push({ resourceId: rid, title: title, allDay: true, start: moment(start).format("YYYY-MM-DD"), end: moment(end).format("YYYY-MM-DD"), backgroundColor: '#00c0ef', borderColor: '#00c0ef' });
+                                            $("#calendar").fullCalendar("renderEvent", _data[0], true);
+                                        },
+                                        error: function () {
+                                            alert("Failed");
+                                        }
+
+                                    });
+                                },
+                                cancelValue: "关闭",
+                                cancel: function () {
+                                }
+                            });
+                            d.showModal();
+                        }
+                    },
                     select: function (start, end, jsEvent, view, resource) {
+                        $(".clear-data").val("");
+                        $("#form-received,#payamount1,#payamount2,#payamount3").val("0");
+                        $(".col-md-4").hide();
+                        $('#isfinish').html("未结账");
+                        $('#isfront').html("前台未审");
+                        $('#isfinance').html("财务未审");
+                        //#region change/keyup事件
+                        $("#addpay").on('click', function () {
+                            $(".col-md-4").show();
+                        });
+                        $("#isfinish").on('click', function () {
+                            var hl = $("#isfinish").html();
+                            if (hl == "未结账")
+                                $('#isfinish').html("已结账");
+                            if (hl == "已结账")
+                                $('#isfinish').html("未结账");
+                        });
+                        $("#isfront").on('click', function () {
+                            var hl = $("#isfront").html();
+                            if (hl == "前台未审")
+                                $('#isfront').html("前台已审");
+                            if (hl == "前台已审")
+                                $('#isfront').html("前台未审");
+                        });
+                        $("#isfinance").on('click', function () {
+                            var hl = $("#isfinance").html();
+                            if (hl == "财务未审")
+                                $('#isfinance').html("财务已审");
+                            if (hl == "财务已审")
+                                $('#isfinance').html("财务未审");
+                        });
+
+                        $('#payamount1').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = 0.00;
+                            if (checkIsDouble(pay1))
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay2) > 0)
+                                result += parseFloat(pay2);
+                            if (parseFloat(pay3) > 0)
+                                result += parseFloat(pay3);
+                            $('#form-received').val(result.toString());
+                        });
+                        $('#payamount2').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = 0.00;
+                            if (checkIsDouble(pay2))
+                                result += parseFloat(pay2);
+                            if (parseFloat(pay1) > 0)
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay3) > 0)
+                                result += parseFloat(pay3);
+                            $('#form-received').val(result.toString());
+                        });
+                        $('#payamount3').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = 0.00;
+                            if (checkIsDouble(pay3))
+                                result += parseFloat(pay3);
+                            if (parseFloat(pay1) > 0)
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay2) > 0)
+                                result += parseFloat(pay2);
+                            $('#form-received').val(result.toString());
+                        });
+                        $('#form-unit').keyup(function () {
+                            var unitPrice = document.getElementById("form-unit").value;
+                            var result = 0.00;
+                            if (checkIsDouble(unitPrice))
+                                result = parseFloat(unitPrice);
+                            console.log(unitPrice);
+                            var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
+                            console.log(days);
+                            result = result * days;
+                            $('#form-total').val(result.toString());
+                        });
+                        $('#form-total').keyup(function () {
+                            var totalPrice = document.getElementById("form-total").value;
+                            var result = 0.00;
+                            if (checkIsDouble(totalPrice))
+                                result = parseFloat(totalPrice);
+                            var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
+                            if (parseFloat(days) > 0)
+                                result = result / days;
+                            $('#form-unit').val(result.toString());
+                        });
+                        //#endregion
                         var d = dialog({
                             title: "新建订单",
                             content: $("#create-form"),
@@ -177,7 +619,32 @@
                                 var stewardleader = $('#form-stewardleader').val();
                                 var relation = $('#form-relation').val();
                                 var note = $('#form-note').val();
-                                var _data = [];
+                                var paydate1 = $('#paydate1').val();
+                                var payway1 = $('#payway1').val();
+                                var payamount1 = $('#payamount1').val();
+                                var paydate2 = $('#paydate2').val();
+                                var payway2 = $('#payway2').val();
+                                var payamount2 = $('#payamount2').val();
+                                var paydate3 = $('#paydate3').val();
+                                var payway3 = $('#payway3').val();
+                                var payamount3 = $('#payamount3').val();
+                                var isfinish = false;
+                                if ($('#isfinish').html() == "已结账") {
+                                    isfinish = true;
+                                }
+                                var isfront = false;
+                                if ($('#isfront').html() == "前台已审") {
+                                    isfront = true;
+                                }
+                                var isfinance = false;
+                                if ($('#isfinance').html() == "财务已审") {
+                                    isfinance = true;
+                                }
+                                var color = "";
+                                for (var i = 0; i < _channel.length; i++) {
+                                    if (_channel[i].channelType == channel)
+                                        color = _channel[i].color;
+                                }
                                 $.ajax({
                                     type: "post",
                                     async: true,
@@ -185,6 +652,7 @@
                                     contentType: "application/json; charset=utf-8",
                                     dataType: "json",
                                     data: JSON.stringify({
+                                        frontDeskAccountsId: _frontId,
                                         houseNumber: resource.id,
                                         customerName: title,
                                         customerCount: count,
@@ -202,11 +670,25 @@
                                         relationStaff: relation,
                                         branch: _branch,
                                         note: note,
+                                        isFinish: isfinish,
+                                        isFront: isfront,
+                                        isFinance: isfinance,
+                                        color: color,
+                                        payDate1: paydate1,
+                                        payDate2: paydate2,
+                                        payDate3: paydate3,
+                                        payWay1: payway1,
+                                        payWay2: payway2,
+                                        payWay3: payway3,
+                                        payAmount1: payamount1,
+                                        payAmount2: payamount2,
+                                        payAmount3: payamount3
                                     }),
                                     success: function (data) {
-                                        var rid = parseInt(resource.id);
-                                        _data.push({ resourceId: rid, title: title, allDay: true, start: moment(start).format("YYYY-MM-DD"), end: moment(end).format("YYYY-MM-DD"), backgroundColor: '#00c0ef', borderColor: '#00c0ef' });
-                                        $("#calendar").fullCalendar("renderEvent", _data[0], true);
+                                        console.log(data.brhFrontDeskAccounts);
+                                        _frontData.push(data.brhFrontDeskAccounts);
+                                        var _data = { id: data.brhFrontDeskAccounts.frontDeskAccountsId, resourceId: data.brhFrontDeskAccounts.houseNumber, title: data.brhFrontDeskAccounts.customerName + " " + data.brhFrontDeskAccounts.channel, allDay: true, start: moment(start).format("YYYY-MM-DD"), end: moment(end).format("YYYY-MM-DD"), color: data.brhFrontDeskAccounts.color };
+                                            $("#calendar").fullCalendar("renderEvent", _data, true);
                                     },
                                     error: function () {
                                         alert("Failed");
@@ -271,7 +753,28 @@
                     eventRender: function (event, element) {//在呈现事件时触发
                         element.css("height", "30px");
                         var el = element.html();
-                        element.html("<div style='width:80%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='glyphicon glyphicon-trash'></i></div>");
+                        var hl = "";
+                        var ffff=_frontData.find(function (x) {
+                            return x.frontDeskAccountsId == event.id;
+                        });
+                        if (ffff != undefined) {
+                            if (ffff.isFinish) {
+                                hl = "<div style='width:80%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='glyphicon glyphicon-ok'></i></div>";
+                            }
+                            else {
+                                hl = "<div style='width:80%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='glyphicon glyphicon-remove'></i></div>";
+                            }
+                            if (ffff.isFinance) {
+                                hl += "<div style='width:50%;float:left;margin-top:5px;margin-left:5px'><i class='fa fa-lock'></i></div>";
+                            }
+                            if (ffff.isFront) {
+                                hl += "<div style='text-align:right;font-size:10px;margin-top:5px'><i class='glyphicon glyphicon-ok'></i></div>";
+                            }
+                            else {
+                                hl += "<div style='text-align:right;font-size:10px;color:white;margin-top:5px'><i class='glyphicon glyphicon-remove'></i></div>";
+                            }
+                            element.html(hl);
+                        }
                         //element.find('.fc-event-title').append("<br/>" + event.duration + "h");
                         //element.find('.fc-event-time').hide();
                         //element.find('.close').click(function () {
@@ -303,6 +806,7 @@
                             _end,
                             event.id,
                             event.title,
+                            event.color
                         );
                     },
                     eventDragStart: function (event, jsEvent, ui, view) {
@@ -341,6 +845,10 @@
                 $('#calendar').fullCalendar('today'); // call method
             });
 
+            $('#month').on('click', function () {
+                $('#calendar').fullCalendar('changeView', 'timelineThirtyDays', $('#startdate').val());
+            });
+
             $('#prev').on('click', function () {
                 $('#calendar').fullCalendar('prev'); // call method
             });
@@ -353,7 +861,6 @@
                 $('#calendar').fullCalendar('changeView', 'timelineThirtyDays', $('#startdate').val());
             });
 
-            //#endregion
             $("#startdate").datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
@@ -363,13 +870,42 @@
             });
 
             $('#startdate').datepicker('setDate', new Date());
+            //#endregion
 
-            //GetCalendarData();
-            window.onload = function () {
-                var doc = document.documentElement;
-                document.body.style.height = doc.scrollHeight + 'px';
-                GetCalendarData(_startdate);
-            };
+            $('.datetimepicker').datetimepicker({
+                format: 'yyyy-mm-dd hh:ii',
+                autoclose: true,
+                language: "zh-CN",
+                todayBtn: 'linked',
+                todayHighlight: true,
+            });
+            $('.datetimepicker').datetimepicker('setDate', new Date());
+
+            //#region 功能模块
+            function checkIsDouble(checkString) {
+
+                var reg = /^[0-9,.]*$/;
+
+                if (reg.test(checkString)) {
+                    return true;
+                }
+                //alert("输入数字");
+                return false;
+            }
+            function DateDiff(sDate1, sDate2) {    //sDate1和sDate2是2002-12-18格式
+                var aDate, oDate1, oDate2, iDays
+                aDate = sDate1.split("-")
+                oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])    //转换为12-18-2002格式
+                aDate = sDate2.split("-")
+                oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
+                iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24)    //把相差的毫秒数转换为天数
+                return iDays
+            }
+            //#endregion
+
+            var doc = document.documentElement;
+            document.body.style.height = doc.scrollHeight + 'px';
+            GetCalendarData(_startdate);
         });
     </script>
 }

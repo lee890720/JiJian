@@ -1,0 +1,485 @@
+﻿@model Tuple<List<string>, List<BrhFrontDeskAccounts>, AppIdentityUser>
+
+@{
+    Layout = "_Layout2";
+}
+<link href="~/lib/fullcalendar/fullcalendar.min.css" rel="stylesheet" />
+<link href="~/lib/fullcalendar/fullcalendar.print.min.css" rel="stylesheet" media="print" />
+<link href='~/lib/fullcalendar/scheduler/scheduler.min.css' rel='stylesheet' />
+<link href="~/lib/artDialog/css/ui-dialog.css" rel="stylesheet" />
+<link href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+<style>
+    #calendar td.div {
+        height: 30px !important;
+    }
+</style>
+<div style="background-color:white" id="calendar"></div>
+<div id="create-form" style="display:none">
+    <form class="form-inline">
+        <div class="col-md-6">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">姓名</span>
+                <input id="form-name" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">人数</span>
+                <input id="form-count" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">单价</span>
+                <input id="form-unit" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">总价</span>
+                <input id="form-total" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">应收</span>
+                <input id="form-receivable" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">已收</span>
+                <input id="form-received" type="text" class="form-control clear-data">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">渠道</span>
+                <input id="form-channel" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">管家</span>
+                <input id="form-steward" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">前组</span>
+                <input id="form-frontleader" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">管组</span>
+                <input id="form-stewardleader" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">关系</span>
+                <input id="form-relation" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">备注</span>
+                <input id="form-note" type="text" class="form-control clear-data">
+            </div>
+        </div>
+    </form>
+</div>
+<div id="create-form1" style="display:none">
+    <form class="form-inline">
+        <div class="col-md-6">
+            <br />
+            <br />
+            <br />
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">姓名</span>
+                <input id="form1-name" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">人数</span>
+                <input id="form1-count" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">单价</span>
+                <input id="form1-unit" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">总价</span>
+                <input id="form1-total" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">应收</span>
+                <input id="form1-receivable" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">已收</span>
+                <input id="form1-received" type="text" class="form-control clear-data">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">渠道</span>
+                <input id="form1-channel" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">管家</span>
+                <input id="form1-steward" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">前组</span>
+                <input id="form1-frontleader" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">管组</span>
+                <input id="form1-stewardleader" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">关系</span>
+                <input id="form1-relation" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">备注</span>
+                <input id="form1-note" type="text" class="form-control clear-data">
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts{
+    <script src='~/lib/fullcalendar/fullcalendar.min.js'></script>
+    <script src="~/lib/fullcalendar/locale/zh-cn.js"></script>
+    <script src='~/lib/fullcalendar/scheduler/scheduler.min.js'></script>
+    <script src="~/lib/artDialog/dist/dialog-min.js"></script>
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="utf-8"></script>
+    <script>
+        $(function () {
+            var _connect =@Html.Raw(Json.Serialize(Model.Item3));
+            var _numbers =@Html.Raw(Json.Serialize(Model.Item1));
+            var _fronts=@Html.Raw(Json.Serialize(Model.Item2));
+            var _branch = _connect.belongTo;
+            var _userName = _connect.userName;
+            var _frontData = [];
+            var _branchData = [];
+            var _reData = [];
+            var _eventData = [];
+            var _resourceId = "";
+            var date = new Date();
+            var d = date.getDate(),
+                m = date.getMonth(),
+                y = date.getFullYear();
+            var _startdate = moment(new Date(y, m, d - 3)).format("YYYY-MM-DD");
+
+            //#region GetCalendarData
+            function GetCalendarData() {
+                    _frontData = _fronts;
+                    _branchData = _numbers;
+
+                    for (var i = 0; i < _frontData.length; i++) {
+                        var _id = _frontData[i].frontDeskAccountsId;
+                        var _color = _frontData[i].color;
+                        var _resourceId = _frontData[i].houseNumber;
+                        var _title = _frontData[i].customerName + " " + _frontData[i].channel;
+                        var _allDay = true;
+                        var _start = moment(_frontData[i].startDate).format("YYYY-MM-DD");
+                        var _end = moment(_frontData[i].endDate).format("YYYY-MM-DD");
+                        _eventData.push({ id: _id, resourceId: _resourceId, title: _title, allDay: true, start: _start, end: _end, color:_color });
+                    };
+                    for (var i = 0; i < _branchData.length; i++) {
+                        var _id = _branchData[i];
+                        var _title = _branchData[i];
+                        _reData.push({ id: _id, title: _title });
+                    };
+                    InitCalendar();
+                };
+            //#endregion
+
+            function InitCalendar() {
+                $('#calendar').fullCalendar({
+                    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                    //themeSystem: 'bootstrap3',
+                    header: false,
+                    defaultView: 'timelineThirtyDays',
+                    views: {
+                        timelineThirtyDays: {
+                            type: 'timeline',
+                            duration: { days: 30 }
+                        }
+                    },
+                    slotWidth: '100',
+                    slotLabelFormat: "MM/DD ddd",
+                    height: 'parent',
+                    defaultDate: _startdate,
+                    navLinks: true,
+                    resourceAreaWidth: '50',
+                    resourceLabelText: '房间',
+                    resources: _reData,
+                    resourceRender: function (resourceObj, labelTds, bodyTds) {
+                        labelTds.css('height', '30px');
+                    },
+                    editable: true,
+                    selectable: true,
+                    selectHelper: true,
+                    dayClick: function (date, allDay, jsEvent, view,resource) {
+                        //$(this).css('background-color', 'red');
+                        if (navigator.platform.indexOf('Win32') != -1) {
+                        } else {
+                            var d = dialog({
+                                title: "新建订单",
+                                content: $("#create-form1"),
+                                okValue: "确定",
+                                ok: function () {
+                                    var title = $('#form1-name').val();
+                                    var count = $('#form1-count').val();
+                                    var unit = $('#form1-unit').val();
+                                    var total = $('#form1-total').val();
+                                    var channel = $('#form1-channel').val();
+                                    var receivable = $('#form1-receivable').val();
+                                    var received = $('#form1-received').val();
+                                    var steward = $("#form1-steward").val();
+                                    var frontleader = $('#form1-frontleader').val();
+                                    var stewardleader = $('#form1-stewardleader').val();
+                                    var relation = $('#form1-relation').val();
+                                    var note = $('#form1-note').val();
+                                    var _data = [];
+                                    $.ajax({
+                                        type: "post",
+                                        async: true,
+                                        url: "/Branch/FrontCalendar/Create",
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        data: JSON.stringify({
+                                            houseNumber: resource.id,
+                                            customerName: title,
+                                            customerCount: count,
+                                            startDate: moment(date).format("YYYY-MM-DD"),
+                                            endDate: moment(date).format("YYYY-MM-DD"),
+                                            channel: channel,
+                                            unitPrice: unit,
+                                            totalPrice: total,
+                                            receivable: receivable,
+                                            received: received,
+                                            enteringStaff: _userName,
+                                            steward: steward,
+                                            frontDeskLeader: frontleader,
+                                            stewardLeader: stewardleader,
+                                            relationStaff: relation,
+                                            branch: _branch,
+                                            note: note,
+                                        }),
+                                        success: function (data) {
+                                            var rid = parseInt(resource.id);
+                                            _data.push({ resourceId: rid, title: title, allDay: true, start: moment(start).format("YYYY-MM-DD"), end: moment(end).format("YYYY-MM-DD"), backgroundColor: '#00c0ef', borderColor: '#00c0ef' });
+                                            $("#calendar").fullCalendar("renderEvent", _data[0], true);
+                                        },
+                                        error: function () {
+                                            alert("Failed");
+                                        }
+
+                                    });
+                                },
+                                cancelValue: "关闭",
+                                cancel: function () {
+                                }
+                            });
+                            d.showModal();
+                        }
+                    },
+                    select: function (start, end, jsEvent, view, resource) {
+                        var d = dialog({
+                            title: "新建订单",
+                            content: $("#create-form"),
+                            okValue: "确定",
+                            ok: function () {
+                                var title = $('#form-name').val();
+                                var count = $('#form-count').val();
+                                var unit = $('#form-unit').val();
+                                var total = $('#form-total').val();
+                                var channel = $('#form-channel').val();
+                                var receivable = $('#form-receivable').val();
+                                var received = $('#form-received').val();
+                                var steward = $("#form-steward").val();
+                                var frontleader = $('#form-frontleader').val();
+                                var stewardleader = $('#form-stewardleader').val();
+                                var relation = $('#form-relation').val();
+                                var note = $('#form-note').val();
+                                var _data = [];
+                                $.ajax({
+                                    type: "post",
+                                    async: true,
+                                    url: "/Branch/FrontCalendar/Create",
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    data: JSON.stringify({
+                                        houseNumber: resource.id,
+                                        customerName: title,
+                                        customerCount: count,
+                                        startDate: moment(start).format("YYYY-MM-DD"),
+                                        endDate: moment(end).format("YYYY-MM-DD"),
+                                        channel: channel,
+                                        unitPrice: unit,
+                                        totalPrice: total,
+                                        receivable: receivable,
+                                        received: received,
+                                        enteringStaff: _userName,
+                                        steward: steward,
+                                        frontDeskLeader: frontleader,
+                                        stewardLeader: stewardleader,
+                                        relationStaff: relation,
+                                        branch: _branch,
+                                        note: note,
+                                    }),
+                                    success: function (data) {
+                                        var rid = parseInt(resource.id);
+                                        _data.push({ resourceId: rid, title: title, allDay: true, start: moment(start).format("YYYY-MM-DD"), end: moment(end).format("YYYY-MM-DD"), backgroundColor: '#00c0ef', borderColor: '#00c0ef' });
+                                        $("#calendar").fullCalendar("renderEvent", _data[0], true);
+                                    },
+                                    error: function () {
+                                        alert("Failed");
+                                    }
+
+                                });
+                            },
+                            cancelValue: "关闭",
+                            cancel: function () {
+                            }
+                        });
+                        d.width(600).showModal();
+                    },
+                    events: _eventData,
+                    //events: function (start, end, callback) {
+                    //    var now = new Date();
+                    //    //初始化参数
+                    //    var name = "songyuan";
+                    //    var title = "";
+                    //    var content = "";
+                    //    var noteType = "";
+                    //    $.ajax({
+                    //        type: "post",
+                    //        url: "Branch/FrontCalendar/GetCalendarData",
+                    //        success: function (data) {
+                    //            var events = [];
+                    //            $.each(data, function (key, value) {
+                    //                var noteType = "";
+                    //                if (value.noteType == 1) {
+                    //                    noteType = "工作";
+                    //                } else if (value.noteType == 2) {
+                    //                    noteType = "生活";
+                    //                } else if (value.noteType == 3) {
+                    //                    noteType = "家庭";
+                    //                } else if (value.noteType == 4) {
+                    //                    noteType = "私密";
+                    //                } else {
+                    //                    noteType = "其他";
+                    //                }
+                    //                events.push({
+                    //                    sid: 2,
+                    //                    uid: 3,
+                    //                    title: '记事簿',
+                    //                    start: value.starTime,
+                    //                    end: value.endTime,
+                    //                    fullname: value.name,
+                    //                    confname: noteType,
+                    //                    confshortname: 'M1',
+                    //                    confcolor: '#ff3f3f',
+                    //                    confid: value.noteType,
+                    //                    allDay: false,
+                    //                    topic: value.title,
+                    //                    description: value.content,
+                    //                    id: value.id,
+                    //                });
+                    //            });
+                    //            callback(events);
+                    //        }
+                    //    });
+                    //},
+                    eventOverlap: false, // will cause the event to take up entire resource height
+                    eventRender: function (event, element) {//在呈现事件时触发
+                        element.css("height", "30px");
+                        var el = element.html();
+                        element.html("<div style='width:80%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='glyphicon glyphicon-trash'></i></div>");
+                        //element.find('.fc-event-title').append("<br/>" + event.duration + "h");
+                        //element.find('.fc-event-time').hide();
+                        //element.find('.close').click(function () {
+                        //    if (!confirm("Delete event?")) {
+                        //        return false;
+                        //    } else {
+                        //        var id = event.id;
+                        //        $.post('<?= base_url() ?>calendar/delete_alert',
+                        //            {
+                        //                id: id
+                        //            },
+                        //            function (data) {
+                        //                if (data == 1)
+                        //                    alert('Successfully deleted');
+                        //                else
+                        //                    alert('Error deleted');
+                        //            });
+                        //        $("#fullcalendar").fullCalendar('removeEvents', event.id);
+                        //    }
+                        //});
+                    },
+                    eventClick: function (event, jsEvent, view) {
+                        var _start = moment(event.start).format("YYYY-MM-DD");
+                        var _end = moment(event.end).format("YYYY-MM-DD");
+                        console.log(
+                            _resourceId,
+                            event.resourceId,
+                            _start,
+                            _end,
+                            event.id,
+                            event.title,
+                        );
+                    },
+                    eventDragStart: function (event, jsEvent, ui, view) {
+                        _resourceId = event.resourceId;
+                    },
+                    eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+                        var start = moment(event.start).format("YYYY-MM-DD");
+                        var end = moment(event.end).format("YYYY-MM-DD");
+                        console.log(
+                            _resourceId,
+                            event.resourceId,
+                            start,
+                            end,
+                            event.id,
+                            event.title,
+                        );
+                    },
+                    eventResizeStart: function (event, jsEvent, ui, view) {
+                    },
+                    eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
+                        var start = moment(event.start).format("YYYY-MM-DD");
+                        var end = moment(event.end).format("YYYY-MM-DD");
+                        console.log(
+                            _resourceId,
+                            event.resourceId,
+                            start,
+                            end,
+                            event.id,
+                            event.title,
+                        );
+                    }
+                });
+            }
+
+            $('#today').on('click', function () {
+                $('#calendar').fullCalendar('today'); // call method
+            });
+
+            $('#month').on('click', function () {
+                $('#calendar').fullCalendar('changeView', 'timelineThirtyDays', $('#startdate').val());
+            });
+
+            $('#prev').on('click', function () {
+                $('#calendar').fullCalendar('prev'); // call method
+            });
+
+            $('#next').on('click', function () {
+                $('#calendar').fullCalendar('next'); // call method
+            });
+
+            $('#startdate').change(function () {
+                $('#calendar').fullCalendar('changeView', 'timelineThirtyDays', $('#startdate').val());
+            });
+
+            //#endregion
+            $("#startdate").datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                language: "zh-CN",
+                todayBtn: 'linked',
+                todayHighlight: true,
+            });
+
+            $('#startdate').datepicker('setDate', new Date());
+            var doc = document.documentElement;
+            document.body.style.height = doc.scrollHeight + 'px';
+                GetCalendarData();
+        });
+    </script>
+}
