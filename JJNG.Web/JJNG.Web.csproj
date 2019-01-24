@@ -42,8 +42,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Personnel\Models\" />
+    <Folder Include="Connected Services\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="wwwroot\lib\icomoon\" />
   </ItemGroup>
@@ -75,9 +75,6 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Branch\Views\BrhStewardAccount\DetialList.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
-    <Content Update="Areas\Branch\Views\FrontCalendar\Index2.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Branch\Views\_ViewImports.cshtml">

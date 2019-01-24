@@ -1,4 +1,4 @@
-﻿@model Tuple<AppIdentityUser,List<FncChannelType>>
+﻿@model Tuple<AppIdentityUser, List<FncChannelType>>
 
 @{
     Layout = "_Layout2";
@@ -11,6 +11,19 @@
 <style>
     #calendar td.div {
         height: 30px !important;
+    }
+</style>
+<style>
+    .table td.brr {
+        text-align: left !important;
+    }
+
+    .table td.brl {
+        text-align: right !important;
+    }
+
+    .description-header {
+        color: coral;
     }
 </style>
 <div style="background-color:white" id="calendar"></div>
@@ -39,7 +52,7 @@
             </div>
             <div class="input-group" style="margin-bottom:10px">
                 <span class="input-group-addon">已收</span>
-                <input id="form-received" type="text"  class="form-control clear-data">
+                <input id="form-received" type="text" readonly="readonly" class="form-control clear-data">
             </div>
         </div>
         <div class="col-md-6">
@@ -67,6 +80,11 @@
                 <span class="input-group-addon">备注</span>
                 <input id="form-note" type="text" class="form-control clear-data">
             </div>
+        </div>
+        <div id="table-1" class="col-md-12">
+            <table class="table">
+                <tbody id="tbody-form"></tbody>
+            </table>
         </div>
         <div class="col-md-12">
             <div class="input-group" style="margin-bottom:10px">
@@ -159,7 +177,7 @@
         </div>
         <div class="input-group" style="margin-bottom:10px">
             <span class="input-group-addon">已收</span>
-            <input id="form1-received" type="text" class="form-control clear-data">
+            <input id="form1-received" type="text" readonly="readonly" class="form-control clear-data">
         </div>
         <div class="input-group" style="margin-bottom:10px">
             <span class="input-group-addon">渠道</span>
@@ -243,6 +261,22 @@
         </div>
     </form>
 </div>
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+                <p>执行中，请稍后&hellip;</p>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script src='~/lib/fullcalendar/fullcalendar.min.js'></script>
     <script src="~/lib/fullcalendar/locale/zh-cn.js"></script>
@@ -254,7 +288,6 @@
         $(function () {
             var _connect =@Html.Raw(Json.Serialize(Model.Item1));
             var _channel =@Html.Raw(Json.Serialize(Model.Item2));
-            var _frontId=11111111;
             var _branch = _connect.belongTo;
             var _userName = _connect.userName;
             var _frontData = [];
@@ -276,7 +309,18 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 data: {},
+                beforeSend: function () {
+                    //$("#submit").attr({ disabled: "disabled" });
+                    //$('#modal-default').modal({
+                    //    backdrop: 'static'
+                    //});
+                    $('#modal-default').modal('show');
+                },
                 success: function (result) {
+                },
+                complete: function () {
+                    //$("#submit").removeAttr("disabled");
+                    $('#modal-default').modal('hide');
                 },
             };
             //#endregion
@@ -344,8 +388,8 @@
                     editable: true,
                     selectable: true,
                     selectHelper: true,
-                    dayClick: function (date, allDay, jsEvent, view,resource) {
-                        //$(this).css('background-color', 'red');
+                    dayClick: function (date, allDay, jsEvent, view, resource) {
+                        $(".clear-data").removeAttr("disabled", "disabled");
                         $(".clear-data").val("");
                         $(".form1").hide();
                         $('#1isfinish').html("未结账");
@@ -353,28 +397,35 @@
                         $('#1isfinance').html("财务未审");
                         //#region change/keyup事件
                         $("#1addpay").on('click', function () {
+                            $("#1addpay").removeClass("btn-primary");
+                            $("#1addpay").addClass("btn-warning");
                             $(".form1").show();
-                        });
-                        $("#1isfinish").on('click', function () {
-                            var hl = $("#1isfinish").html();
-                            if (hl == "未结账")
-                                $('#1isfinish').html("已结账");
-                            if (hl == "已结账")
-                                $('#1isfinish').html("未结账");
                         });
                         $("#1isfront").on('click', function () {
                             var hl = $("#1isfront").html();
-                            if (hl == "前台未审")
+                            if (hl == "前台未审") {
                                 $('#1isfront').html("前台已审");
-                            if (hl == "前台已审")
+                                $("#1isfront").removeClass("btn-primary");
+                                $("#1isfront").addClass("btn-warning");
+                            }
+                            if (hl == "前台已审") {
                                 $('#1isfront').html("前台未审");
+                                $("#1isfront").removeClass("btn-warning");
+                                $("#1isfront").addClass("btn-primary");
+                            }
                         });
                         $("#1isfinance").on('click', function () {
                             var hl = $("#1isfinance").html();
-                            if (hl == "财务未审")
+                            if (hl == "财务未审") {
                                 $('#1isfinance').html("财务已审");
-                            if (hl == "财务已审")
+                                $("#1isfinance").removeClass("btn-primary");
+                                $("#1isfinance").addClass("btn-warning");
+                            }
+                            if (hl == "财务已审") {
                                 $('#1isfinance').html("财务未审");
+                                $("#1isfinance").removeClass("btn-warning");
+                                $("#1isfinance").addClass("btn-primary");
+                            }
                         });
                         if (navigator.platform.indexOf('Win32') != -1) {
                         } else {
@@ -391,6 +442,16 @@
                                 if (parseFloat(pay3) > 0)
                                     result += parseFloat(pay3);
                                 $('#form1-received').val(result.toString());
+                                if (result == parseFloat($("#form1-receivable").val())) {
+                                    $('#1isfinish').html("已结账");
+                                    $("#1isfinish").removeClass("btn-primary");
+                                    $("#1isfinish").addClass("btn-warning");
+                                }
+                                else {
+                                    $('#1isfinish').html("未结账");
+                                    $("#1isfinish").removeClass("btn-warning");
+                                    $("#1isfinish").addClass("btn-primary");
+                                }
                             });
                             $('#1payamount2').keyup(function () {
                                 var pay1 = document.getElementById("1payamount1").value;
@@ -404,6 +465,16 @@
                                 if (parseFloat(pay3) > 0)
                                     result += parseFloat(pay3);
                                 $('#form1-received').val(result.toString());
+                                if (result == parseFloat($("#form1-receivable").val())) {
+                                    $('#1isfinish').html("已结账");
+                                    $("#1isfinish").removeClass("btn-primary");
+                                    $("#1isfinish").addClass("btn-warning");
+                                }
+                                else {
+                                    $('#1isfinish').html("未结账");
+                                    $("#1isfinish").removeClass("btn-warning");
+                                    $("#1isfinish").addClass("btn-primary");
+                                }
                             });
                             $('#1payamount3').keyup(function () {
                                 var pay1 = document.getElementById("1payamount1").value;
@@ -417,6 +488,16 @@
                                 if (parseFloat(pay2) > 0)
                                     result += parseFloat(pay2);
                                 $('#form1-received').val(result.toString());
+                                if (result == parseFloat($("#form1-receivable").val())) {
+                                    $('#1isfinish').html("已结账");
+                                    $("#1isfinish").removeClass("btn-primary");
+                                    $("#1isfinish").addClass("btn-warning");
+                                }
+                                else {
+                                    $('#1isfinish').html("未结账");
+                                    $("#1isfinish").removeClass("btn-warning");
+                                    $("#1isfinish").addClass("btn-primary");
+                                }
                             });
 
                             $("#1addpay").on('ifChecked', function () {
@@ -430,9 +511,7 @@
                                 var result = 0.00;
                                 if (checkIsDouble(unitPrice))
                                     result = parseFloat(unitPrice);
-                                console.log(unitPrice);
                                 var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
-                                console.log(days);
                                 result = result * days;
                                 $('#form1-total').val(result.toString());
                             });
@@ -490,11 +569,17 @@
                                             branch: _branch,
                                             note: note,
                                         }),
+                                        beforeSend: function () {
+                                            $('#modal-default').modal('show');
+                                        },
                                         success: function (data) {
                                             var rid = parseInt(resource.id);
                                             _data.push({ resourceId: rid, title: title, allDay: true, start: moment(start).format("YYYY-MM-DD"), end: moment(end).format("YYYY-MM-DD"), backgroundColor: '#00c0ef', borderColor: '#00c0ef' });
                                             $("#calendar").fullCalendar("renderEvent", _data[0], true);
                                         },
+                                        complete: function () {
+                                            $('#modal-default').modal('hide');
+                                        }, 
                                         error: function () {
                                             alert("Failed");
                                         }
@@ -509,6 +594,16 @@
                         }
                     },
                     select: function (start, end, jsEvent, view, resource) {
+                        $(".clear-data").removeAttr("disabled", "disabled");
+                        $("#addpay").removeClass("btn-warning");
+                        $("#addpay").addClass("btn-primary");
+                        $("#isfinish").removeClass("btn-warning");
+                        $("#isfinish").addClass("btn-primary");
+                        $("#isfront").removeClass("btn-warning");
+                        $("#isfront").addClass("btn-primary");
+                        $("#isfinance").removeClass("btn-warning");
+                        $("#isfinance").addClass("btn-primary");
+                        $("#table-1").hide();
                         $(".clear-data").val("");
                         $("#form-received,#payamount1,#payamount2,#payamount3").val("0");
                         $(".col-md-4").hide();
@@ -517,28 +612,35 @@
                         $('#isfinance').html("财务未审");
                         //#region change/keyup事件
                         $("#addpay").on('click', function () {
+                            $("#addpay").removeClass("btn-primary");
+                            $("#addpay").addClass("btn-warning");
                             $(".col-md-4").show();
-                        });
-                        $("#isfinish").on('click', function () {
-                            var hl = $("#isfinish").html();
-                            if (hl == "未结账")
-                                $('#isfinish').html("已结账");
-                            if (hl == "已结账")
-                                $('#isfinish').html("未结账");
                         });
                         $("#isfront").on('click', function () {
                             var hl = $("#isfront").html();
-                            if (hl == "前台未审")
+                            if (hl == "前台未审") {
                                 $('#isfront').html("前台已审");
-                            if (hl == "前台已审")
+                                $("#isfront").removeClass("btn-primary");
+                                $("#isfront").addClass("btn-warning");
+                            }
+                            if (hl == "前台已审") {
                                 $('#isfront').html("前台未审");
+                                $("#isfront").removeClass("btn-warning");
+                                $("#isfront").addClass("btn-primary");
+                            }
                         });
                         $("#isfinance").on('click', function () {
                             var hl = $("#isfinance").html();
-                            if (hl == "财务未审")
+                            if (hl == "财务未审") {
                                 $('#isfinance').html("财务已审");
-                            if (hl == "财务已审")
+                                $("#isfinance").removeClass("btn-primary");
+                                $("#isfinance").addClass("btn-warning");
+                            }
+                            if (hl == "财务已审") {
                                 $('#isfinance').html("财务未审");
+                                $("#isfinance").removeClass("btn-warning");
+                                $("#isfinance").addClass("btn-primary");
+                            }
                         });
 
                         $('#payamount1').keyup(function () {
@@ -553,6 +655,16 @@
                             if (parseFloat(pay3) > 0)
                                 result += parseFloat(pay3);
                             $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
                         });
                         $('#payamount2').keyup(function () {
                             var pay1 = document.getElementById("payamount1").value;
@@ -566,6 +678,16 @@
                             if (parseFloat(pay3) > 0)
                                 result += parseFloat(pay3);
                             $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
                         });
                         $('#payamount3').keyup(function () {
                             var pay1 = document.getElementById("payamount1").value;
@@ -579,15 +701,23 @@
                             if (parseFloat(pay2) > 0)
                                 result += parseFloat(pay2);
                             $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
                         });
                         $('#form-unit').keyup(function () {
                             var unitPrice = document.getElementById("form-unit").value;
                             var result = 0.00;
                             if (checkIsDouble(unitPrice))
                                 result = parseFloat(unitPrice);
-                            console.log(unitPrice);
                             var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
-                            console.log(days);
                             result = result * days;
                             $('#form-total').val(result.toString());
                         });
@@ -652,7 +782,6 @@
                                     contentType: "application/json; charset=utf-8",
                                     dataType: "json",
                                     data: JSON.stringify({
-                                        frontDeskAccountsId: _frontId,
                                         houseNumber: resource.id,
                                         customerName: title,
                                         customerCount: count,
@@ -684,12 +813,17 @@
                                         payAmount2: payamount2,
                                         payAmount3: payamount3
                                     }),
+                                    beforeSend: function () {
+                                        $('#modal-default').modal('show');
+                                    },
                                     success: function (data) {
-                                        console.log(data.brhFrontDeskAccounts);
                                         _frontData.push(data.brhFrontDeskAccounts);
                                         var _data = { id: data.brhFrontDeskAccounts.frontDeskAccountsId, resourceId: data.brhFrontDeskAccounts.houseNumber, title: data.brhFrontDeskAccounts.customerName + " " + data.brhFrontDeskAccounts.channel, allDay: true, start: moment(start).format("YYYY-MM-DD"), end: moment(end).format("YYYY-MM-DD"), color: data.brhFrontDeskAccounts.color };
                                             $("#calendar").fullCalendar("renderEvent", _data, true);
                                     },
+                                    complete: function () {
+                                        $('#modal-default').modal('hide');
+                                    }, 
                                     error: function () {
                                         alert("Failed");
                                     }
@@ -703,52 +837,6 @@
                         d.width(600).showModal();
                     },
                     events: _eventData,
-                    //events: function (start, end, callback) {
-                    //    var now = new Date();
-                    //    //初始化参数
-                    //    var name = "songyuan";
-                    //    var title = "";
-                    //    var content = "";
-                    //    var noteType = "";
-                    //    $.ajax({
-                    //        type: "post",
-                    //        url: "Branch/FrontCalendar/GetCalendarData",
-                    //        success: function (data) {
-                    //            var events = [];
-                    //            $.each(data, function (key, value) {
-                    //                var noteType = "";
-                    //                if (value.noteType == 1) {
-                    //                    noteType = "工作";
-                    //                } else if (value.noteType == 2) {
-                    //                    noteType = "生活";
-                    //                } else if (value.noteType == 3) {
-                    //                    noteType = "家庭";
-                    //                } else if (value.noteType == 4) {
-                    //                    noteType = "私密";
-                    //                } else {
-                    //                    noteType = "其他";
-                    //                }
-                    //                events.push({
-                    //                    sid: 2,
-                    //                    uid: 3,
-                    //                    title: '记事簿',
-                    //                    start: value.starTime,
-                    //                    end: value.endTime,
-                    //                    fullname: value.name,
-                    //                    confname: noteType,
-                    //                    confshortname: 'M1',
-                    //                    confcolor: '#ff3f3f',
-                    //                    confid: value.noteType,
-                    //                    allDay: false,
-                    //                    topic: value.title,
-                    //                    description: value.content,
-                    //                    id: value.id,
-                    //                });
-                    //            });
-                    //            callback(events);
-                    //        }
-                    //    });
-                    //},
                     eventOverlap: false, // will cause the event to take up entire resource height
                     eventRender: function (event, element) {//在呈现事件时触发
                         element.css("height", "30px");
@@ -797,17 +885,344 @@
                         //});
                     },
                     eventClick: function (event, jsEvent, view) {
+                        $("#addpay").removeClass("btn-warning");
+                        $("#addpay").addClass("btn-primary");
+                        $("#table-1").show();
+                        $("#tbody-form").html("");
+                        $.ajax({
+                            type: "post",
+                            async: true,
+                            url: "/Branch/FrontCalendar/List",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                frontDeskAccountsId: event.id,
+                            }),
+                            success: function (data) {
+                                var hls = "";
+                                for (var i = 0; i < data.list1.length; i++) {
+                                    hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list1[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list1[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list1[i].payAmount+"</td></tr>";
+                                }
+                                for (var i = 0; i < data.list2.length; i++) {
+                                    hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list2[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list2[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list2[i].payAmount + "</td></tr>";
+                                }
+                                var ahl = $(hls);
+                                ahl.appendTo($("#tbody-form"));
+                            }, 
+                            error: function () {
+                                alert("Failed");
+                            }
+
+                        });
                         var _start = moment(event.start).format("YYYY-MM-DD");
                         var _end = moment(event.end).format("YYYY-MM-DD");
-                        console.log(
-                            _resourceId,
-                            event.resourceId,
-                            _start,
-                            _end,
-                            event.id,
-                            event.title,
-                            event.color
-                        );
+                        function checkAdult(fro) {
+                            return fro.frontDeskAccountsId==event.id;
+                        }
+                        var _ff = _frontData.find(checkAdult);
+                        $(".clear-data").val("");
+                        $("#payamount1,#payamount2,#payamount3").val("0");
+                        $(".col-md-4").hide();
+                        if (_ff.isFinish) {
+                            $('#isfinish').html("已结账");
+                            $("#isfinish").removeClass("btn-primary");
+                            $("#isfinish").addClass("btn-warning");
+                        }
+                        else{
+                            $('#isfinish').html("未结账");
+                            $("#isfinish").removeClass("btn-warning");
+                            $("#isfinish").addClass("btn-primary");
+                        }
+                        if (_ff.isFront) {
+                            $('#isfront').html("前台已审");
+                            $("#isfront").removeClass("btn-primary");
+                            $("#isfront").addClass("btn-warning");
+                        }
+                        else {
+                            $('#isfront').html("前台未审");
+                            $("#isfront").removeClass("btn-warning");
+                            $("#isfront").addClass("btn-primary");
+                        }
+                        if (_ff.isFinance) {
+                            $('#isfinance').html("财务已审");
+                            $("#isfinance").removeClass("btn-primary");
+                            $("#isfinance").addClass("btn-warning");
+                        }
+                        else {
+                            $('#isfinance').html("财务未审");
+                            $("#isfinance").removeClass("btn-warning");
+                            $("#isfinance").addClass("btn-primary");
+                        }
+                        $('#form-name').val(_ff.customerName);
+                        $('#form-count').val(_ff.customerCount);
+                        $('#form-unit').val(_ff.unitPrice);
+                        $('#form-total').val(_ff.totalPrice);
+                        $('#form-channel').val(_ff.channel);
+                        $('#form-receivable').val(_ff.receivable);
+                        $('#form-received').val(_ff.received);
+                        $("#form-steward").val(_ff.steward);
+                        $('#form-frontleader').val(_ff.frontDeskLeader);
+                        $('#form-stewardleader').val(_ff.stewardLeader);
+                        $('#form-relation').val(_ff.relationStaff);
+                        $('#form-note').val(_ff.note);
+                        $('#payamount1').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = parseFloat(_ff.received);
+                            if (checkIsDouble(pay1))
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay2) > 0)
+                                result += parseFloat(pay2);
+                            if (parseFloat(pay3) > 0)
+                                result += parseFloat(pay3);
+                            $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
+                        });
+                        $('#payamount2').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = parseFloat(_ff.received);
+                            if (checkIsDouble(pay2))
+                                result += parseFloat(pay2);
+                            if (parseFloat(pay1) > 0)
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay3) > 0)
+                                result += parseFloat(pay3);
+                            $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
+                        });
+                        $('#payamount3').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = parseFloat(_ff.received);
+                            if (checkIsDouble(pay3))
+                                result += parseFloat(pay3);
+                            if (parseFloat(pay1) > 0)
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay2) > 0)
+                                result += parseFloat(pay2);
+                            $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
+                        });
+                        $('#form-unit').keyup(function () {
+                            var unitPrice = document.getElementById("form-unit").value;
+                            var result = 0.00;
+                            if (checkIsDouble(unitPrice))
+                                result = parseFloat(unitPrice);
+                            var days = DateDiff(moment(_start).format("YYYY-MM-DD"), moment(_end).format("YYYY-MM-DD"));
+                            result = result * days;
+                            $('#form-total').val(result.toString());
+                        });
+                        $('#form-total').keyup(function () {
+                            var totalPrice = document.getElementById("form-total").value;
+                            var result = 0.00;
+                            if (checkIsDouble(totalPrice))
+                                result = parseFloat(totalPrice);
+                            var days = DateDiff(moment(_start).format("YYYY-MM-DD"), moment(_end).format("YYYY-MM-DD"));
+                            if (parseFloat(days) > 0)
+                                result = result / days;
+                            $('#form-unit').val(result.toString());
+                        });
+                        if (_ff.isFinance) {
+                            $(".clear-data").attr("disabled","disabled");
+                            var d = dialog({
+                                title: "查看订单",
+                                content: $("#create-form"),
+                                cancelValue: "关闭",
+                                cancel: function () {
+                                }
+                            });
+                            d.width(600).showModal();
+                        }
+
+                        else {
+                            $(".clear-data").removeAttr("disabled", "disabled");
+                            $("#addpay").on('click', function () {
+                                $("#addpay").removeClass("btn-primary");
+                                $("#addpay").addClass("btn-warning");
+                                $(".col-md-4").show();
+                            });
+                            $("#isfront").on('click', function () {
+                                var hl = $("#isfront").html();
+                                if (hl == "前台未审") {
+                                    $('#isfront').html("前台已审");
+                                    $("#isfront").removeClass("btn-primary");
+                                    $("#isfront").addClass("btn-warning");
+                                }
+                                if (hl == "前台已审") {
+                                    $('#isfront').html("前台未审");
+                                    $("#isfront").removeClass("btn-warning");
+                                    $("#isfront").addClass("btn-primary");
+                                }
+                            });
+                            $("#isfinance").on('click', function () {
+                                var hl = $("#isfinance").html();
+                                if (hl == "财务未审") {
+                                    $('#isfinance').html("财务已审");
+                                    $("#isfinance").removeClass("btn-primary");
+                                    $("#isfinance").addClass("btn-warning");
+                                }
+                                if (hl == "财务已审") {
+                                    $('#isfinance').html("财务未审");
+                                    $("#isfinance").removeClass("btn-warning");
+                                    $("#isfinance").addClass("btn-primary");
+                                }
+                            });
+                            var d = dialog({
+                                title: "修改订单",
+                                content: $("#create-form"),
+                                button: [{
+                                    value: '删除订单',
+                                    callback: function () {
+                                        if (confirm("确定删除订单？")) {
+                                            $.ajax({
+                                                type: "post",
+                                                async: true,
+                                                url: "/Branch/FrontCalendar/Delete",
+                                                contentType: "application/json; charset=utf-8",
+                                                dataType: "json",
+                                                data: JSON.stringify({
+                                                    frontDeskAccountsId: event.id,
+                                                }),
+                                                success: function (data) {
+                                                    $("#calendar").fullCalendar("removeEvents", event.id);
+                                                },
+                                                error: function () {
+                                                    alert("Failed");
+                                                }
+
+                                            });
+                                        }
+                                    }
+                                }],
+                                okValue: "确定",
+                                ok: function () {
+                                    var channel = $("#form-channel").val();
+                                    var paydate1 = $('#paydate1').val();
+                                    var payway1 = $('#payway1').val();
+                                    var payamount1 = $('#payamount1').val();
+                                    var paydate2 = $('#paydate2').val();
+                                    var payway2 = $('#payway2').val();
+                                    var payamount2 = $('#payamount2').val();
+                                    var paydate3 = $('#paydate3').val();
+                                    var payway3 = $('#payway3').val();
+                                    var payamount3 = $('#payamount3').val();
+                                    var isfinish = false;
+                                    if ($('#isfinish').html() == "已结账") {
+                                        isfinish = true;
+                                    }
+                                    var isfront = false;
+                                    if ($('#isfront').html() == "前台已审") {
+                                        isfront = true;
+                                    }
+                                    console.log(isfront);
+                                    var isfinance = false;
+                                    if ($('#isfinance').html() == "财务已审") {
+                                        isfinance = true;
+                                    }
+                                    var color = "";
+                                    var channel = $("#form-channel").val();
+                                    for (var i = 0; i < _channel.length; i++) {
+                                        if (_channel[i].channelType == channel)
+                                            color = _channel[i].color;
+                                    }
+                                    $.ajax({
+                                        type: "post",
+                                        async: true,
+                                        url: "/Branch/FrontCalendar/Edit",
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        data: JSON.stringify({
+                                            frontDeskAccountsId: _ff.frontDeskAccountsId,
+                                            houseNumber: _ff.houseNumber,
+                                            customerName: $('#form-name').val(),
+                                            customerCount: $('#form-count').val(),
+                                            startDate: _ff.startDate,
+                                            endDate: _ff.endDate,
+                                            channel: $('#form-channel').val(),
+                                            unitPrice: $('#form-unit').val(),
+                                            totalPrice: $('#form-total').val(),
+                                            receivable: $('#form-receivable').val(),
+                                            received: $('#form-received').val(),
+                                            enteringStaff: _ff.enteringStaff,
+                                            steward: $('#form-steward').val(),
+                                            frontDeskLeader: $('#form-frontleader').val(),
+                                            stewardLeader: $('#form-stewardleader').val(),
+                                            relationStaff: $('#form-relation').val(),
+                                            branch: _ff.branch,
+                                            note: $('#form-note').val(),
+                                            isFinish: isfinish,
+                                            isFront: isfront,
+                                            isFinance: isfinance,
+                                            color: color,
+                                            payDate1: paydate1,
+                                            payDate2: paydate2,
+                                            payDate3: paydate3,
+                                            payWay1: payway1,
+                                            payWay2: payway2,
+                                            payWay3: payway3,
+                                            payAmount1: payamount1,
+                                            payAmount2: payamount2,
+                                            payAmount3: payamount3
+                                        }),
+                                        beforeSend: function () {
+                                            $('#modal-default').modal('show');
+                                        },
+                                        success: function (data) {
+                                            for (var i = 0; i < _frontData.length; i++) {
+                                                if (_frontData[i].frontDeskAccountsId == data.brhFrontDeskAccounts.frontDeskAccountsId) {
+                                                    _frontData[i] = data.brhFrontDeskAccounts;
+                                                }
+                                            }
+                                            var _data = { id: data.brhFrontDeskAccounts.frontDeskAccountsId, resourceId: data.brhFrontDeskAccounts.houseNumber, title: data.brhFrontDeskAccounts.customerName + " " + data.brhFrontDeskAccounts.channel, allDay: true, start: data.brhFrontDeskAccounts.startDate, end: data.brhFrontDeskAccounts.endDate, color: data.brhFrontDeskAccounts.color };
+                                            $("#calendar").fullCalendar("removeEvents", data.brhFrontDeskAccounts.frontDeskAccountsId);
+                                            $("#calendar").fullCalendar("renderEvent", _data, true);
+                                        },
+                                        complete: function () {
+                                            $('#modal-default').modal('hide');
+                                        }, 
+                                        error: function () {
+                                            alert("Failed");
+                                        }
+
+                                    });
+                                },
+                                cancelValue: "关闭",
+                                cancel: function () {
+                                }
+                            });
+                            d.width(600).showModal();
+                        }
                     },
                     eventDragStart: function (event, jsEvent, ui, view) {
                         _resourceId = event.resourceId;
@@ -815,28 +1230,77 @@
                     eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
                         var start = moment(event.start).format("YYYY-MM-DD");
                         var end = moment(event.end).format("YYYY-MM-DD");
-                        console.log(
-                            _resourceId,
-                            event.resourceId,
-                            start,
-                            end,
-                            event.id,
-                            event.title,
-                        );
+                        $.ajax({
+                            type: "post",
+                            async: true,
+                            url: "/Branch/FrontCalendar/Drop",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                frontDeskAccountsId: event.id,
+                                houseNumber: event.resourceId,
+                                startDate: start,
+                                endDate:end,
+                            }),
+                            beforeSend: function () {
+                                $('#modal-default').modal('show');
+                            },
+                            success: function (data) {
+                                for (var i = 0; i < _frontData.length; i++) {
+                                    if (_frontData[i].frontDeskAccountsId == data.brhFrontDeskAccounts.frontDeskAccountsId) {
+                                        _frontData[i] = data.brhFrontDeskAccounts;
+                                    }
+                                }
+                                var _data = { id: data.brhFrontDeskAccounts.frontDeskAccountsId, resourceId: data.brhFrontDeskAccounts.houseNumber, title: data.brhFrontDeskAccounts.customerName + " " + data.brhFrontDeskAccounts.channel, allDay: true, start: data.brhFrontDeskAccounts.startDate, end: data.brhFrontDeskAccounts.endDate, color: data.brhFrontDeskAccounts.color };
+                                $("#calendar").fullCalendar("removeEvents", data.brhFrontDeskAccounts.frontDeskAccountsId);
+                                $("#calendar").fullCalendar("renderEvent", _data, true);
+                            },
+                            complete: function () {
+                                $('#modal-default').modal('hide');
+                            }, 
+                            error: function () {
+                                alert("Failed");
+                            }
+
+                        });
                     },
                     eventResizeStart: function (event, jsEvent, ui, view) {
                     },
                     eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
                         var start = moment(event.start).format("YYYY-MM-DD");
                         var end = moment(event.end).format("YYYY-MM-DD");
-                        console.log(
-                            _resourceId,
-                            event.resourceId,
-                            start,
-                            end,
-                            event.id,
-                            event.title,
-                        );
+                        $.ajax({
+                            type: "post",
+                            async: true,
+                            url: "/Branch/FrontCalendar/Resize",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                frontDeskAccountsId: event.id,
+                                startDate: start,
+                                endDate: end,
+                            }),
+                            beforeSend: function () {
+                                $('#modal-default').modal('show');
+                            },
+                            success: function (data) {
+                                for (var i = 0; i < _frontData.length; i++) {
+                                    if (_frontData[i].frontDeskAccountsId == data.brhFrontDeskAccounts.frontDeskAccountsId) {
+                                        _frontData[i] = data.brhFrontDeskAccounts;
+                                    }
+                                }
+                                var _data = { id: data.brhFrontDeskAccounts.frontDeskAccountsId, resourceId: data.brhFrontDeskAccounts.houseNumber, title: data.brhFrontDeskAccounts.customerName + " " + data.brhFrontDeskAccounts.channel, allDay: true, start: data.brhFrontDeskAccounts.startDate, end: data.brhFrontDeskAccounts.endDate, color: data.brhFrontDeskAccounts.color };
+                                $("#calendar").fullCalendar("removeEvents", data.brhFrontDeskAccounts.frontDeskAccountsId);
+                                $("#calendar").fullCalendar("renderEvent", _data, true);
+                            },
+                            complete: function () {
+                                $('#modal-default').modal('hide');
+                            }, 
+                            error: function () {
+                                alert("Failed");
+                            }
+
+                        });
                     }
                 });
             }

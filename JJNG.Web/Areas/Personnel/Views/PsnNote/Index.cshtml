@@ -15,7 +15,7 @@
         <div class="col-md-12">
             <div class="box  box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">账号<small style="color:skyblue">&emsp; @ViewData["BelongTo"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <h3 class="box-title">账号<small class="hidden-xs"  style="color:skyblue">&emsp; @ViewData["BelongTo"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
                     <div class="box-tools pull-right">
                         <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-box-tool" asp-action="Create" asp-route-id="@ViewData["NoteAccountId"]"> 新增</a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -60,37 +60,45 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Account)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Password)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Platform)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Phone)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EnteringStaff)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Branch)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Note)
-                                    </td>
-                                    <td>
-                                        <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.NoteId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-pencil"></i> 编辑
-                                        </a>
-                                        <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.NoteId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Account)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Password)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Platform)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Phone)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EnteringStaff)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Branch)
+                                </td>
+                                @{
+                                    string note = item.Note;
+                                    string note2 = note;
+                                    if (note != null && note.Count() > 10)
+                                    {
+                                        note2 = note.Substring(0, 10);
+                                    }
+                                }
+                                <td title="@note">
+                                    @note2
+                                </td>
+                                <td>
+                                    <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.NoteId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                        <i class="glyphicon glyphicon-pencil"></i> 编辑
+                                    </a>
+                                    <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.NoteId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
+                                        <i class="glyphicon glyphicon-trash"></i> 删除
+                                    </a>
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -105,6 +113,7 @@
             //#region table1初始化
             var table1 = $('#table-1').dataTable(
                 {
+                    responsive: true,
                     order: [[0, "desc"]],
                     dom:
                         "<'row'<'col-sm-6'><'col-sm-6'>>" +

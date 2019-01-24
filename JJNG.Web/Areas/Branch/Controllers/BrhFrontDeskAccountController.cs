@@ -160,6 +160,16 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
                 brhFrontDeskAccounts.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
 
+                var channel = _context.FncChannelType.ToList();
+                foreach (var c in channel)
+                {
+                    if (c.ChannelType == brhFrontDeskAccounts.Channel)
+                    {
+                        brhFrontDeskAccounts.Color = c.Color;
+                        break;
+                    }
+                }
+
                 _context.Add(brhFrontDeskAccounts);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -209,6 +219,15 @@ namespace JJNG.Web.Areas.Branch.Controllers
                         brhFrontDeskAccounts.IsFinish = true;
 
                     //brhFrontDeskAccounts.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
+                    var channel = _context.FncChannelType.ToList();
+                    foreach (var c in channel)
+                    {
+                        if (c.ChannelType == brhFrontDeskAccounts.Channel)
+                        {
+                            brhFrontDeskAccounts.Color = c.Color;
+                            break;
+                        }
+                    }
 
                     _context.Update(brhFrontDeskAccounts);
                     await _context.SaveChangesAsync();

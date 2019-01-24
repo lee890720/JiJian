@@ -57,7 +57,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             if (ModelState.IsValid)
             {
-                brhEarningRecord.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
+                brhEarningRecord.EnteringDate = TimeZoneInfo.ConvertTime(brhEarningRecord.EnteringDate, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                 _context.Add(brhEarningRecord);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -101,7 +101,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             {
                 try
                 {
-                    brhEarningRecord.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
+                    //brhEarningRecord.EnteringDate = TimeZoneInfo.ConvertTime(brhEarningRecord.EnteringDate, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                     _context.Update(brhEarningRecord);
                     await _context.SaveChangesAsync();
                 }

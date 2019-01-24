@@ -76,6 +76,15 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 {
                     _context.Update(fncChannelType);
                     await _context.SaveChangesAsync();
+
+                    var front = _context.BrhFrontDeskAccounts.ToList();
+                        foreach (var f in front)
+                        {
+                            if (fncChannelType.ChannelType == f.Channel)
+                                f.Color = fncChannelType.Color;
+                            _context.Update(f);
+                        }
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

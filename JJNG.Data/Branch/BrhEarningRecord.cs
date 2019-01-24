@@ -12,7 +12,7 @@ namespace JJNG.Data.Branch
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int EarningRecordId { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日HH时mm分}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日}")]
         [Display(Name = "录入时间")]
         public DateTime EnteringDate { get; set; }
         [Display(Name = "分类")]

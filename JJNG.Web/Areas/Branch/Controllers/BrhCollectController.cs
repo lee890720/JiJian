@@ -17,7 +17,7 @@ using JJNG.Web.Areas.Branch.Models;
 namespace JJNG.Web.Areas.Branch.Controllers
 {
     [Area("Branch")]
-    [Authorize(Roles = "Admins,前台")]
+    [Authorize(Roles = "Admins,前台,管家")]
     public class BrhCollectController : Controller
     {
         private readonly AppDbContext _context;
@@ -120,7 +120,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             count = templist6d.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
 
-            var templist7 = _context.BrhFrontDeskAccounts.Where(x => !x.IsFinish||x.UnitPrice==0).ToList();
+            var templist7 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo &&  !x.IsFinish||x.UnitPrice==0).ToList();
             typename = "FrontIsFinish";
             amount = templist7.Sum(x => x.Receivable);
             count = templist7.Count;

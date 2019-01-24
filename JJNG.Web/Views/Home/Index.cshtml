@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     Layout = "";
 }
 <!DOCTYPE html>
@@ -61,25 +61,25 @@
                         <a href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#services" style="color:#F4D03F">町隐学院</a>
+                        <a class="page-scroll" href="#services">町隐学院</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#works" style="color:#F4D03F">既见民宿</a>
+                        <a class="page-scroll" href="#works">既见行旅</a>
                     </li>
                     @*<li>
-                        <a class="page-scroll" href="#about">文化产品</a>
-                    </li>*@
+                            <a class="page-scroll" href="#about">文化产品</a>
+                        </li>*@
                     <li>
-                        <a class="page-scroll" href="#team" style="color:#F4D03F">团队精英</a>
+                        <a class="page-scroll" href="#team">团队精英</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#testimonials" style="color:#F4D03F">品牌故事</a>
+                        <a class="page-scroll" href="#testimonials">品牌故事</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#contact" style="color:#F4D03F">联系我们</a>
+                        <a class="page-scroll" href="#contact">联系我们</a>
                     </li>
                     <li>
-                        <a class="page-scroll" style="color:#F4D03F" asp-action="Login" asp-controller="Account" asp-area="AppIdentity">登录</a>
+                        <a class="page-scroll" asp-action="Login" asp-controller="Account" asp-area="AppIdentity">登录</a>
                     </li>
                 </ul>
             </div>
@@ -95,8 +95,9 @@
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
                         <h1>町 隐  <span class="brand-heading"><strong style="color:darkolivegreen">·</strong> 既 见</span></h1>
+                        @*<h1>小 <span class="brand-heading">即 是</span> 美</h1>*@
                         @*<br />
-                        <p class="intro-text" style=" font-size:30px"><strong style="color:#F4D03F"> 町隐</strong>南山&emsp;&emsp;风云<strong style="color:#F4D03F">既见</strong></p>*@
+                            <p class="intro-text" style=" font-size:30px"><strong style="color:#F4D03F"> 町隐</strong>南山&emsp;&emsp;风云<strong style="color:#F4D03F">既见</strong></p>*@
                         <a href="#services" class="btn btn-circle page-scroll">
                             <i class="fa fa-angle-double-down animated"></i>
                         </a>
@@ -109,30 +110,31 @@
     <div id="services" class="text-center">
         <div class="container">
             <div class="section-title center">
-                <h2>町 隐 学 院 </h2>
+                <h2>町隐学院</h2>
+                <h3>Tinyinn College</h3>
                 <hr>
             </div>
             <div class="space"></div>
             <div class="row">
                 <div class="col-md-3 col-sm-6 service">
                     <i class="fa fa-laptop"></i>
-                    <h4><strong>民宿培训</strong></h4>
-                    @*<p>Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam.</p>*@
+                    <h4><strong>民宿教育</strong></h4>
+                    <p>高校办学&nbsp;&nbsp;人才培训&nbsp;&nbsp;行业交流&nbsp;&nbsp;人才储备</p>
                 </div>
                 <div class="col-md-3 col-sm-6 service">
                     <i class="fa fa-code"></i>
-                    <h4><strong>酒店管理</strong></h4>
-                    @*<p>Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque.</p>*@
+                    <h4><strong>产业整合</strong></h4>
+                    <p>设计师库&nbsp;&nbsp;产品供应商&nbsp;&nbsp;项目推介&nbsp;&nbsp;金融众筹</p>
                 </div>
                 <div class="col-md-3 col-sm-6 service">
                     <i class="fa fa-rocket"></i>
-                    <h4><strong>文化旅游</strong></h4>
-                    @*<p>Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque etiam.</p>*@
+                    <h4><strong>行业智库</strong></h4>
+                    <p>行业研究&nbsp;&nbsp;运营诊断&nbsp;&nbsp;集群策划&nbsp;&nbsp;集群运营</p>
                 </div>
                 <div class="col-md-3 col-sm-6 service">
                     <i class="fa fa-bullseye"></i>
-                    <h4><strong>社群活动</strong></h4>
-                    @*<p>Lorem ipsum dolor sit amet placerat facilisis felis mi in tempus eleifend pellentesque natoque.</p>*@
+                    <h4><strong>媒体传播</strong></h4>
+                    <p>事件引爆&nbsp;&nbsp;营销推广&nbsp;&nbsp;线上订房&nbsp;&nbsp;人才招聘</p>
                 </div>
             </div>
         </div>
@@ -140,12 +142,46 @@
     <!-- Portfolio Section -->
     <div id="works">
         <div class="container">
+            <div class="section-title text-center center">
+                <h2>既见行旅</h2>
+                <h3>MEET Travel & Hotel</h3>
+                <hr>
+            </div>
+            <div class="row">
+                <div class="col-md-6"> <img src="~/front/img/about.png" class="img-responsive"> </div>
+                <div class="col-md-6">
+                    <div class="about-text">
+                        <i class="fa fa-automobile"></i>
+                        <div class="padding-left">
+                            <h4>旅 行</h4>
+                            <p>旅行，人和自然的对话，人与人之间共情，偶遇另一个自己！</p>
+                        </div>
+                        <i class="fa fa-university"></i>
+                        <div class="padding-left">
+                            <h4>旅 宿</h4>
+                            <p>旅宿，是进入美好空间，沉浸交互式场域，觅见另一种生活！</p>
+                        </div>
+                        <i class="fa fa-cubes"></i>
+                        <div class="padding-left">
+                            <h4>产 品</h4>
+                            <p>整合云南优质及个性化旅游民宿及其他旅行资源，提供旅游目的地连线产品预订、民宿+体验组合产品、民宿游学，冬夏令营等活动。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="works1">
+        <div class="container">
             <!-- Container -->
             <div class="section-title text-center center">
                 <h2>既见民宿</h2>
+                <h3>MEET Hotel</h3>
                 <hr>
                 <div class="clearfix"></div>
-                <p>既见君子&emsp;云胡不喜</p>
+                <p>
+                    体验民宿旅行生活方式
+                </p>
             </div>
             <div class="categories">
                 <ul class="cat">
@@ -288,76 +324,46 @@
             </div>
         </div>
     </div>
-    <!-- About Section -->
-    @*<div id="about">
-        <div class="container">
-            <div class="section-title text-center center">
-                <h2>文化产品</h2>
-                <hr>
-            </div>
-            <div class="row">
-                <div class="col-md-6"> <img src="~/front/img/about.png" class="img-responsive"> </div>
-                <div class="col-md-6">
-                    <div class="about-text">
-                        <i class="fa fa-users"></i>
-                        <div class="padding-left">
-                            <h4>Who We Are</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam. Sed commodo nibh ante facilisis bibendum dolor feugiat at. Duis sed dapibus leo nec ornare diam commodo nibh.</p>
-                        </div>
-                        <i class="fa fa-magic"></i>
-                        <div class="padding-left">
-                            <h4>What We Do</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam. Sed commodo nibh ante facilisis bibendum dolor feugiat at. Duis sed dapibus leo nec ornare diam.</p>
-                        </div>
-                        <i class="fa fa-check-square-o"></i>
-                        <div class="padding-left">
-                            <h4>Why Choose Us</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam. Sed commodo nibh ante facilisis bibendum dolor feugiat at.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>*@
     @*<div id="achivements" class="section dark-bg">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 col-sm-3">
-                    <div class="achivement-box">
-                        <i class="fa fa-smile-o"></i>
-                        <span class="count">120</span>
-                        <h4>Happy clients</h4>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-sm-3">
+                        <div class="achivement-box">
+                            <i class="fa fa-smile-o"></i>
+                            <span class="count">120</span>
+                            <h4>Happy clients</h4>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3 col-sm-3">
-                    <div class="achivement-box">
-                        <i class="fa fa-code"></i>
-                        <span class="count">7,800</span>
-                        <h4>Working hours</h4>
+                    <div class="col-md-3 col-sm-3">
+                        <div class="achivement-box">
+                            <i class="fa fa-code"></i>
+                            <span class="count">7,800</span>
+                            <h4>Working hours</h4>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3 col-sm-3">
-                    <div class="achivement-box">
-                        <i class="fa fa-check-square-o"></i>
-                        <span class="count">340</span>
-                        <h4>Projects completed</h4>
+                    <div class="col-md-3 col-sm-3">
+                        <div class="achivement-box">
+                            <i class="fa fa-check-square-o"></i>
+                            <span class="count">340</span>
+                            <h4>Projects completed</h4>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3 col-sm-3">
-                    <div class="achivement-box">
-                        <i class="fa fa-trophy"></i>
-                        <span class="count">25</span>
-                        <h4>Awards won</h4>
+                    <div class="col-md-3 col-sm-3">
+                        <div class="achivement-box">
+                            <i class="fa fa-trophy"></i>
+                            <span class="count">25</span>
+                            <h4>Awards won</h4>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>*@
+        </div>*@
     <!-- Team Section -->
     <div id="team" class="text-center">
         <div class="container">
             <div class="section-title center">
                 <h2>团队精英</h2>
+                <h3>Team Elite</h3>
                 <hr>
                 @*<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diamcommodo nibh ante facilisis.</p>*@
             </div>
@@ -367,8 +373,9 @@
                         <img src="~/front/img/team/01.jpg" alt="..." class="img-circle team-img">
                         <div class="caption">
                             <h3>刘汉捷</h3>
-                            <p>町隐民宿学院创始人</p>
-                            <p>既见民宿品牌创始人</p>
+                            <p>町隐民宿学院执行人</p>
+                            <p>北京町隐酒店管理有限公司法人</p>
+                            <p>“既见”系列非标住宿主理人</p>
                         </div>
                     </div>
                 </div>
@@ -378,7 +385,8 @@
                         <div class="caption">
                             <h3>李&nbsp;虹</h3>
                             <p>町隐民宿学院院长</p>
-                            <p>大理远方的家创始人</p>
+                            <p>大理远方的家主理人</p>
+                            <p>前五百强企业高管</p>
                         </div>
                     </div>
                 </div>
@@ -412,21 +420,38 @@
         <div class="container">
             <div class="section-title center">
                 <h2 style="color:#F4D03F">品牌故事</h2>
+                <h3 style="color:#F4D03F">Brand Story</h3>
                 <hr>
             </div>
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
                     <div id="testimonial" class="owl-carousel owl-theme">
                         <div class="item">
-                            <p style="color:brown">町隐民宿学院致力于民宿行业人才培养及输出，成立两年来开展民宿管家店长培训二十多期，民宿沙龙二十多场，举办政府及文旅企业招商，行业论坛多次。并与赢商网共同组建云南民宿行业联盟，是国内最具影响力的民宿行业培训机构之一，目前已经有大理本部，町隐·江南民宿学院，町隐·巴蜀民宿学院，町隐·广西民宿学院，町隐·八闽民宿学院等六个分院。</p>
-                            <p style="font-size:20px;color:#F4D03F">町隐 · 民宿学院</p>
+                            <p style="color:white">
+                                “町”字的变体生成，一扇窗户，一个美宿，一所学校......
+                                <br />
+                                町隐—归隐田町，对田园生活的向往，自然的回归及对内心隐逸自我的追寻
+                                <br />
+                                民宿之路，就是这么美好的一条田间小路
+                                <br />
+                                “町隐”是英文Tiny Inn的音译；Tiny Inn是各种“微型住宿”包括民宿、客栈、精品酒店、城市公寓等的统称。
+                                <br />
+                                町隐民宿学院致力于微型住宿行业的观察研究、培训教育及业内交流。
+                            </p>
+                            <p style="font-size:20px;color:#F4D03F">町隐 · 学院</p>
                         </div>
                         <div class="item">
-                            <p style="color:brown">既见语出《诗经》“既见君子，云胡不喜”，是公司旗下自营的个性化住宿品牌。以运营中心+连锁店的模式，针对中高端客群提供品质住宿及在地化旅行体验。目前有既见欢喜、既见达舍、既见南国、既见苍海四个分店。</p>
-                            <p style="font-size:20px;color:#F4D03F">既见 · 非标民宿</p>
+                            <p style="color:white">
+                                “既见君子，云胡不喜。”既见是一种内心期盼充盈后的满溢，见自己，见天地，见诗和远方。
+                                <br />
+                                我们不断探索小微住宿的不同模式，在品牌下探索更多不同的住宿类型，致力于做好自己的品牌民宿同时也为町隐民宿学院提供落地的教学积累。
+                            </p>
+                            <p style="font-size:20px;color:#F4D03F">既见 · 行旅</p>
                         </div>
                         <div class="item">
-                            <p style="color:brown">小即是美依托町隐民宿学院说沉淀行业资源，为民宿行业提供媒体服务支持，并为乡建文旅项目提供民宿集群的咨询和行业资源导入。</p>
+                            <p style="color:white">
+                            小即是美依托町隐民宿学院说沉淀行业资源，为民宿行业提供媒体服务支持，并为乡建文旅项目提供民宿集群的咨询和行业资源导入。
+                            </p>
                             <p style="font-size:20px;color:#F4D03F">小即是美 · 文化传播</p>
                         </div>
                     </div>
@@ -439,7 +464,8 @@
     <div id="contact" class="text-center">
         <div class="container">
             <div class="section-title center">
-                <h2><strong>联系</strong>我们</h2>
+                <h2>联系我们</h2>
+                <h3>Contact Us</h3>
                 <hr>
                 <p>学习 成就 民宿</p>
             </div>
@@ -447,13 +473,12 @@
                 <div class="col-md-4">
                     <i class="fa fa-map-marker fa-2x"></i>
                     <p>
-                        云南省大理市<br>
-                        蜜湾小镇B18栋
+                        云南省大理市蜜湾小镇B6栋
                     </p>
                 </div>
                 <div class="col-md-4">
                     <i class="fa fa-envelope-o fa-2x"></i>
-                    <p>lhj8814@126.com</p>
+                    <p>service@tinyinn.cn</p>
                 </div>
                 <div class="col-md-4">
                     <i class="fa fa-phone fa-2x"></i>
@@ -497,13 +522,13 @@
                 <p>Copyright &copy; 2017 Company Name All Rights Reserved. </p>
             </div>
             @*<div class="pull-right fnav">
-                <ul class="footer-social">
-                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                    <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                </ul>
-            </div>*@
+                    <ul class="footer-social">
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+                        <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                    </ul>
+                </div>*@
         </div>
     </nav>
 

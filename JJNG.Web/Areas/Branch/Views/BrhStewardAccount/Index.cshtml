@@ -17,7 +17,7 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">管家账目<small style="color:red">&emsp; @ViewData["BelongTo"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                        <h3 class="box-title">管家账目<small class="hidden-xs" style="color:red">&emsp; @ViewData["BelongTo"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
                         <div class="box-tools pull-right">
                             <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-box-tool" asp-action="Create"> 新增</a>
                             @if (ViewData["Position"].ToString() == "组长")
@@ -222,8 +222,16 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.RelationStaff)
                                         </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Note)
+                                        @{
+                                            string note = item.Note;
+                                            string note2 = note;
+                                            if (note != null && note.Count() > 7)
+                                            {
+                                                note2 = note.Substring(0, 7);
+                                            }
+                                        }
+                                        <td title="@note">
+                                            @note2
                                         </td>
                                         <td>
                                             @if (item.IsFinance)
@@ -259,11 +267,16 @@
     }
 </section>
 @section Scripts{
+    <script src="~/js/range_dates.js"></script>
+    <script src="~/js/dateRangeSelector.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
+
     <script>
         $(function () {
             //#region table1初始化
             var table1 = $('#table-1').dataTable(
                 {
+                    responsive: true,
                     order: [[0, "desc"]],
                     pageLength: 10,
                     dom:

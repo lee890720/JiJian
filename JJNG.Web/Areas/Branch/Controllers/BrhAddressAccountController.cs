@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace JJNG.Web.Areas.Branch.Controllers
 {
     [Area("Branch")]
-    [Authorize(Roles = "Admins,前台")]
+    [Authorize(Roles = "Admins,前台,管家")]
     public class BrhAddressAccountController : Controller
     {
         private readonly AppDbContext _context;
@@ -33,7 +33,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             ViewData["UserName"] = _user.UserName;
             ViewData["BelongTo"] = _user.BelongTo;
             ViewData["Department"] = _user.Department;
-            var psnAddressAccount = await _context.PsnAddressAccount.Where(x => x.BelongTo == _user.BelongTo && x.Department == _user.Department&&(string.IsNullOrEmpty(x.Manager)||x.Manager==_user.UserName))
+            var psnAddressAccount = await _context.PsnAddressAccount.Where(x => x.BelongTo == _user.BelongTo&&(string.IsNullOrEmpty(x.Manager)||x.Manager==_user.UserName))
 .ToListAsync();
             return View(psnAddressAccount);
         }

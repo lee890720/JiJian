@@ -35,7 +35,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             ViewData["UserName"] = _user.UserName;
             ViewData["BelongTo"] = _user.BelongTo;
 
-            var list_branch = _identityContext.UserBelongTo.Where(x => x.BelongToName != "运营中心").ToList();
+            var list_branch = _identityContext.UserBelongTo.Where(x => x.BelongToName != "运营中心"&& x.BelongToName != "町隐学院").ToList();
             List<BrhStewardAccounts> brhStewardAccounts = new List<BrhStewardAccounts>();
 
             if (string.IsNullOrEmpty(branch))

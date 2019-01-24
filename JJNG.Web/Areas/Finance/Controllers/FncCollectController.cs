@@ -35,7 +35,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
         public IActionResult Index(string branch)
         {
             //AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var list_branch = _identityContext.UserBelongTo.Where(x => x.BelongToName != "运营中心").ToList();
+            var list_branch = _identityContext.UserBelongTo.Where(x => x.BelongToName != "运营中心"&& x.BelongToName != "町隐学院").ToList();
             var _params = new Params();
             _params.Branch = branch;
             return View(Tuple.Create<Params, List<UserBelongTo>>(_params, list_branch));

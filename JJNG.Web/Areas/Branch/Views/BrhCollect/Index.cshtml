@@ -83,7 +83,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 table-responsive" style="padding:30px">
+                        <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12  hidden-xs table-responsive" style="padding:30px">
                             @if (Model.Item1 != null)
                             {
                                 <table class="table" style="table-layout:fixed">
@@ -380,6 +380,7 @@
         //#region 初始化table1
         var table1 = $('#table-1').dataTable(
             {
+                responsive: true,
                 order: [[0, "desc"]],
                 info: false,
                 paging: false,
@@ -416,6 +417,7 @@
         //#region table2初始化
         var table1 = $('#table-2').dataTable(
             {
+                responsive: true,
                 order: [[1, "asc"]],
                 pageLength: 30,
                 dom:

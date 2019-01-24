@@ -32,6 +32,12 @@
                 </a>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
+                        @*<li>
+                            <div class="input-group" style="width:250px;margin-right:10px;margin-top:9px">
+                                <span class="input-group-addon">分店</span>
+                                <select id="select-branch" class="form-control select2" style="width: 100%;"></select>
+                            </div>
+                        </li>*@
                         <li>
                             <div class="input-group" style="width:250px;margin-right:10px;margin-top:9px">
                                 <div class="input-group-btn">
@@ -150,7 +156,6 @@
         </aside>
         <div class="control-sidebar-bg"></div>
     </div>
-    @Html.Partial("_ValidationScriptsPartial")
     @Html.Partial("_Modal", new BootstrapModel { ID = "modal-action", AreaLabeledId = "modal-action-label", Size = ModalSize.Large })
     @Html.Partial("_ModalM", new BootstrapModel { ID = "modal-action-m", AreaLabeledId = "modal-action-m-label", Size = ModalSize.Medium })
     <script src="~/js/adminlte.min.js"></script>

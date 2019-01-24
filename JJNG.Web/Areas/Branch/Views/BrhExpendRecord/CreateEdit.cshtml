@@ -16,27 +16,33 @@ else
 {
     <input type="hidden" asp-for="ExpendRecordId" />
 }
-<div class="col-md-6">
-    <div class="form-group">
-        <label asp-for="ExpendType" class="control-label"></label>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label asp-for="EnteringDate" class="control-label"></label>
+            <input asp-for="EnteringDate" id="enterdate" type="text" class="form-control datepicker" />
+            <span asp-validation-for="EnteringDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ExpendType" class="control-label"></label>
             <select asp-for="ExpendType" asp-items="ViewBag.ExpendType" class="form-control"></select>
-            <span asp-validation-for="ExpendType" class="text-danger"></span>    </div>
-    <div class="form-group">
-        <label asp-for="Purpose" class="control-label"></label>
-        <input asp-for="Purpose" class="form-control" />
-        <span asp-validation-for="Purpose" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Amount" class="control-label"></label>
-        <input asp-for="Amount" class="form-control" />
-        <span asp-validation-for="Amount" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="PaymentType" class="control-label"></label>
+            <span asp-validation-for="ExpendType" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Purpose" class="control-label"></label>
+            <input asp-for="Purpose" class="form-control" />
+            <span asp-validation-for="Purpose" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Amount" class="control-label"></label>
+            <input asp-for="Amount" class="form-control" />
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="PaymentType" class="control-label"></label>
             <select asp-for="PaymentType" asp-items="ViewBag.PaymentType" class="form-control"></select>
             <span asp-validation-for="PaymentType" class="text-danger"></span>
+        </div>
     </div>
-</div>
 <div class="col-md-6">
     <div class="form-group">
         <label asp-for="ConnectNumber" class="control-label"></label>
@@ -62,3 +68,12 @@ else
 
 @Html.Partial("_ValidationScriptsPartial")
 
+<script>
+    $(".datepicker").datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        language: "zh-CN",
+        todayBtn: 'linked',
+        todayHighlight: true,
+    });
+</script>

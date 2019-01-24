@@ -16,7 +16,7 @@ using JJNG.Web;
 namespace JJNG.Web.Areas.Branch.Controllers
 {
     [Area("Branch")]
-    [Authorize(Roles = "Admins,前台")]
+    [Authorize(Roles = "Admins,前台,管家")]
     public class BrhImprestRecordController : Controller
     {
         private readonly AppDbContext _context;
@@ -59,7 +59,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             if (ModelState.IsValid)
             {
-                brhImprestRecord.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
+                brhImprestRecord.EnteringDate = TimeZoneInfo.ConvertTime(brhImprestRecord.EnteringDate, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                 _context.Add(brhImprestRecord);
                 await _context.SaveChangesAsync();
                 var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId&&!x.IsFinance).Sum(x => x.Amount);
@@ -106,7 +106,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             {
                 try
                 {
-                    brhImprestRecord.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
+                    //brhImprestRecord.EnteringDate = TimeZoneInfo.ConvertTime(brhImprestRecord.EnteringDate, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                     _context.Update(brhImprestRecord);
                     await _context.SaveChangesAsync();
                     var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId&&!x.IsFinance).Sum(x => x.Amount);

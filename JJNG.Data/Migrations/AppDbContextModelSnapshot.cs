@@ -257,6 +257,25 @@ namespace JJNG.Data.Migrations
                     b.ToTable("Brh_FrontPaymentDetial");
                 });
 
+            modelBuilder.Entity("JJNG.Data.Branch.BrhFrontPaymentDetial2", b =>
+                {
+                    b.Property<int>("FrontPaymentDetialId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long>("FrontDeskAccountsId");
+
+                    b.Property<decimal>("PayAmount");
+
+                    b.Property<DateTime>("PayDate");
+
+                    b.Property<string>("PayWay")
+                        .IsRequired();
+
+                    b.HasKey("FrontPaymentDetialId");
+
+                    b.ToTable("Brh_FrontPaymentDetial2");
+                });
+
             modelBuilder.Entity("JJNG.Data.Branch.BrhImprestAccounts", b =>
                 {
                     b.Property<int>("ImprestAccountsId")
