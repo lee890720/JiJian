@@ -100,9 +100,9 @@ $(window).scroll(function() {
   	/*====================================
     Pretty Photo
     ======================================*/
-	$("a[rel^='prettyPhoto']").prettyPhoto({
-		social_tools: false
-	});	
+	//$("a[rel^='prettyPhoto']").prettyPhoto({
+	//	social_tools: false
+	//});	
 
 }());
 

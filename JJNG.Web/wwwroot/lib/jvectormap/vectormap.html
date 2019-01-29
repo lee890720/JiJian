@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jquery矢量地图</title>
+<link rel="stylesheet" href="css/jquery.jvectormap.css" type="text/css"/>
+<script src="js/jquery.min.js"></script>
+<script src="js/jvectormap.min.js"></script>
+<script src="js/maps/usa.js"></script><!--美国地图-->
+<script src="js/maps/world.js"></script><!--世界地图-->
+<script src="js/maps/china.js"></script><!--中国地图-->
+<style>
+ html,body,#map{
+	 height:100%;
+	 width:100%;
+	 margin:0px;
+	 padding:0px;
+}
+</style>
+<script type="text/javascript">
+	$(function(){
+	   $("#map").vectorMap({
+			map: 'cn_mill',//载入地图的名称 cn_mill为china.js地图名称 
+			backgroundColor: 'rgba(0,0,0,0.25)',//地图背景颜色
+			regionStyle: {
+				initial: {
+					fill: 'rgba(255,2552,255,0.7)'
+				},
+				hover: {
+					fill: '#fff'
+				},
+			},    //区域选中颜色
+			zoomMin:1,   //表示地图可以显示的最小倍数，默认为1        
+			markerStyle: {
+				initial: {
+					fill: '#e80000',
+					stroke: 'rgba(0,0,0,0.4)',
+					"fill-opacity": 2,
+					"stroke-width": 7,
+					"stroke-opacity": 0.5,
+					r: 4
+				},
+				hover: {
+					stroke: 'black',
+					"stroke-width": 2,
+				},
+				selected: {
+					fill: 'blue'
+				},
+				selectedHover: {
+				}
+			},//点样式
+			zoomOnScroll: true,  //当设置为true时可以使用鼠标滚轮缩放地图，否则不可以。默认值为true  
+			markers :[
+				{latLng: [39.9, 116.3], name: '北京'},
+				{latLng: [116.3, 39.9], name: 'Sample Name 2'},
+				{latLng: [36, -79], name: 'Sample Name 3'},
+				{latLng: [29, -99], name: 'Sample Name 4'},
+				{latLng: [33, -95], name: 'Sample Name 4'},
+				{latLng: [31, -92], name: 'Liechtenstein'},
+			] //坐标点     	 
+	   });
+	});
+</script>
+</head>
+
+<body>
+ <div id="map">
+ </div>
+</body>
+</html>
