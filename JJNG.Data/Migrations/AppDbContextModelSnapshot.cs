@@ -283,7 +283,7 @@ namespace JJNG.Data.Migrations
 
                     b.Property<decimal>("Balance");
 
-                    b.Property<string>("BelongTo");
+                    b.Property<string>("Branch");
 
                     b.Property<string>("Department");
 
@@ -292,6 +292,8 @@ namespace JJNG.Data.Migrations
                     b.Property<string>("ImprestAccountsName");
 
                     b.Property<string>("Manager");
+
+                    b.Property<decimal>("MoveAmount");
 
                     b.HasKey("ImprestAccountsId");
 
@@ -320,6 +322,8 @@ namespace JJNG.Data.Migrations
                     b.Property<int>("ImprestAccountsId");
 
                     b.Property<bool>("IsFinance");
+
+                    b.Property<bool>("IsMove");
 
                     b.Property<string>("Note");
 
@@ -527,7 +531,7 @@ namespace JJNG.Data.Migrations
 
                     b.Property<string>("AccountName");
 
-                    b.Property<string>("BelongTo");
+                    b.Property<string>("Branch");
 
                     b.Property<string>("Department");
 
@@ -575,7 +579,7 @@ namespace JJNG.Data.Migrations
 
                     b.Property<string>("AccountName");
 
-                    b.Property<string>("BelongTo");
+                    b.Property<string>("Branch");
 
                     b.Property<string>("Department");
 

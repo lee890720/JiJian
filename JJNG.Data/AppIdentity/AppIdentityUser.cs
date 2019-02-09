@@ -14,8 +14,10 @@ namespace JJNG.Data.AppIdentity
         public string Department { get; set; }
         [Display(Name ="职位")]
         public string Position { get; set; }
-        [Display(Name ="隶属")]
-        public string BelongTo { get; set; }
+        [Display(Name = "隶属")]
+        public string Branch { get; set; }
+        [Display(Name = "隶属ID")]
+        public int BranchId { get; set; }
         [Display(Name = "注册时间")]
         public DateTime RegisterDate { get; set; }
         [Display(Name = "头像")]

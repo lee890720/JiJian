@@ -12,7 +12,7 @@ namespace JJNG.Data.Branch
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int MemoId { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:MM/dd HH:mm}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [Display(Name = "录入时间")]
         public DateTime EnteringDate { get; set; }
         [Display(Name = "备忘录")]

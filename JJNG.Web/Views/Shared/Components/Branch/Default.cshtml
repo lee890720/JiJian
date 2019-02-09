@@ -1,0 +1,27 @@
+﻿@model IEnumerable<UserBranch>
+<div class="input-group">
+    <span class="input-group-addon">分店</span>
+    <select id="branch" onchange="selectfun()" class="form-control" style="width: 150px;">
+        @foreach (var b in Model)
+        {
+            var tempid = b.BranchId;
+            var tempname = b.BranchName;
+            var bid = Convert.ToInt32(ViewData["BranchId"]);
+            if (tempid == bid)
+            {
+                <option value="@tempid" selected="selected">@tempname</option>
+            }
+            else
+            {
+                <option value="@tempid">@tempname</option>
+            }
+        }
+    </select>
+</div>
+<script>
+    function selectfun() {
+        var vs = $('#branch option:selected').val();
+        var vt = $('#branch option:selected').html();
+        window.location.href = "/Finance/FncFrontCalendar/Index?branchId="+vs+"&branch="+vt;
+    }
+</script>

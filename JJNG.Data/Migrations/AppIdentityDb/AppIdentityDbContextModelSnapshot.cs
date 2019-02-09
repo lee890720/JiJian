@@ -20,24 +20,6 @@ namespace JJNG.Data.Migrations.AppIdentityDb
                 .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("JJNG.Data.AppIdentity.AppIdentityRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("IdentityRoleId");
-
-                    b.Property<string>("Permission");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdentityRoleId");
-
-                    b.ToTable("AppIdentityRole");
-                });
-
             modelBuilder.Entity("JJNG.Data.AppIdentity.AppIdentityUser", b =>
                 {
                     b.Property<string>("Id")
@@ -45,7 +27,9 @@ namespace JJNG.Data.Migrations.AppIdentityDb
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("BelongTo");
+                    b.Property<string>("Branch");
+
+                    b.Property<int>("BranchId");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -99,32 +83,32 @@ namespace JJNG.Data.Migrations.AppIdentityDb
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("JJNG.Data.AppIdentity.UserBelongTo", b =>
+            modelBuilder.Entity("JJNG.Data.AppIdentity.UserBranch", b =>
                 {
-                    b.Property<int>("BelongToId")
+                    b.Property<int>("BranchId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BelongToName");
+                    b.Property<string>("BranchName");
 
-                    b.HasKey("BelongToId");
+                    b.HasKey("BranchId");
 
-                    b.ToTable("User_BelongTo");
+                    b.ToTable("User_Branch");
                 });
 
-            modelBuilder.Entity("JJNG.Data.AppIdentity.UserBelongToDetial", b =>
+            modelBuilder.Entity("JJNG.Data.AppIdentity.UserBranchDetial", b =>
                 {
-                    b.Property<int>("BelongToDetialId")
+                    b.Property<int>("BranchDetialId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("BelongToId");
+                    b.Property<int>("BranchId");
 
                     b.Property<string>("HouseNumber");
 
-                    b.HasKey("BelongToDetialId");
+                    b.HasKey("BranchDetialId");
 
-                    b.HasIndex("BelongToId");
+                    b.HasIndex("BranchId");
 
-                    b.ToTable("User_BelongToDetial");
+                    b.ToTable("User_BranchDetial");
                 });
 
             modelBuilder.Entity("JJNG.Data.AppIdentity.UserDepartment", b =>
@@ -259,18 +243,11 @@ namespace JJNG.Data.Migrations.AppIdentityDb
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("JJNG.Data.AppIdentity.AppIdentityRole", b =>
+            modelBuilder.Entity("JJNG.Data.AppIdentity.UserBranchDetial", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "IdentityRole")
-                        .WithMany()
-                        .HasForeignKey("IdentityRoleId");
-                });
-
-            modelBuilder.Entity("JJNG.Data.AppIdentity.UserBelongToDetial", b =>
-                {
-                    b.HasOne("JJNG.Data.AppIdentity.UserBelongTo", "UserBelongTo")
-                        .WithMany("UserBelongToDetial")
-                        .HasForeignKey("BelongToId")
+                    b.HasOne("JJNG.Data.AppIdentity.UserBranch", "UserBranch")
+                        .WithMany("UserBranchDetial")
+                        .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -35,8 +35,8 @@ namespace JJNG.Web.Areas.Branch.Controllers
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
             ViewData["Position"] = _user.Position;
-            ViewData["BelongTo"] = _user.BelongTo;
-            return View(await _context.BrhStewardAccounts.Where(x => x.Branch == _user.BelongTo).ToListAsync());
+            ViewData["Branch"] = _user.Branch;
+            return View(await _context.BrhStewardAccounts.Where(x => x.Branch == _user.Branch).ToListAsync());
         }
 
         [HttpPost]
@@ -61,9 +61,9 @@ namespace JJNG.Web.Areas.Branch.Controllers
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
 
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
 
-            var belongToId = _identityContext.UserBelongTo.SingleOrDefault(x => x.BelongToName == _user.BelongTo).BelongToId;
+            var belongToId = _identityContext.UserBranch.SingleOrDefault(x => x.BranchName == _user.Branch).BranchId;
 
             var list_paymentType = _context.FncPaymentType.ToList();
             ViewData["PaymentType"] = new SelectList(list_paymentType, "PaymentType", "PaymentType");
@@ -163,7 +163,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            var belongToId = _identityContext.UserBelongTo.SingleOrDefault(x => x.BelongToName == _user.BelongTo).BelongToId;
+            var belongToId = _identityContext.UserBranch.SingleOrDefault(x => x.BranchName == _user.Branch).BranchId;
 
             return PartialView("~/Areas/Branch/Views/BrhStewardAccount/Edit.cshtml", brhStewardAccounts);
         }

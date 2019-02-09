@@ -35,7 +35,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
             ViewData["Position"] = _user.Position;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             //var channel = _context.FncChannelType.ToList();
             //var front = _context.BrhFrontDeskAccounts.ToList();
             //foreach (var c in channel)
@@ -49,7 +49,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             //}
             //await _context.SaveChangesAsync();
 
-            return View(await _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo).ToListAsync());
+            return View(await _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.Branch).ToListAsync());
         }
 
         [HttpPost]
@@ -74,10 +74,10 @@ namespace JJNG.Web.Areas.Branch.Controllers
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
 
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
 
-            var belongToId = _identityContext.UserBelongTo.SingleOrDefault(x => x.BelongToName == _user.BelongTo).BelongToId;
-            var list_houseNumber = _identityContext.UserBelongToDetial.Where(x => x.BelongToId == belongToId).ToList();
+            var belongToId = _identityContext.UserBranch.SingleOrDefault(x => x.BranchName == _user.Branch).BranchId;
+            var list_houseNumber = _identityContext.UserBranchDetial.Where(x => x.BranchId == belongToId).ToList();
             ViewData["HouseNumber"] = new SelectList(list_houseNumber, "HouseNumber", "HouseNumber");
 
             var list_paymentType = _context.FncPaymentType.ToList();
@@ -192,8 +192,8 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            var belongToId = _identityContext.UserBelongTo.SingleOrDefault(x => x.BelongToName == _user.BelongTo).BelongToId;
-            var list_houseNumber = _identityContext.UserBelongToDetial.Where(x => x.BelongToId == belongToId).ToList();
+            var belongToId = _identityContext.UserBranch.SingleOrDefault(x => x.BranchName == _user.Branch).BranchId;
+            var list_houseNumber = _identityContext.UserBranchDetial.Where(x => x.BranchId == belongToId).ToList();
             ViewData["HouseNumber"] = new SelectList(list_houseNumber, "HouseNumber", "HouseNumber", brhFrontDeskAccounts.HouseNumber);
 
             var list_channelType = _context.FncChannelType.ToList();

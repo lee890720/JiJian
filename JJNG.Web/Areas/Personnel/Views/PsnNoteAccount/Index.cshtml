@@ -15,7 +15,7 @@
         <div class="col-md-12">
             <div class="box box-primary ">
                 <div class="box-header with-border">
-                    <h3 class="box-title">账号管理<small class="hidden-xs"  style="color:skyblue">&emsp; @ViewData["BelongTo"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <h3 class="box-title">账号管理<small class="hidden-xs"  style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
                     <div class="box-tools pull-right">
                         <a title="新增通讯录" class="btn btn-box-tool" id="createModal" data-toggle="modal" data-target="#modal-action" asp-action="Create"> 新增</a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -43,7 +43,7 @@
                                     @Html.DisplayNameFor(model => model.Department)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.BelongTo)
+                                    @Html.DisplayNameFor(model => model.Branch)
                                 </th>
                                 <th></th>
                             </tr>
@@ -62,7 +62,7 @@
                                         @Html.DisplayFor(modelItem => item.Department)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.BelongTo)
+                                        @Html.DisplayFor(modelItem => item.Branch)
                                     </td>
                                     <td>
                                         <a asp-action="Index" asp-controller="PsnNote" asp-route-area="Personnel" asp-route-id="@item.NoteAccountId" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">

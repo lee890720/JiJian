@@ -91,6 +91,9 @@ namespace JJNG.Web.Areas.Branch.Models
         [Display(Name = "分店")]
         public string Branch { get; set; }
 
+        [Display(Name ="分店ID")]
+        public int BranchId { get; set; }
+
         [Display(Name = "备注")]
         public string Note { get; set; }
 

@@ -13,7 +13,7 @@ namespace JJNG.Data.Branch
         public int ImprestRecordId { get; set; }
         public int ImprestAccountsId { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         [Display(Name = "录入时间")]
         public DateTime EnteringDate { get; set; }
         [Display(Name = "分类")]
@@ -34,6 +34,8 @@ namespace JJNG.Data.Branch
         [Required]
         [Display(Name = "财务审核")]
         public bool IsFinance { get; set; }
+        [Display(Name = "是否转移")]
+        public bool IsMove { get; set; }
         [Required]
         [Display(Name = "分店")]
         public string Branch { get; set; }

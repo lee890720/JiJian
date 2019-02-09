@@ -31,7 +31,7 @@ namespace JJNG.Web.Areas.Personnel.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             ViewData["AddressAccountId"] = id;
 
             return View(await _context.PsnAddress.Where(x => x.AddressAccountId == id).ToListAsync());
@@ -41,7 +41,7 @@ namespace JJNG.Web.Areas.Personnel.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             ViewData["AddressAccountId"] = id;
             return PartialView("~/Areas/Personnel/Views/PsnAddress/CreateEdit.cshtml");
         }
@@ -69,7 +69,7 @@ namespace JJNG.Web.Areas.Personnel.Controllers
             var psnAddress = await _context.PsnAddress.SingleOrDefaultAsync(m => m.AddressId == id);
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             if (psnAddress == null)
             {
                 return NotFound();

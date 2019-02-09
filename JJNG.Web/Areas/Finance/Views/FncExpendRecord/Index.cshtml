@@ -1,4 +1,4 @@
-﻿@model Tuple<List<BrhExpendRecord>, List<UserBelongTo>>
+﻿@model Tuple<List<BrhExpendRecord>, List<UserBranch>>
 
 @{
     var actionName = ViewContext.RouteData.Values["action"].ToString();
@@ -17,7 +17,7 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">支出明细<small  class="hidden-xs"  style="color:skyblue">&emsp; @ViewData["BelongTo"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                        <h3 class="box-title">支出明细<small  class="hidden-xs"  style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
                         <div class="box-tools pull-right">
                             <button title="审核" type="submit" class="btn btn-box-tool"> 审核</button>
                             <div class="btn-group">
@@ -26,7 +26,7 @@
                                     <li><a asp-action="Index"><i class="fa fa-circle-o text-light-blue"></i>全部</a></li>
                                     @foreach (var u in Model.Item2)
                                     {
-                                        <li><a asp-action="Index" asp-route-branch="@u.BelongToName"><i class="fa fa-circle-o text-light-blue"></i>@u.BelongToName</a></li>
+                                        <li><a asp-action="Index" asp-route-branch="@u.BranchName"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
                                     }
                                 </ul>
                             </div>

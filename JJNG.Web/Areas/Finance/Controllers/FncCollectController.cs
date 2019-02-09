@@ -35,10 +35,10 @@ namespace JJNG.Web.Areas.Finance.Controllers
         public IActionResult Index(string branch)
         {
             //AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var list_branch = _identityContext.UserBelongTo.Where(x => x.BelongToName != "运营中心"&& x.BelongToName != "町隐学院").ToList();
+            var list_branch = _identityContext.UserBranch.Where(x => x.BranchName != "运营中心"&& x.BranchName != "町隐学院").ToList();
             var _params = new Params();
             _params.Branch = branch;
-            return View(Tuple.Create<Params, List<UserBelongTo>>(_params, list_branch));
+            return View(Tuple.Create<Params, List<UserBranch>>(_params, list_branch));
 
         }
 
@@ -88,7 +88,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
                 var templist4 = _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(x.StartDate, newdate) >= 0).ToList();
                 var templist4d = _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(x.StartDate, DateTime.Now.Date) <= 0 && DateTime.Compare(x.EndDate, DateTime.Now.Date) > 0).ToList();
-                var houselist = _identityContext.UserBelongToDetial.ToList();
+                var houselist = _identityContext.UserBranchDetial.ToList();
                 var housenum = houselist.Count;
                 var housetotal = housenum * DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
                 decimal day_rate = 0;
@@ -280,7 +280,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
                 var templist4 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == branch && DateTime.Compare(x.StartDate, newdate) >= 0).ToList();
                 var templist4d = _context.BrhFrontDeskAccounts.Where(x => x.Branch == branch && DateTime.Compare(x.StartDate, DateTime.Now.Date) <= 0 && DateTime.Compare(x.EndDate, DateTime.Now.Date) > 0).ToList();
-                var houselist = _identityContext.UserBelongToDetial.Where(x => x.UserBelongTo.BelongToName == branch).ToList();
+                var houselist = _identityContext.UserBranchDetial.Where(x => x.UserBranch.BranchName == branch).ToList();
                 var housenum = houselist.Count;
                 var housetotal = housenum * DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
                 decimal day_rate = 0;

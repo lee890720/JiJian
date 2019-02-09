@@ -31,9 +31,9 @@ namespace JJNG.Web.Areas.Finance.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
 
-            var list_branch = _identityContext.UserBelongTo.Where(x => x.BelongToName != "运营中心"&& x.BelongToName != "町隐学院").ToList();
+            var list_branch = _identityContext.UserBranch.Where(x => x.BranchName != "运营中心"&& x.BranchName != "町隐学院").ToList();
             List<BrhEarningRecord> brhEarningRecord = new List<BrhEarningRecord>();
 
             if (string.IsNullOrEmpty(branch))
@@ -41,7 +41,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             else
                 brhEarningRecord = await _context.BrhEarningRecord.Where(x => x.Branch == branch).ToListAsync();
 
-            return View(Tuple.Create<List<BrhEarningRecord>, List<UserBelongTo>>(brhEarningRecord, list_branch));
+            return View(Tuple.Create<List<BrhEarningRecord>, List<UserBranch>>(brhEarningRecord, list_branch));
         }
 
         [HttpPost]

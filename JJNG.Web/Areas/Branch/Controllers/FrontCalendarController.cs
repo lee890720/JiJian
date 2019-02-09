@@ -35,8 +35,8 @@ namespace JJNG.Web.Areas.Branch.Controllers
         public async Task<ActionResult> Index()
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var belongToId = _identityContext.UserBelongTo.SingleOrDefault(x => x.BelongToName == _user.BelongTo).BelongToId;
-            var list_houseNumber = _identityContext.UserBelongToDetial.Where(x => x.BelongToId == belongToId).ToList();
+            var belongToId = _identityContext.UserBranch.SingleOrDefault(x => x.BranchName == _user.Branch).BranchId;
+            var list_houseNumber = _identityContext.UserBranchDetial.Where(x => x.BranchId == belongToId).ToList();
             ViewData["HouseNumber"] = new SelectList(list_houseNumber, "HouseNumber", "HouseNumber");
 
             var list_paymentType = _context.FncPaymentType.ToList();
@@ -71,7 +71,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            var belongToId = _identityContext.UserBelongTo.SingleOrDefault(x => x.BelongToName == _user.BelongTo).BelongToId;
+            var belongToId = _identityContext.UserBranch.SingleOrDefault(x => x.BranchName == _user.Branch).BranchId;
             var frontId = Convert.ToInt64(belongToId.ToString() + ConvertJson.DateTimeToStamp(DateTime.Now).ToString());
             brhFrontModel.FrontDeskAccountsId = frontId;
             BrhFrontDeskAccounts brhFrontDeskAccounts = new BrhFrontDeskAccounts();
@@ -263,17 +263,17 @@ namespace JJNG.Web.Areas.Branch.Controllers
         public async Task<JsonResult> GetCalendarData()
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var branch = _user.BelongTo;
+            var branch = _user.Branch;
             var frontdata = _context.BrhFrontDeskAccounts.Where(x => x.Branch == branch).ToList();
-            var list_branch = _identityContext.UserBelongToDetial.Include(x => x.UserBelongTo).GroupBy(x => new
+            var list_branch = _identityContext.UserBranchDetial.Include(x => x.UserBranch).GroupBy(x => new
             {
-                x.BelongToId,
-                x.UserBelongTo.BelongToName,
+                x.BranchId,
+                x.UserBranch.BranchName,
                 x.HouseNumber,
             }).Select(x => new
             {
-                BranchId = x.Key.BelongToId,
-                Branch = x.Key.BelongToName,
+                BranchId = x.Key.BranchId,
+                Branch = x.Key.BranchName,
                 HouseNumber = x.Key.HouseNumber,
             }).ToList();
 

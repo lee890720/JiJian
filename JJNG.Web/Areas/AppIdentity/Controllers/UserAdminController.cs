@@ -40,10 +40,10 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
         {
             var list_department = _context.UserDepartment.ToList();
             var list_position = _context.UserPosition.ToList();
-            var list_belongto = _context.UserBelongTo.ToList();
+            var list_branch = _context.UserBranch.ToList();
             ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName");
             ViewData["Position"] = new SelectList(list_position, "PositionName", "PositionName");
-            ViewData["BelongTo"] = new SelectList(list_belongto, "BelongToName", "BelongToName");
+            ViewData["Branch"] = new SelectList(list_branch, "BranchName", "BranchName");
             return PartialView("~/Areas/AppIdentity/Views/UserAdmin/Create.cshtml");
         }
 
@@ -52,13 +52,23 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
         {
             if (ModelState.IsValid)
             {
+                var list_branch = _context.UserBranch.ToList();
+                var bid = 0;
+                foreach(var b in list_branch)
+                {
+                    if(model.Branch==b.BranchName)
+                    {
+                        bid = b.BranchId;
+                    }
+                }
                 AppIdentityUser user = new AppIdentityUser
                 {
                     UserName = model.Name,
-                    PhoneNumber=model.PhoneNumber,
-                    Department=model.Department,
-                    Position=model.Position,
-                    BelongTo=model.BelongTo,
+                    PhoneNumber = model.PhoneNumber,
+                    Department = model.Department,
+                    Position = model.Position,
+                    Branch = model.Branch,
+                    BranchId = bid,
                     RegisterDate = DateTime.Now,
                     UserImage="/images/JiJian.jpg"
                 };
@@ -127,10 +137,10 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
             AppIdentityUser user = await userManager.FindByIdAsync(id);
             var list_department = _context.UserDepartment.ToList();
             var list_position = _context.UserPosition.ToList();
-            var list_belongto = _context.UserBelongTo.ToList();
+            var list_branch = _context.UserBranch.ToList();
             ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName", user.Department.ToString());
             ViewData["Position"] = new SelectList(list_position, "PositionName", "PositionName", user.Position.ToString());
-            ViewData["BelongTo"] = new SelectList(list_belongto, "BelongToName", "BelongToName", user.BelongTo.ToString());
+            ViewData["Branch"] = new SelectList(list_branch, "BranchName", "BranchName", user.Branch.ToString());
 
             if (user != null)
             {
@@ -145,15 +155,25 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
 
         [HttpPost]
         //[AllowAnonymous]
-        public async Task<IActionResult> Edit(string id, string PhoneNumber,string Department,string Position,string BelongTo,string password)
+        public async Task<IActionResult> Edit(string id, string PhoneNumber,string Department,string Position,string Branch,string password)
         {
+            var list_branch = _context.UserBranch.ToList();
+            var bid = 0;
+            foreach (var b in list_branch)
+            {
+                if (Branch == b.BranchName)
+                {
+                    bid = b.BranchId;
+                }
+            }
             AppIdentityUser user = await userManager.FindByIdAsync(id);
             if (user != null)
             {
                 user.PhoneNumber =PhoneNumber ;
                 user.Department = Department;
                 user.Position = Position;
-                user.BelongTo = BelongTo;
+                user.Branch = Branch;
+                user.BranchId = bid;
                 IdentityResult validPass = null;
                 if (!string.IsNullOrEmpty(password))
                 {

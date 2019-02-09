@@ -32,16 +32,16 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
 
-            return View(await _context.BrhEarningRecord.Where(x => x.Branch == _user.BelongTo).ToListAsync());
+            return View(await _context.BrhEarningRecord.Where(x => x.Branch == _user.Branch).ToListAsync());
         }
 
         public async Task<IActionResult> Create()
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
 
             var list_paymentType = _context.FncPaymentType.ToList();
             ViewData["PaymentType"] = new SelectList(list_paymentType, "PaymentType", "PaymentType");
@@ -74,7 +74,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var brhEarningRecord = await _context.BrhEarningRecord.SingleOrDefaultAsync(m => m.EarningRecordId == id);
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
 
             var list_paymentType = _context.FncPaymentType.ToList();
             ViewData["PaymentType"] = new SelectList(list_paymentType, "PaymentType", "PaymentType", brhEarningRecord.PaymentType);

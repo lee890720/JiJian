@@ -34,15 +34,15 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
-            return View(await _context.BrhConnectRecord.Where(x => x.Branch == _user.BelongTo).ToListAsync());
+            ViewData["Branch"] = _user.Branch;
+            return View(await _context.BrhConnectRecord.Where(x => x.Branch == _user.Branch).ToListAsync());
         }
 
         public async Task<IActionResult> Create()
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             return PartialView("~/Areas/Branch/Views/BrhConnectRecord/CreateEdit.cshtml");
         }
 
@@ -68,7 +68,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             }
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             var brhConnectRecord = await _context.BrhConnectRecord.SingleOrDefaultAsync(m => m.ConnectRecordId == id);
             if (brhConnectRecord == null)
             {

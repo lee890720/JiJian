@@ -31,17 +31,17 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             if (_user.Position.Contains("普通"))
-                return View(await _context.BrhClient.Where(x => x.Branch == _user.BelongTo && x.EnteringStaff == _user.UserName).ToListAsync());
-            return View(await _context.BrhClient.Where(x => x.Branch == _user.BelongTo).ToListAsync());
+                return View(await _context.BrhClient.Where(x => x.Branch == _user.Branch && x.EnteringStaff == _user.UserName).ToListAsync());
+            return View(await _context.BrhClient.Where(x => x.Branch == _user.Branch).ToListAsync());
         }
 
         public async Task<IActionResult> Create()
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             return PartialView("~/Areas/Branch/Views/BrhClient/CreateEdit.cshtml");
         }
 
@@ -67,7 +67,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             }
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             var brhClient = await _context.BrhClient.SingleOrDefaultAsync(m => m.ClientId == id);
             if (brhClient == null)
             {

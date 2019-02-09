@@ -34,9 +34,9 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             ViewData["Department"] = _user.Department;
-            var brhImprestAccounts = await _context.BrhImprestAccounts.Where(x => x.BelongTo == _user.BelongTo && x.Department == _user.Department&&(string.IsNullOrEmpty(x.Manager)||x.Manager==_user.UserName)).ToListAsync();
+            var brhImprestAccounts = await _context.BrhImprestAccounts.Where(x => x.Branch == _user.Branch && x.Department == _user.Department&&(string.IsNullOrEmpty(x.Manager)||x.Manager==_user.UserName)).ToListAsync();
             ViewData["Total"] = brhImprestAccounts.Sum(x => x.Balance);
             return View( brhImprestAccounts);
         }

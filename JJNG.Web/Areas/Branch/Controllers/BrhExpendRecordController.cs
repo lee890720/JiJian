@@ -34,15 +34,15 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
    AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
-            return View(await _context.BrhExpendRecord.Where(x => x.Branch == _user.BelongTo).ToListAsync());
+            ViewData["Branch"] = _user.Branch;
+            return View(await _context.BrhExpendRecord.Where(x => x.Branch == _user.Branch).ToListAsync());
         }
 
         public async Task<IActionResult> Create()
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             var list_paymenttype = _context.FncPaymentType.ToList();
             ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType");
             var list_expendtype = _context.FncExpendType.ToList();
@@ -73,7 +73,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var brhExpendRecord = await _context.BrhExpendRecord.SingleOrDefaultAsync(m => m.ExpendRecordId == id);
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             var list_paymenttype = _context.FncPaymentType.ToList();
             ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType",brhExpendRecord.PaymentType);
             var list_expendtype = _context.FncExpendType.ToList();

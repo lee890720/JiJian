@@ -1,4 +1,4 @@
-﻿@model Tuple<Params, List<UserBelongTo>>
+﻿@model Tuple<Params, List<UserBranch>>
 @{
     var actionName = ViewContext.RouteData.Values["action"].ToString();
     var controllerName = ViewContext.RouteData.Values["controller"].ToString();
@@ -38,7 +38,7 @@
                                 <li><a asp-action="Index"><i class="fa fa-circle-o text-light-blue"></i>全部</a></li>
                                 @foreach (var u in Model.Item2)
                                 {
-                                    <li><a asp-action="Index" asp-route-branch="@u.BelongToName"><i class="fa fa-circle-o text-light-blue"></i>@u.BelongToName</a></li>
+                                    <li><a asp-action="Index" asp-route-branch="@u.BranchName"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
                                 }
                             </ul>
                         </div>

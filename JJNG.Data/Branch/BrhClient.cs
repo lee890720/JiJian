@@ -12,7 +12,7 @@ namespace JJNG.Data.Branch
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int ClientId { get; set; }
         [Required]
-        [DisplayFormat(DataFormatString = "{0:yyyy年MM月dd日HH时mm分}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [Display(Name = "录入时间")]
         public DateTime EnteringDate { get; set; }
         [Display(Name = "客户姓名/编号")]

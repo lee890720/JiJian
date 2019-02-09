@@ -22,7 +22,7 @@ namespace JJNG.Data.Personnel
         [Display(Name = "部门")]
         public string Department { get; set; }
         [Display(Name = "隶属")]
-        public string BelongTo { get; set; }
+        public string Branch { get; set; }
 
         public ICollection<PsnAddress> PsnAddress { get; set; }
     }

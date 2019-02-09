@@ -16,12 +16,12 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserAdmin\Edit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserAdmin\Edit2.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserAdmin\Index.cshtml
---file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBelongToDetial\CreateEdit.cshtml
---file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBelongToDetial\Delete.cshtml
---file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBelongToDetial\Index.cshtml
---file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBelongTo\CreateEdit.cshtml
---file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBelongTo\Delete.cshtml
---file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBelongTo\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBranchDetial\CreateEdit.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBranchDetial\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBranchDetial\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBranch\CreateEdit.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBranch\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserBranch\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserDepartment\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserDepartment\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\AppIdentity\Views\UserDepartment\Index.cshtml
@@ -61,6 +61,9 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestRecord\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestRecord\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestRecord\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhMemo\CreateEdit.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhMemo\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhMemo\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhNoteAccount\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhNoteAccount\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhNoteAccount\Index.cshtml
@@ -73,6 +76,7 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\DetialList.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\Edit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\FrontCalendar\Index - 复制.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\FrontCalendar\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\_ViewImports.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\_ViewStart.cshtml
@@ -88,8 +92,11 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncExpendType\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncExpendType\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncExpendType\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontCalendar\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontDeskAccount\DetialList.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontDeskAccount\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontPaymentDetial\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontPaymentDetial\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncImprestAccount\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncImprestAccount\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncImprestAccount\Index.cshtml
@@ -116,9 +123,8 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Personnel\Views\PsnNote\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Personnel\_ViewImports.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Personnel\_ViewStart.cshtml
---file=D:\JiJian\JJNG.Web\Views\Home\About.cshtml
---file=D:\JiJian\JJNG.Web\Views\Home\Contact.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Home\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Views\Shared\Components\Branch\Default.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\Components\Menu\Default.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\Error.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_ControlSidebarPartial.cshtml
@@ -126,6 +132,7 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Views\Shared\_DeletePartial.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_Layout.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_Layout2.cshtml
+--file=D:\JiJian\JJNG.Web\Views\Shared\_Layout3.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_Modal.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_ModalFooter.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_ModalHeader.cshtml

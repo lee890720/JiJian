@@ -30,7 +30,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             ViewData["NoteAccountId"] = id;
 
             return View(await _context.PsnNote.Where(x => x.NoteAccountId == id).ToListAsync());
@@ -40,7 +40,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             ViewData["NoteAccountId"] = id;
             return PartialView("~/Areas/Branch/Views/BrhNote/CreateEdit.cshtml");
         }
@@ -68,7 +68,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var psnNote = await _context.PsnNote.SingleOrDefaultAsync(m => m.NoteId == id);
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             if (psnNote == null)
             {
                 return NotFound();

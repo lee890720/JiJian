@@ -30,10 +30,10 @@ namespace JJNG.Web.Areas.Finance.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             ViewData["ImprestAccountsId"] = id;
 
-            var brhImprestAccounts = await _context.BrhImprestRecord.Include(b => b.BrhImprestAccounts).Where(x=>x.ImprestAccountsId==id&&!x.IsFinance).ToListAsync();
+            var brhImprestAccounts = await _context.BrhImprestRecord.Include(b => b.BrhImprestAccounts).Where(x=>x.ImprestAccountsId==id&&!x.IsMove).ToListAsync();
 
             return View(brhImprestAccounts);
         }
@@ -50,23 +50,10 @@ namespace JJNG.Web.Areas.Finance.Controllers
                     id = x.ImprestAccountsId;
                     x.IsFinance = true;
                     _context.Update(x);
-
-                    var expendRecord = new BrhExpendRecord();
-                    expendRecord.EnteringDate = x.EnteringDate;
-                    expendRecord.ExpendType = x.ExpendType;
-                    expendRecord.Purpose = x.Purpose;
-                    expendRecord.Amount = x.Amount;
-                    expendRecord.PaymentType = x.PaymentType;
-                    expendRecord.ConnectNumber = x.ConnectNumber;
-                    expendRecord.Branch = x.Branch;
-                    expendRecord.EnteringStaff = x.EnteringStaff;
-                    expendRecord.IsFinance = x.IsFinance;
-                    expendRecord.Note = "备用金转入-" + x.Note;
-                    _context.Add(expendRecord);
                 });
                 _context.SaveChanges();
 
-                var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == id && !x.IsFinance).Sum(x => x.Amount);
+                var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == id && !x.IsMove).Sum(x => x.Amount);
                 var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.ImprestAccountsId == id);
                 brhImprestAccount.Equity = brhImprestAccount.Balance - total;
 
@@ -75,6 +62,37 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Move(int? id)
+        {
+            _context.BrhImprestRecord.Include(b => b.BrhImprestAccounts).Where(x => x.ImprestAccountsId == id && x.IsFinance && !x.IsMove).ToList().ForEach(x=>
+            {
+                x.IsMove = true;
+                _context.Update(x);
+                var expendRecord = new BrhExpendRecord();
+                expendRecord.EnteringDate = x.EnteringDate;
+                expendRecord.ExpendType = x.ExpendType;
+                expendRecord.Purpose = x.Purpose;
+                expendRecord.Amount = x.Amount;
+                expendRecord.PaymentType = x.PaymentType;
+                expendRecord.ConnectNumber = x.ConnectNumber;
+                expendRecord.Branch = x.Branch;
+                expendRecord.EnteringStaff = x.EnteringStaff;
+                expendRecord.IsFinance = x.IsFinance;
+                expendRecord.Note = "备用金转入-" + x.Note;
+                _context.Add(expendRecord);
+            });
+            _context.SaveChanges();
+
+            var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == id && !x.IsMove).Sum(x => x.Amount);
+            var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.ImprestAccountsId == id);
+            brhImprestAccount.Equity = brhImprestAccount.Balance - total;
+
+            _context.Update(brhImprestAccount);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index), new { id = id });
+
         }
     }
 }

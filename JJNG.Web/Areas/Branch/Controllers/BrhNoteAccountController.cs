@@ -31,9 +31,9 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             ViewData["Department"] = _user.Department;
-            var psnNoteAccount = await _context.PsnNoteAccount.Where(x => x.BelongTo == _user.BelongTo&&(string.IsNullOrEmpty(x.Manager)||x.Manager==_user.UserName)).ToListAsync();
+            var psnNoteAccount = await _context.PsnNoteAccount.Where(x => x.Branch == _user.Branch&&(string.IsNullOrEmpty(x.Manager)||x.Manager==_user.UserName)).ToListAsync();
             return View(psnNoteAccount);
         }
     }

@@ -34,9 +34,9 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             ViewData["ImprestAccountsId"] = id;
-            var brhImprestReord = await _context.BrhImprestRecord.Include(b => b.BrhImprestAccounts).Where(x=>x.ImprestAccountsId==id&&!x.IsFinance).ToListAsync();
+            var brhImprestReord = await _context.BrhImprestRecord.Include(b => b.BrhImprestAccounts).Where(x=>x.ImprestAccountsId==id&&!x.IsMove).ToListAsync();
             return View(brhImprestReord);
         }
 
@@ -44,7 +44,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             var list_paymenttype = _context.FncPaymentType.ToList();
             ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType");
             var list_expendtype = _context.FncExpendType.ToList();
@@ -62,7 +62,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 brhImprestRecord.EnteringDate = TimeZoneInfo.ConvertTime(brhImprestRecord.EnteringDate, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                 _context.Add(brhImprestRecord);
                 await _context.SaveChangesAsync();
-                var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId&&!x.IsFinance).Sum(x => x.Amount);
+                var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId&& !x.IsMove).Sum(x => x.Amount);
                 var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId);
                 brhImprestAccount.Equity = brhImprestAccount.Balance - total;
                 _context.Update(brhImprestAccount);
@@ -81,7 +81,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var brhImprestRecord = await _context.BrhImprestRecord.SingleOrDefaultAsync(m => m.ImprestRecordId == id);
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             var list_paymenttype = _context.FncPaymentType.ToList();
             ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType",brhImprestRecord.PaymentType);
             var list_expendtype = _context.FncExpendType.ToList();
@@ -109,7 +109,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                     //brhImprestRecord.EnteringDate = TimeZoneInfo.ConvertTime(brhImprestRecord.EnteringDate, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                     _context.Update(brhImprestRecord);
                     await _context.SaveChangesAsync();
-                    var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId&&!x.IsFinance).Sum(x => x.Amount);
+                    var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId&& !x.IsMove).Sum(x => x.Amount);
                     var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId);
                     brhImprestAccount.Equity = brhImprestAccount.Balance - total;
                     _context.Update(brhImprestAccount);
@@ -157,7 +157,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             _context.BrhImprestRecord.Remove(brhImprestRecord);
             await _context.SaveChangesAsync();
 
-            var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId && !x.IsFinance).Sum(x => x.Amount);
+            var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId && !x.IsMove).Sum(x => x.Amount);
             var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.ImprestAccountsId == brhImprestRecord.ImprestAccountsId);
             brhImprestAccount.Equity = brhImprestAccount.Balance - total;
             _context.Update(brhImprestAccount);

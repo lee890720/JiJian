@@ -36,12 +36,12 @@ namespace JJNG.Web.Areas.Branch.Controllers
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
             ViewData["Department"] = _user.Department;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             var now = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
-            var connectRecord = _context.BrhConnectRecord.Where(x => x.Branch == _user.BelongTo).OrderByDescending(x => x.EnteringDate).LastOrDefault();
-            var brhMemoList = _context.BrhMemo.Where(x=>x.Branch==_user.BelongTo&&x.IsFinish==false).ToList();
-            var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.Department == _user.Department && x.BelongTo == _user.BelongTo&&string.IsNullOrEmpty(x.Manager));
-            var brhFrontDeskAccounts=_context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo&&DateTime.Compare(x.StartDate,now)<=0&&DateTime.Compare(x.EndDate,now)>0).ToList();
+            var connectRecord = _context.BrhConnectRecord.Where(x => x.Branch == _user.Branch).OrderByDescending(x => x.EnteringDate).LastOrDefault();
+            var brhMemoList = _context.BrhMemo.Where(x=>x.Branch==_user.Branch&&x.IsFinish==false).ToList();
+            var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.Department == _user.Department && x.Branch == _user.Branch&&string.IsNullOrEmpty(x.Manager));
+            var brhFrontDeskAccounts=_context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.Branch&&DateTime.Compare(x.StartDate,now)<=0&&DateTime.Compare(x.EndDate,now)>0).ToList();
 
             List<BrhCollectModel> brhCollectModel = new List<BrhCollectModel>();
             var typename = "";
@@ -50,37 +50,37 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var year = now.Year;
             var month = now.Month;
             var newdate = new DateTime(year, month, 1);
-            var templist1 = _context.BrhEarningRecord.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.EnteringDate, newdate) >= 0).ToList();
+            var templist1 = _context.BrhEarningRecord.Where(x => x.Branch == _user.Branch && DateTime.Compare(x.EnteringDate, newdate) >= 0).ToList();
             typename = "Earning_M";
             amount = (decimal)templist1.Sum(x => x.Amount);
             count = templist1.Count;
             brhCollectModel.Add(new BrhCollectModel { Type=typename, Amount=amount, Count=count });
-            var templist1d = _context.BrhEarningRecord.Where(x => x.Branch == _user.BelongTo && x.EnteringDate.Date == DateTime.Now.Date).ToList();
+            var templist1d = _context.BrhEarningRecord.Where(x => x.Branch == _user.Branch && x.EnteringDate.Date == DateTime.Now.Date).ToList();
             typename = "Earning_D";
             amount = (decimal)templist1d.Sum(x => x.Amount);
             count = templist1d.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
 
-            var templist2 =_context.BrhExpendRecord.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.EnteringDate, newdate) >= 0).ToList();
+            var templist2 =_context.BrhExpendRecord.Where(x => x.Branch == _user.Branch && DateTime.Compare(x.EnteringDate, newdate) >= 0).ToList();
             typename = "Expend_M";
             amount = (decimal)templist2.Sum(x => x.Amount);
             count = templist2.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
-            var templist2d = _context.BrhExpendRecord.Where(x => x.Branch == _user.BelongTo && x.EnteringDate.Date == DateTime.Now.Date).ToList();
+            var templist2d = _context.BrhExpendRecord.Where(x => x.Branch == _user.Branch && x.EnteringDate.Date == DateTime.Now.Date).ToList();
             typename = "Expend_D";
             amount = (decimal)templist2d.Sum(x => x.Amount);
             count = templist2d.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
 
-            var templist3 = _context.BrhImprestRecord.Include(x=>x.BrhImprestAccounts).Where(x => x.Branch == _user.BelongTo && !x.IsFinance&&string.IsNullOrEmpty(x.BrhImprestAccounts.Manager)).ToList();
+            var templist3 = _context.BrhImprestRecord.Include(x=>x.BrhImprestAccounts).Where(x => x.Branch == _user.Branch && !x.IsFinance&&string.IsNullOrEmpty(x.BrhImprestAccounts.Manager)).ToList();
             typename = "Imprest";
             amount = (decimal)templist3.Sum(x => x.Amount);
             count = templist3.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
 
-            var templist4 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.StartDate, newdate) >= 0).ToList();
-            var templist4d = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.StartDate, DateTime.Now.Date) <= 0 && DateTime.Compare(x.EndDate, DateTime.Now.Date) > 0).ToList();
-            var houselist = _identitycontext.UserBelongToDetial.Where(x => x.UserBelongTo.BelongToName == _user.BelongTo).ToList();
+            var templist4 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.Branch && DateTime.Compare(x.StartDate, newdate) >= 0).ToList();
+            var templist4d = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.Branch && DateTime.Compare(x.StartDate, DateTime.Now.Date) <= 0 && DateTime.Compare(x.EndDate, DateTime.Now.Date) > 0).ToList();
+            var houselist = _identitycontext.UserBranchDetial.Where(x => x.UserBranch.BranchName == _user.Branch).ToList();
             var housenum = houselist.Count;
             var housetotal = housenum * DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
             decimal day_rate = 0;
@@ -98,29 +98,29 @@ namespace JJNG.Web.Areas.Branch.Controllers
             count = 0;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
 
-            var templist5 = _context.BrhStewardAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.EnteringDate, newdate) >= 0).ToList();
+            var templist5 = _context.BrhStewardAccounts.Where(x => x.Branch == _user.Branch && DateTime.Compare(x.EnteringDate, newdate) >= 0).ToList();
             typename = "Steward_M";
             amount = templist5.Sum(x => x.Receivable);
             count = templist5.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
-            var templist5d = _context.BrhStewardAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.EnteringDate.Date, DateTime.Now.Date) == 0).ToList();
+            var templist5d = _context.BrhStewardAccounts.Where(x => x.Branch == _user.Branch && DateTime.Compare(x.EnteringDate.Date, DateTime.Now.Date) == 0).ToList();
             typename = "Steward_D";
             amount = templist5d.Sum(x => x.Receivable);
             count = templist5d.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
 
-            var templist6 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.StartDate, newdate) >= 0).ToList();
+            var templist6 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.Branch && DateTime.Compare(x.StartDate, newdate) >= 0).ToList();
             typename = "Front_M";
             amount = templist6.Sum(x => x.TotalPrice);
             count = templist6.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
-            var templist6d = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo && DateTime.Compare(x.StartDate, DateTime.Now.Date) <= 0 && DateTime.Compare(x.EndDate, DateTime.Now.Date) > 0).ToList();
+            var templist6d = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.Branch && DateTime.Compare(x.StartDate, DateTime.Now.Date) <= 0 && DateTime.Compare(x.EndDate, DateTime.Now.Date) > 0).ToList();
             typename = "Front_D";
             amount = templist6d.Sum(x => x.UnitPrice);
             count = templist6d.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
 
-            var templist7 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.BelongTo &&  !x.IsFinish||x.UnitPrice==0).ToList();
+            var templist7 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.Branch &&  !x.IsFinish||x.UnitPrice==0).ToList();
             typename = "FrontIsFinish";
             amount = templist7.Sum(x => x.Receivable);
             count = templist7.Count;
@@ -150,7 +150,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             return PartialView("~/Areas/Branch/Views/BrhCollect/CreateEdit.cshtml");
         }
 
@@ -182,7 +182,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             }
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             return PartialView("~/Areas/Branch/Views/BrhCollect/CreateEdit.cshtml",brhMemo);
         }
 
@@ -218,7 +218,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             }
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             return PartialView("~/Areas/Branch/Views/BrhCollect/CreateEdit.cshtml", brhMemo);
         }
 
@@ -254,20 +254,20 @@ namespace JJNG.Web.Areas.Branch.Controllers
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
 
             var now = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time")).Date;
-            var frontDetials = _context.BrhFrontPaymentDetials.Include(x => x.BrhFrontDeskAccounts).Where(x =>x.BrhFrontDeskAccounts.Branch==_user.BelongTo&& x.PayDate.Date == now).ToList();
+            var frontDetials = _context.BrhFrontPaymentDetials.Include(x => x.BrhFrontDeskAccounts).Where(x =>x.BrhFrontDeskAccounts.Branch==_user.Branch&& x.PayDate.Date == now).ToList();
             List<BrhGroupModel> brhGroup = new List<BrhGroupModel>();
             var frontGroup = frontDetials.GroupBy(x => new { x.PayWay }).Select(s => new
             {
                 PayWay = s.Key.PayWay,
                 FrontAmount = s.Sum(x => x.PayAmount),
             }).ToList();
-            var stewardDetials = _context.BrhStewardPaymentDetial.Include(x => x.BrhStewardAccounts).Where(x => x.BrhStewardAccounts.Branch == _user.BelongTo && x.PayDate.Date == now).ToList();
+            var stewardDetials = _context.BrhStewardPaymentDetial.Include(x => x.BrhStewardAccounts).Where(x => x.BrhStewardAccounts.Branch == _user.Branch && x.PayDate.Date == now).ToList();
             var stewardGroup = stewardDetials.GroupBy(x => new { x.PayWay }).Select(s => new
             {
                 PayWay = s.Key.PayWay,
                 StewardAmount = s.Sum(x => x.PayAmount),
             }).ToList();
-            var earningDetials = _context.BrhEarningRecord.Where(x => x.Branch == _user.BelongTo && x.EnteringDate.Date == now).ToList();
+            var earningDetials = _context.BrhEarningRecord.Where(x => x.Branch == _user.Branch && x.EnteringDate.Date == now).ToList();
             var earningGroup = earningDetials.GroupBy(x => new { x.PaymentType }).Select(s => new
             {
                 PayWay = s.Key.PaymentType,

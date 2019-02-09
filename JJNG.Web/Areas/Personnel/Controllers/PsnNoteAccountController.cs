@@ -31,7 +31,7 @@ namespace JJNG.Web.Areas.Personnel.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
             ViewData["Department"] = _user.Department;
             var psnNoteAccount = await _context.PsnNoteAccount.ToListAsync();
             return View(psnNoteAccount);
@@ -41,19 +41,19 @@ namespace JJNG.Web.Areas.Personnel.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["BelongTo"] = _user.BelongTo;
+            ViewData["Branch"] = _user.Branch;
 
             var list_department = _identityContext.UserDepartment.ToList();
-            var list_belongto = _identityContext.UserBelongTo.ToList();
+            var list_belongto = _identityContext.UserBranch.ToList();
             ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName");
-            ViewData["BelongTo"] = new SelectList(list_belongto, "BelongToName", "BelongToName");
+            ViewData["Branch"] = new SelectList(list_belongto, "BranchName", "BranchName");
 
             return PartialView("~/Areas/Personnel/Views/PsnNoteAccount/CreateEdit.cshtml");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NoteAccountId,AccountName,Manager,Department,BelongTo")] PsnNoteAccount psnNoteAccount)
+        public async Task<IActionResult> Create([Bind("NoteAccountId,AccountName,Manager,Department,Branch")] PsnNoteAccount psnNoteAccount)
         {
             if (ModelState.IsValid)
             {
@@ -77,16 +77,16 @@ namespace JJNG.Web.Areas.Personnel.Controllers
                 return NotFound();
             }
             var list_department = _identityContext.UserDepartment.ToList();
-            var list_belongto = _identityContext.UserBelongTo.ToList();
+            var list_belongto = _identityContext.UserBranch.ToList();
             ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName", psnNoteAccount.Department);
-            ViewData["BelongTo"] = new SelectList(list_belongto, "BelongToName", "BelongToName", psnNoteAccount.BelongTo);
+            ViewData["Branch"] = new SelectList(list_belongto, "BranchName", "BranchName", psnNoteAccount.Branch);
 
             return PartialView("~/Areas/Personnel/Views/PsnNoteAccount/CreateEdit.cshtml", psnNoteAccount);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("NoteAccountId,AccountName,Manager,Department,BelongTo")] PsnNoteAccount psnNoteAccount)
+        public async Task<IActionResult> Edit(int id, [Bind("NoteAccountId,AccountName,Manager,Department,Branch")] PsnNoteAccount psnNoteAccount)
         {
             if (id != psnNoteAccount.NoteAccountId)
             {

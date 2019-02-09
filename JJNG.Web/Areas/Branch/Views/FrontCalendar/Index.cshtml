@@ -12,8 +12,7 @@
     #calendar td.div {
         height: 30px !important;
     }
-</style>
-<style>
+
     .table td.brr {
         text-align: left !important;
     }
@@ -26,7 +25,9 @@
         color: coral;
     }
 </style>
+
 <div style="background-color:white" id="calendar"></div>
+
 <div id="create-form" style="display:none">
     <form class="form-inline">
         <div class="col-md-6">
@@ -150,117 +151,6 @@
         </div>
     </form>
 </div>
-<div id="create-form1" style="display:none">
-    <form class="form-inline">
-        <br />
-        <br />
-        <br />
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">姓名</span>
-            <input id="form1-name" type="text" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">人数</span>
-            <input id="form1-count" type="text" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">单价</span>
-            <input id="form1-unit" type="text" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">总价</span>
-            <input id="form1-total" type="text" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">应收</span>
-            <input id="form1-receivable" type="text" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">已收</span>
-            <input id="form1-received" type="text" readonly="readonly" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">渠道</span>
-            <input id="form1-channel" type="text" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">管家</span>
-            <input id="form1-steward" type="text" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">前组</span>
-            <input id="form1-frontleader" type="text" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">管组</span>
-            <input id="form1-stewardleader" type="text" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">关系</span>
-            <input id="form1-relation" type="text" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <span class="input-group-addon">备注</span>
-            <input id="form1-note" type="text" class="form-control clear-data">
-        </div>
-        <div class="input-group" style="margin-bottom:10px">
-            <div class="input-group-btn">
-                <button id="1addpay" type="button" class="btn btn-primary">增加收款</button>
-                <button id="1isfinish" type="button" class="btn btn-primary">未结账</button>
-            </div>
-            @{
-                if (Model.Item1.Position != "普通员工")
-                {
-                    <button id="1isfront" type="button" class="btn btn-primary">前台未审</button>
-
-                }
-                if (Model.Item1.Department == "财务部")
-                {
-                    <button id="1isfinance" type="button" class="btn btn-primary">财务未审</button>
-
-                }
-            }
-        </div>
-        <div class="form1">
-            <div class="input-group" style="margin-bottom:10px">
-                <span class="input-group-addon">方式</span>
-                <select asp-items="ViewBag.PaymentType" id="1payway1" class="form-control"></select>
-            </div>
-            <div class="input-group" style="margin-bottom:10px">
-                <span class="input-group-addon">方式</span>
-                <select asp-items="ViewBag.PaymentType" id="1payway2" class="form-control"></select>
-            </div>
-            <div class="input-group" style="margin-bottom:10px">
-                <span class="input-group-addon">方式</span>
-                <select asp-items="ViewBag.PaymentType" id="1payway3" class="form-control"></select>
-            </div>
-            <div class="input-group" style="margin-bottom:10px">
-                <span class="input-group-addon">日期</span>
-                <input id="1paydate1" type="text" class="form-control datetimepicker" />
-            </div>
-            <div class="input-group" style="margin-bottom:10px">
-                <span class="input-group-addon">日期</span>
-                <input id="1paydate2" type="text" class="form-control datetimepicker" />
-            </div>
-            <div class="input-group" style="margin-bottom:10px">
-                <span class="input-group-addon">日期</span>
-                <input id="1paydate3" type="text" class="form-control datetimepicker" />
-            </div>
-            <div class="input-group" style="margin-bottom:10px">
-                <span class="input-group-addon">金额</span>
-                <input id="1payamount1" type="text" value="0" class="form-control" />
-            </div>
-            <div class="input-group" style="margin-bottom:10px">
-                <span class="input-group-addon">金额</span>
-                <input id="1payamount2" type="text" value="0" class="form-control" />
-            </div>
-            <div class="input-group" style="margin-bottom:10px">
-                <span class="input-group-addon">金额</span>
-                <input id="1payamount3" type="text" value="0" class="form-control" />
-            </div>
-        </div>
-    </form>
-</div>
 
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
@@ -288,7 +178,7 @@
         $(function () {
             var _connect =@Html.Raw(Json.Serialize(Model.Item1));
             var _channel =@Html.Raw(Json.Serialize(Model.Item2));
-            var _branch = _connect.belongTo;
+            var _branch = _connect.branch;
             var _userName = _connect.userName;
             var _frontData = [];
             var _branchData = [];
@@ -310,16 +200,11 @@
                 dataType: "json",
                 data: {},
                 beforeSend: function () {
-                    //$("#submit").attr({ disabled: "disabled" });
-                    //$('#modal-default').modal({
-                    //    backdrop: 'static'
-                    //});
                     $('#modal-default').modal('show');
                 },
                 success: function (result) {
                 },
                 complete: function () {
-                    //$("#submit").removeAttr("disabled");
                     $('#modal-default').modal('hide');
                 },
             };
@@ -365,7 +250,6 @@
             function InitCalendar() {
                 $('#calendar').fullCalendar({
                     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
-                    //themeSystem: 'bootstrap3',
                     header: false,
                     defaultView: 'timelineThirtyDays',
                     views: {
@@ -388,211 +272,6 @@
                     editable: true,
                     selectable: true,
                     selectHelper: true,
-                    dayClick: function (date, allDay, jsEvent, view, resource) {
-                        $(".clear-data").removeAttr("disabled", "disabled");
-                        $(".clear-data").val("");
-                        $(".form1").hide();
-                        $('#1isfinish').html("未结账");
-                        $('#1isfront').html("前台未审");
-                        $('#1isfinance').html("财务未审");
-                        //#region change/keyup事件
-                        $("#1addpay").on('click', function () {
-                            $("#1addpay").removeClass("btn-primary");
-                            $("#1addpay").addClass("btn-warning");
-                            $(".form1").show();
-                        });
-                        $("#1isfront").on('click', function () {
-                            var hl = $("#1isfront").html();
-                            if (hl == "前台未审") {
-                                $('#1isfront').html("前台已审");
-                                $("#1isfront").removeClass("btn-primary");
-                                $("#1isfront").addClass("btn-warning");
-                            }
-                            if (hl == "前台已审") {
-                                $('#1isfront').html("前台未审");
-                                $("#1isfront").removeClass("btn-warning");
-                                $("#1isfront").addClass("btn-primary");
-                            }
-                        });
-                        $("#1isfinance").on('click', function () {
-                            var hl = $("#1isfinance").html();
-                            if (hl == "财务未审") {
-                                $('#1isfinance').html("财务已审");
-                                $("#1isfinance").removeClass("btn-primary");
-                                $("#1isfinance").addClass("btn-warning");
-                            }
-                            if (hl == "财务已审") {
-                                $('#1isfinance').html("财务未审");
-                                $("#1isfinance").removeClass("btn-warning");
-                                $("#1isfinance").addClass("btn-primary");
-                            }
-                        });
-                        if (navigator.platform.indexOf('Win32') != -1) {
-                        } else {
-                            //#region change/keyup事件
-                            $('#1payamount1').keyup(function () {
-                                var pay1 = document.getElementById("1payamount1").value;
-                                var pay2 = document.getElementById("1payamount2").value;
-                                var pay3 = document.getElementById("1payamount3").value;
-                                var result = 0.00;
-                                if (checkIsDouble(pay1))
-                                    result += parseFloat(pay1);
-                                if (parseFloat(pay2) > 0)
-                                    result += parseFloat(pay2);
-                                if (parseFloat(pay3) > 0)
-                                    result += parseFloat(pay3);
-                                $('#form1-received').val(result.toString());
-                                if (result == parseFloat($("#form1-receivable").val())) {
-                                    $('#1isfinish').html("已结账");
-                                    $("#1isfinish").removeClass("btn-primary");
-                                    $("#1isfinish").addClass("btn-warning");
-                                }
-                                else {
-                                    $('#1isfinish').html("未结账");
-                                    $("#1isfinish").removeClass("btn-warning");
-                                    $("#1isfinish").addClass("btn-primary");
-                                }
-                            });
-                            $('#1payamount2').keyup(function () {
-                                var pay1 = document.getElementById("1payamount1").value;
-                                var pay2 = document.getElementById("1payamount2").value;
-                                var pay3 = document.getElementById("1payamount3").value;
-                                var result = 0.00;
-                                if (checkIsDouble(pay2))
-                                    result += parseFloat(pay2);
-                                if (parseFloat(pay1) > 0)
-                                    result += parseFloat(pay1);
-                                if (parseFloat(pay3) > 0)
-                                    result += parseFloat(pay3);
-                                $('#form1-received').val(result.toString());
-                                if (result == parseFloat($("#form1-receivable").val())) {
-                                    $('#1isfinish').html("已结账");
-                                    $("#1isfinish").removeClass("btn-primary");
-                                    $("#1isfinish").addClass("btn-warning");
-                                }
-                                else {
-                                    $('#1isfinish').html("未结账");
-                                    $("#1isfinish").removeClass("btn-warning");
-                                    $("#1isfinish").addClass("btn-primary");
-                                }
-                            });
-                            $('#1payamount3').keyup(function () {
-                                var pay1 = document.getElementById("1payamount1").value;
-                                var pay2 = document.getElementById("1payamount2").value;
-                                var pay3 = document.getElementById("1payamount3").value;
-                                var result = 0.00;
-                                if (checkIsDouble(pay3))
-                                    result += parseFloat(pay3);
-                                if (parseFloat(pay1) > 0)
-                                    result += parseFloat(pay1);
-                                if (parseFloat(pay2) > 0)
-                                    result += parseFloat(pay2);
-                                $('#form1-received').val(result.toString());
-                                if (result == parseFloat($("#form1-receivable").val())) {
-                                    $('#1isfinish').html("已结账");
-                                    $("#1isfinish").removeClass("btn-primary");
-                                    $("#1isfinish").addClass("btn-warning");
-                                }
-                                else {
-                                    $('#1isfinish').html("未结账");
-                                    $("#1isfinish").removeClass("btn-warning");
-                                    $("#1isfinish").addClass("btn-primary");
-                                }
-                            });
-
-                            $("#1addpay").on('ifChecked', function () {
-                                $(".form1").show();
-                            });
-                            $("#1addpay").on('ifUnchecked', function () {
-                                $(".form1").hide();
-                            });
-                            $('#form1-unit').keyup(function () {
-                                var unitPrice = document.getElementById("form1-unit").value;
-                                var result = 0.00;
-                                if (checkIsDouble(unitPrice))
-                                    result = parseFloat(unitPrice);
-                                var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
-                                result = result * days;
-                                $('#form1-total').val(result.toString());
-                            });
-                            $('#form1-total').keyup(function () {
-                                var totalPrice = document.getElementById("form1-total").value;
-                                var result = 0.00;
-                                if (checkIsDouble(totalPrice))
-                                    result = parseFloat(totalPrice);
-                                var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
-                                if (parseFloat(days) > 0)
-                                    result = result / days;
-                                $('#form1-unit').val(result.toString());
-                            });
-                        //#endregion
-                            var d = dialog({
-                                title: "新建订单",
-                                content: $("#create-form1"),
-                                okValue: "确定",
-                                ok: function () {
-                                    var title = $('#form1-name').val();
-                                    var count = $('#form1-count').val();
-                                    var unit = $('#form1-unit').val();
-                                    var total = $('#form1-total').val();
-                                    var channel = $('#form1-channel').val();
-                                    var receivable = $('#form1-receivable').val();
-                                    var received = $('#form1-received').val();
-                                    var steward = $("#form1-steward").val();
-                                    var frontleader = $('#form1-frontleader').val();
-                                    var stewardleader = $('#form1-stewardleader').val();
-                                    var relation = $('#form1-relation').val();
-                                    var note = $('#form1-note').val();
-                                    var _data = [];
-                                    $.ajax({
-                                        type: "post",
-                                        async: true,
-                                        url: "/Branch/FrontCalendar/Create",
-                                        contentType: "application/json; charset=utf-8",
-                                        dataType: "json",
-                                        data: JSON.stringify({
-                                            houseNumber: resource.id,
-                                            customerName: title,
-                                            customerCount: count,
-                                            startDate: moment(date).format("YYYY-MM-DD"),
-                                            endDate: moment(date).format("YYYY-MM-DD"),
-                                            channel: channel,
-                                            unitPrice: unit,
-                                            totalPrice: total,
-                                            receivable: receivable,
-                                            received: received,
-                                            enteringStaff: _userName,
-                                            steward: steward,
-                                            frontDeskLeader: frontleader,
-                                            stewardLeader: stewardleader,
-                                            relationStaff: relation,
-                                            branch: _branch,
-                                            note: note,
-                                        }),
-                                        beforeSend: function () {
-                                            $('#modal-default').modal('show');
-                                        },
-                                        success: function (data) {
-                                            var rid = parseInt(resource.id);
-                                            _data.push({ resourceId: rid, title: title, allDay: true, start: moment(start).format("YYYY-MM-DD"), end: moment(end).format("YYYY-MM-DD"), backgroundColor: '#00c0ef', borderColor: '#00c0ef' });
-                                            $("#calendar").fullCalendar("renderEvent", _data[0], true);
-                                        },
-                                        complete: function () {
-                                            $('#modal-default').modal('hide');
-                                        }, 
-                                        error: function () {
-                                            alert("Failed");
-                                        }
-
-                                    });
-                                },
-                                cancelValue: "关闭",
-                                cancel: function () {
-                                }
-                            });
-                            d.showModal();
-                        }
-                    },
                     select: function (start, end, jsEvent, view, resource) {
                         $(".clear-data").removeAttr("disabled", "disabled");
                         $("#addpay").removeClass("btn-warning");
@@ -819,11 +498,11 @@
                                     success: function (data) {
                                         _frontData.push(data.brhFrontDeskAccounts);
                                         var _data = { id: data.brhFrontDeskAccounts.frontDeskAccountsId, resourceId: data.brhFrontDeskAccounts.houseNumber, title: data.brhFrontDeskAccounts.customerName + " " + data.brhFrontDeskAccounts.channel, allDay: true, start: moment(start).format("YYYY-MM-DD"), end: moment(end).format("YYYY-MM-DD"), color: data.brhFrontDeskAccounts.color };
-                                            $("#calendar").fullCalendar("renderEvent", _data, true);
+                                        $("#calendar").fullCalendar("renderEvent", _data, true);
                                     },
                                     complete: function () {
                                         $('#modal-default').modal('hide');
-                                    }, 
+                                    },
                                     error: function () {
                                         alert("Failed");
                                     }
@@ -863,26 +542,6 @@
                             }
                             element.html(hl);
                         }
-                        //element.find('.fc-event-title').append("<br/>" + event.duration + "h");
-                        //element.find('.fc-event-time').hide();
-                        //element.find('.close').click(function () {
-                        //    if (!confirm("Delete event?")) {
-                        //        return false;
-                        //    } else {
-                        //        var id = event.id;
-                        //        $.post('<?= base_url() ?>calendar/delete_alert',
-                        //            {
-                        //                id: id
-                        //            },
-                        //            function (data) {
-                        //                if (data == 1)
-                        //                    alert('Successfully deleted');
-                        //                else
-                        //                    alert('Error deleted');
-                        //            });
-                        //        $("#fullcalendar").fullCalendar('removeEvents', event.id);
-                        //    }
-                        //});
                     },
                     eventClick: function (event, jsEvent, view) {
                         $("#addpay").removeClass("btn-warning");
@@ -908,7 +567,7 @@
                                 }
                                 var ahl = $(hls);
                                 ahl.appendTo($("#tbody-form"));
-                            }, 
+                            },
                             error: function () {
                                 alert("Failed");
                             }
@@ -1210,7 +869,7 @@
                                         },
                                         complete: function () {
                                             $('#modal-default').modal('hide');
-                                        }, 
+                                        },
                                         error: function () {
                                             alert("Failed");
                                         }
@@ -1257,7 +916,7 @@
                             },
                             complete: function () {
                                 $('#modal-default').modal('hide');
-                            }, 
+                            },
                             error: function () {
                                 alert("Failed");
                             }
@@ -1295,7 +954,7 @@
                             },
                             complete: function () {
                                 $('#modal-default').modal('hide');
-                            }, 
+                            },
                             error: function () {
                                 alert("Failed");
                             }
@@ -1306,7 +965,10 @@
             }
 
             $('#today').on('click', function () {
-                $('#calendar').fullCalendar('today'); // call method
+                $('#calendar').fullCalendar('today');
+                var tempdate = moment();
+                console.log(moment(tempdate).format("YYYY-MM-DD"));
+                $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 
             $('#month').on('click', function () {
@@ -1314,11 +976,17 @@
             });
 
             $('#prev').on('click', function () {
-                $('#calendar').fullCalendar('prev'); // call method
+                $('#calendar').fullCalendar('prev');
+                var tempdate = moment($('#startdate').val()).add(-30, 'days');
+                console.log(moment(tempdate).format("YYYY-MM-DD"));
+                $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 
             $('#next').on('click', function () {
-                $('#calendar').fullCalendar('next'); // call method
+                $('#calendar').fullCalendar('next');
+                var tempdate = moment($('#startdate').val()).add(30, 'days');
+                console.log(moment(tempdate).format("YYYY-MM-DD"));
+                $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 
             $('#startdate').change(function () {
@@ -1333,9 +1001,11 @@
                 todayHighlight: true,
             });
 
-            $('#startdate').datepicker('setDate', new Date());
+            //$('#startdate').datepicker('setDate', new Date());
+            $('#startdate').datepicker('setDate', _startdate);
             //#endregion
 
+            //#region datetimepicker
             $('.datetimepicker').datetimepicker({
                 format: 'yyyy-mm-dd hh:ii',
                 autoclose: true,
@@ -1344,6 +1014,7 @@
                 todayHighlight: true,
             });
             $('.datetimepicker').datetimepicker('setDate', new Date());
+            //#endregion
 
             //#region 功能模块
             function checkIsDouble(checkString) {
@@ -1367,9 +1038,11 @@
             }
             //#endregion
 
-            var doc = document.documentElement;
-            document.body.style.height = doc.scrollHeight + 'px';
+            //#region 加载页面初始化数据
+            //var doc = document.documentElement;
+            //document.body.style.height = doc.scrollHeight + 'px';
             GetCalendarData(_startdate);
+            //#endregion
         });
     </script>
 }

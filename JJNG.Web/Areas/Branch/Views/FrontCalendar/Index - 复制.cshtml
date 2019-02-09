@@ -1,0 +1,1370 @@
+﻿@model Tuple<AppIdentityUser, List<FncChannelType>>
+
+@{
+    Layout = "_Layout2";
+}
+<link href="~/lib/fullcalendar/fullcalendar.min.css" rel="stylesheet" />
+<link href="~/lib/fullcalendar/fullcalendar.print.min.css" rel="stylesheet" media="print" />
+<link href='~/lib/fullcalendar/scheduler/scheduler.min.css' rel='stylesheet' />
+<link href="~/lib/artDialog/css/ui-dialog.css" rel="stylesheet" />
+<link href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+<style>
+    #calendar td.div {
+        height: 30px !important;
+    }
+
+    .table td.brr {
+        text-align: left !important;
+    }
+
+    .table td.brl {
+        text-align: right !important;
+    }
+
+    .description-header {
+        color: coral;
+    }
+</style>
+
+<div style="background-color:white" id="calendar"></div>
+<div id="create-form" style="display:none">
+    <form class="form-inline">
+        <div class="col-md-6">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">姓名</span>
+                <input id="form-name" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">人数</span>
+                <input id="form-count" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">单价</span>
+                <input id="form-unit" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">总价</span>
+                <input id="form-total" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">应收</span>
+                <input id="form-receivable" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">已收</span>
+                <input id="form-received" type="text" readonly="readonly" class="form-control clear-data">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">渠道</span>
+                <select id="form-channel" asp-items="ViewBag.ChannelType" class="form-control"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">管家</span>
+                <input id="form-steward" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">前组</span>
+                <input id="form-frontleader" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">管组</span>
+                <input id="form-stewardleader" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">关系</span>
+                <input id="form-relation" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">备注</span>
+                <input id="form-note" type="text" class="form-control clear-data">
+            </div>
+        </div>
+        <div id="table-1" class="col-md-12">
+            <table class="table">
+                <tbody id="tbody-form"></tbody>
+            </table>
+        </div>
+        <div class="col-md-12">
+            <div class="input-group" style="margin-bottom:10px">
+                <div class="input-group-btn">
+                    <button id="addpay" type="button" class="btn btn-primary">增加收款</button>
+                    <button id="isfinish" type="button" class="btn btn-primary">未结账</button>
+                </div>
+                @{
+                    if (Model.Item1.Position != "普通员工")
+                    {
+                        <button id="isfront" type="button" class="btn btn-primary">前台未审</button>
+
+                    }
+                    if (Model.Item1.Department == "财务部")
+                    {
+                        <button id="isfinance" type="button" class="btn btn-primary">财务未审</button>
+
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="payway1" class="form-control"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="payway2" class="form-control"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="payway3" class="form-control"></select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="paydate1" type="text" class="form-control datetimepicker" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="paydate2" type="text" class="form-control datetimepicker" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="paydate3" type="text" class="form-control datetimepicker" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="payamount1" type="text" value="0" class="form-control  clear-data" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="payamount2" type="text" value="0" class="form-control  clear-data" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="payamount3" type="text" value="0" class="form-control  clear-data" />
+            </div>
+        </div>
+    </form>
+</div>
+@*<div id="create-form1" style="display:none">
+    <form class="form-inline">
+        <br />
+        <br />
+        <br />
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">姓名</span>
+            <input id="form1-name" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">人数</span>
+            <input id="form1-count" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">单价</span>
+            <input id="form1-unit" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">总价</span>
+            <input id="form1-total" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">应收</span>
+            <input id="form1-receivable" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">已收</span>
+            <input id="form1-received" type="text" readonly="readonly" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">渠道</span>
+            <input id="form1-channel" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">管家</span>
+            <input id="form1-steward" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">前组</span>
+            <input id="form1-frontleader" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">管组</span>
+            <input id="form1-stewardleader" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">关系</span>
+            <input id="form1-relation" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <span class="input-group-addon">备注</span>
+            <input id="form1-note" type="text" class="form-control clear-data">
+        </div>
+        <div class="input-group" style="margin-bottom:10px">
+            <div class="input-group-btn">
+                <button id="1addpay" type="button" class="btn btn-primary">增加收款</button>
+                <button id="1isfinish" type="button" class="btn btn-primary">未结账</button>
+            </div>
+            @{
+                if (Model.Item1.Position != "普通员工")
+                {
+                    <button id="1isfront" type="button" class="btn btn-primary">前台未审</button>
+
+                }
+                if (Model.Item1.Department == "财务部")
+                {
+                    <button id="1isfinance" type="button" class="btn btn-primary">财务未审</button>
+
+                }
+            }
+        </div>
+        <div class="form1">
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="1payway1" class="form-control"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="1payway2" class="form-control"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">方式</span>
+                <select asp-items="ViewBag.PaymentType" id="1payway3" class="form-control"></select>
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="1paydate1" type="text" class="form-control datetimepicker" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="1paydate2" type="text" class="form-control datetimepicker" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">日期</span>
+                <input id="1paydate3" type="text" class="form-control datetimepicker" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="1payamount1" type="text" value="0" class="form-control" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="1payamount2" type="text" value="0" class="form-control" />
+            </div>
+            <div class="input-group" style="margin-bottom:10px">
+                <span class="input-group-addon">金额</span>
+                <input id="1payamount3" type="text" value="0" class="form-control" />
+            </div>
+        </div>
+    </form>
+</div>*@
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+                <p>执行中，请稍后&hellip;</p>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src='~/lib/fullcalendar/fullcalendar.min.js'></script>
+    <script src="~/lib/fullcalendar/locale/zh-cn.js"></script>
+    <script src='~/lib/fullcalendar/scheduler/scheduler.min.js'></script>
+    <script src="~/lib/artDialog/dist/dialog-min.js"></script>
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="utf-8"></script>
+    <script>
+        $(function () {
+            var _connect =@Html.Raw(Json.Serialize(Model.Item1));
+            var _channel =@Html.Raw(Json.Serialize(Model.Item2));
+            var _branch = _connect.branch;
+            var _branchId = _connect.branchId;
+            var _userName = _connect.userName;
+            var _frontData = [];
+            var _branchData = [];
+            var _reData = [];
+            var _eventData = [];
+            var _resourceId = "";
+            var date = new Date();
+            var d = date.getDate(),
+                m = date.getMonth(),
+                y = date.getFullYear();
+            var _startdate = moment(new Date(y, m, d - 3)).format("YYYY-MM-DD");
+
+            //#region Ajax optionAjax
+            var optionAjax = {
+                type: "post",
+                async: true,
+                url: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: {},
+                beforeSend: function () {
+                    $('#modal-default').modal('show');
+                },
+                success: function (result) {
+                },
+                complete: function () {
+                    $('#modal-default').modal('hide');
+                },
+            };
+            //#endregion
+
+            //#region Ajax GetCalendarData
+            function GetCalendarData(selectDate) {
+                optionAjax.url = "/Branch/FrontCalendar/GetCalendarData";
+                optionAjax.success = function (result) {
+                    //获取数据
+                    _frontData = result.frontdata;
+                    _branchData = result.branchdata;
+
+                    for (var i = 0; i < _frontData.length; i++) {
+                        var _id = _frontData[i].frontDeskAccountsId;
+                        var _color = _frontData[i].color;
+                        var _resourceId = _frontData[i].houseNumber;
+                        var _title = _frontData[i].customerName+" "+_frontData[i].channel;
+                        var _start = moment(_frontData[i].startDate).format("YYYY-MM-DD");
+                        var _end = moment(_frontData[i].endDate).format("YYYY-MM-DD");
+                        _eventData.push({
+                            id: _id,
+                            resourceId: _resourceId,
+                            title: _title,
+                            allDay: true,
+                            start: _start,
+                            end: _end,
+                            color: _color,
+                        });
+                    };
+                    for (var i = 0; i < _branchData.length; i++) {
+                        var _id = _branchData[i];
+                        var _title = _branchData[i];
+                        _reData.push({ id: _id, title: _title });
+                    };
+                    InitCalendar();
+                };
+                $.ajax(optionAjax);
+            };
+            //#endregion
+
+            //#region InitCalendar
+            function InitCalendar() {
+                $('#calendar').fullCalendar({
+                    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                    header: false,
+                    defaultView: 'timelineThirtyDays',
+                    views: {
+                        timelineThirtyDays: {
+                            type: 'timeline',
+                            duration: { days: 30 }
+                        }
+                    },
+                    slotWidth: '100',
+                    slotLabelFormat: "MM/DD ddd",
+                    height: 'parent',
+                    defaultDate: _startdate,
+                    navLinks: true,
+                    resourceAreaWidth: '50',
+                    resourceLabelText: '房间',
+                    resources: _reData,
+                    resourceRender: function (resourceObj, labelTds, bodyTds) {
+                        labelTds.css('height', '30px');
+                    },
+                    editable: true,
+                    selectable: true,
+                    selectHelper: true,
+                    select: function (start, end, jsEvent, view, resource) {
+                        $(".clear-data").removeAttr("disabled", "disabled");
+                        $("#addpay").removeClass("btn-warning");
+                        $("#addpay").addClass("btn-primary");
+                        $("#isfinish").removeClass("btn-warning");
+                        $("#isfinish").addClass("btn-primary");
+                        $("#isfront").removeClass("btn-warning");
+                        $("#isfront").addClass("btn-primary");
+                        $("#isfinance").removeClass("btn-warning");
+                        $("#isfinance").addClass("btn-primary");
+                        $("#table-1").hide();
+                        $(".clear-data").val("");
+                        $("#form-received,#payamount1,#payamount2,#payamount3").val("0");
+                        $(".col-md-4").hide();
+                        $('#isfinish').html("未结账");
+                        $('#isfront').html("前台未审");
+                        $('#isfinance').html("财务未审");
+                        //#region change/keyup事件
+                        $("#addpay").on('click', function () {
+                            $("#addpay").removeClass("btn-primary");
+                            $("#addpay").addClass("btn-warning");
+                            $(".col-md-4").show();
+                        });
+                        $("#isfront").on('click', function () {
+                            var hl = $("#isfront").html();
+                            if (hl == "前台未审") {
+                                $('#isfront').html("前台已审");
+                                $("#isfront").removeClass("btn-primary");
+                                $("#isfront").addClass("btn-warning");
+                            }
+                            if (hl == "前台已审") {
+                                $('#isfront').html("前台未审");
+                                $("#isfront").removeClass("btn-warning");
+                                $("#isfront").addClass("btn-primary");
+                            }
+                        });
+                        $("#isfinance").on('click', function () {
+                            var hl = $("#isfinance").html();
+                            if (hl == "财务未审") {
+                                $('#isfinance').html("财务已审");
+                                $("#isfinance").removeClass("btn-primary");
+                                $("#isfinance").addClass("btn-warning");
+                            }
+                            if (hl == "财务已审") {
+                                $('#isfinance').html("财务未审");
+                                $("#isfinance").removeClass("btn-warning");
+                                $("#isfinance").addClass("btn-primary");
+                            }
+                        });
+
+                        $('#payamount1').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = 0.00;
+                            if (checkIsDouble(pay1))
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay2) > 0)
+                                result += parseFloat(pay2);
+                            if (parseFloat(pay3) > 0)
+                                result += parseFloat(pay3);
+                            $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
+                        });
+                        $('#payamount2').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = 0.00;
+                            if (checkIsDouble(pay2))
+                                result += parseFloat(pay2);
+                            if (parseFloat(pay1) > 0)
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay3) > 0)
+                                result += parseFloat(pay3);
+                            $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
+                        });
+                        $('#payamount3').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = 0.00;
+                            if (checkIsDouble(pay3))
+                                result += parseFloat(pay3);
+                            if (parseFloat(pay1) > 0)
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay2) > 0)
+                                result += parseFloat(pay2);
+                            $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
+                        });
+                        $('#form-unit').keyup(function () {
+                            var unitPrice = document.getElementById("form-unit").value;
+                            var result = 0.00;
+                            if (checkIsDouble(unitPrice))
+                                result = parseFloat(unitPrice);
+                            var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
+                            result = result * days;
+                            $('#form-total').val(result.toString());
+                        });
+                        $('#form-total').keyup(function () {
+                            var totalPrice = document.getElementById("form-total").value;
+                            var result = 0.00;
+                            if (checkIsDouble(totalPrice))
+                                result = parseFloat(totalPrice);
+                            var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
+                            if (parseFloat(days) > 0)
+                                result = result / days;
+                            $('#form-unit').val(result.toString());
+                        });
+                        //#endregion
+                        var d = dialog({
+                            title: "新建订单",
+                            content: $("#create-form"),
+                            okValue: "确定",
+                            ok: function () {
+                                var title = $('#form-name').val();
+                                var count = $('#form-count').val();
+                                var unit = $('#form-unit').val();
+                                var total = $('#form-total').val();
+                                var channel = $('#form-channel').val();
+                                var receivable = $('#form-receivable').val();
+                                var received = $('#form-received').val();
+                                var steward = $("#form-steward").val();
+                                var frontleader = $('#form-frontleader').val();
+                                var stewardleader = $('#form-stewardleader').val();
+                                var relation = $('#form-relation').val();
+                                var note = $('#form-note').val();
+                                var paydate1 = $('#paydate1').val();
+                                var payway1 = $('#payway1').val();
+                                var payamount1 = $('#payamount1').val();
+                                var paydate2 = $('#paydate2').val();
+                                var payway2 = $('#payway2').val();
+                                var payamount2 = $('#payamount2').val();
+                                var paydate3 = $('#paydate3').val();
+                                var payway3 = $('#payway3').val();
+                                var payamount3 = $('#payamount3').val();
+                                var isfinish = false;
+                                if ($('#isfinish').html() == "已结账") {
+                                    isfinish = true;
+                                }
+                                var isfront = false;
+                                if ($('#isfront').html() == "前台已审") {
+                                    isfront = true;
+                                }
+                                var isfinance = false;
+                                if ($('#isfinance').html() == "财务已审") {
+                                    isfinance = true;
+                                }
+                                var color = "";
+                                for (var i = 0; i < _channel.length; i++) {
+                                    if (_channel[i].channelType == channel)
+                                        color = _channel[i].color;
+                                }
+                                $.ajax({
+                                    type: "post",
+                                    async: true,
+                                    url: "/Branch/FrontCalendar/Create",
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    data: JSON.stringify({
+                                        houseNumber: resource.id,
+                                        customerName: title,
+                                        customerCount: count,
+                                        startDate: moment(start).format("YYYY-MM-DD"),
+                                        endDate: moment(end).format("YYYY-MM-DD"),
+                                        channel: channel,
+                                        unitPrice: unit,
+                                        totalPrice: total,
+                                        receivable: receivable,
+                                        received: received,
+                                        enteringStaff: _userName,
+                                        steward: steward,
+                                        frontDeskLeader: frontleader,
+                                        stewardLeader: stewardleader,
+                                        relationStaff: relation,
+                                        branch: _branch,
+                                        note: note,
+                                        isFinish: isfinish,
+                                        isFront: isfront,
+                                        isFinance: isfinance,
+                                        color: color,
+                                        payDate1: paydate1,
+                                        payDate2: paydate2,
+                                        payDate3: paydate3,
+                                        payWay1: payway1,
+                                        payWay2: payway2,
+                                        payWay3: payway3,
+                                        payAmount1: payamount1,
+                                        payAmount2: payamount2,
+                                        payAmount3: payamount3
+                                    }),
+                                    beforeSend: function () {
+                                        $('#modal-default').modal('show');
+                                    },
+                                    success: function (data) {
+                                        _frontData.push(data.brhFrontDeskAccounts);
+                                        var _data = { id: data.brhFrontDeskAccounts.frontDeskAccountsId, resourceId: data.brhFrontDeskAccounts.houseNumber, title: data.brhFrontDeskAccounts.customerName + " " + data.brhFrontDeskAccounts.channel, allDay: true, start: moment(start).format("YYYY-MM-DD"), end: moment(end).format("YYYY-MM-DD"), color: data.brhFrontDeskAccounts.color };
+                                            $("#calendar").fullCalendar("renderEvent", _data, true);
+                                    },
+                                    complete: function () {
+                                        $('#modal-default').modal('hide');
+                                    }, 
+                                    error: function () {
+                                        alert("Failed");
+                                    }
+
+                                });
+                            },
+                            cancelValue: "关闭",
+                            cancel: function () {
+                            }
+                        });
+                        d.width(600).showModal();
+                    },
+                    events: _eventData,
+                    eventOverlap: false, // will cause the event to take up entire resource height
+                    eventRender: function (event, element) {//在呈现事件时触发
+                        element.css("height", "30px");
+                        var el = element.html();
+                        var hl = "";
+                        var ffff=_frontData.find(function (x) {
+                            return x.frontDeskAccountsId == event.id;
+                        });
+                        if (ffff != undefined) {
+                            if (ffff.isFinish) {
+                                hl = "<div style='width:80%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='glyphicon glyphicon-ok'></i></div>";
+                            }
+                            else {
+                                hl = "<div style='width:80%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='glyphicon glyphicon-remove'></i></div>";
+                            }
+                            if (ffff.isFinance) {
+                                hl += "<div style='width:50%;float:left;margin-top:5px;margin-left:5px'><i class='fa fa-lock'></i></div>";
+                            }
+                            if (ffff.isFront) {
+                                hl += "<div style='text-align:right;font-size:10px;margin-top:5px'><i class='glyphicon glyphicon-ok'></i></div>";
+                            }
+                            else {
+                                hl += "<div style='text-align:right;font-size:10px;color:white;margin-top:5px'><i class='glyphicon glyphicon-remove'></i></div>";
+                            }
+                            element.html(hl);
+                        }
+                        //element.find('.fc-event-title').append("<br/>" + event.duration + "h");
+                        //element.find('.fc-event-time').hide();
+                        //element.find('.close').click(function () {
+                        //    if (!confirm("Delete event?")) {
+                        //        return false;
+                        //    } else {
+                        //        var id = event.id;
+                        //        $.post('<?= base_url() ?>calendar/delete_alert',
+                        //            {
+                        //                id: id
+                        //            },
+                        //            function (data) {
+                        //                if (data == 1)
+                        //                    alert('Successfully deleted');
+                        //                else
+                        //                    alert('Error deleted');
+                        //            });
+                        //        $("#fullcalendar").fullCalendar('removeEvents', event.id);
+                        //    }
+                        //});
+                    },
+                    eventClick: function (event, jsEvent, view) {
+                        $("#addpay").removeClass("btn-warning");
+                        $("#addpay").addClass("btn-primary");
+                        $("#table-1").show();
+                        $("#tbody-form").html("");
+                        $.ajax({
+                            type: "post",
+                            async: true,
+                            url: "/Branch/FrontCalendar/List",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                frontDeskAccountsId: event.id,
+                            }),
+                            success: function (data) {
+                                var hls = "";
+                                for (var i = 0; i < data.list1.length; i++) {
+                                    hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list1[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list1[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list1[i].payAmount+"</td></tr>";
+                                }
+                                for (var i = 0; i < data.list2.length; i++) {
+                                    hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list2[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list2[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list2[i].payAmount + "</td></tr>";
+                                }
+                                var ahl = $(hls);
+                                ahl.appendTo($("#tbody-form"));
+                            }, 
+                            error: function () {
+                                alert("Failed");
+                            }
+
+                        });
+                        var _start = moment(event.start).format("YYYY-MM-DD");
+                        var _end = moment(event.end).format("YYYY-MM-DD");
+                        function checkAdult(fro) {
+                            return fro.frontDeskAccountsId==event.id;
+                        }
+                        var _ff = _frontData.find(checkAdult);
+                        $(".clear-data").val("");
+                        $("#payamount1,#payamount2,#payamount3").val("0");
+                        $(".col-md-4").hide();
+                        if (_ff.isFinish) {
+                            $('#isfinish').html("已结账");
+                            $("#isfinish").removeClass("btn-primary");
+                            $("#isfinish").addClass("btn-warning");
+                        }
+                        else{
+                            $('#isfinish').html("未结账");
+                            $("#isfinish").removeClass("btn-warning");
+                            $("#isfinish").addClass("btn-primary");
+                        }
+                        if (_ff.isFront) {
+                            $('#isfront').html("前台已审");
+                            $("#isfront").removeClass("btn-primary");
+                            $("#isfront").addClass("btn-warning");
+                        }
+                        else {
+                            $('#isfront').html("前台未审");
+                            $("#isfront").removeClass("btn-warning");
+                            $("#isfront").addClass("btn-primary");
+                        }
+                        if (_ff.isFinance) {
+                            $('#isfinance').html("财务已审");
+                            $("#isfinance").removeClass("btn-primary");
+                            $("#isfinance").addClass("btn-warning");
+                        }
+                        else {
+                            $('#isfinance').html("财务未审");
+                            $("#isfinance").removeClass("btn-warning");
+                            $("#isfinance").addClass("btn-primary");
+                        }
+                        $('#form-name').val(_ff.customerName);
+                        $('#form-count').val(_ff.customerCount);
+                        $('#form-unit').val(_ff.unitPrice);
+                        $('#form-total').val(_ff.totalPrice);
+                        $('#form-channel').val(_ff.channel);
+                        $('#form-receivable').val(_ff.receivable);
+                        $('#form-received').val(_ff.received);
+                        $("#form-steward").val(_ff.steward);
+                        $('#form-frontleader').val(_ff.frontDeskLeader);
+                        $('#form-stewardleader').val(_ff.stewardLeader);
+                        $('#form-relation').val(_ff.relationStaff);
+                        $('#form-note').val(_ff.note);
+                        $('#payamount1').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = parseFloat(_ff.received);
+                            if (checkIsDouble(pay1))
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay2) > 0)
+                                result += parseFloat(pay2);
+                            if (parseFloat(pay3) > 0)
+                                result += parseFloat(pay3);
+                            $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
+                        });
+                        $('#payamount2').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = parseFloat(_ff.received);
+                            if (checkIsDouble(pay2))
+                                result += parseFloat(pay2);
+                            if (parseFloat(pay1) > 0)
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay3) > 0)
+                                result += parseFloat(pay3);
+                            $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
+                        });
+                        $('#payamount3').keyup(function () {
+                            var pay1 = document.getElementById("payamount1").value;
+                            var pay2 = document.getElementById("payamount2").value;
+                            var pay3 = document.getElementById("payamount3").value;
+                            var result = parseFloat(_ff.received);
+                            if (checkIsDouble(pay3))
+                                result += parseFloat(pay3);
+                            if (parseFloat(pay1) > 0)
+                                result += parseFloat(pay1);
+                            if (parseFloat(pay2) > 0)
+                                result += parseFloat(pay2);
+                            $('#form-received').val(result.toString());
+                            if (result == parseFloat($("#form-receivable").val())) {
+                                $('#isfinish').html("已结账");
+                                $("#isfinish").removeClass("btn-primary");
+                                $("#isfinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isfinish').html("未结账");
+                                $("#isfinish").removeClass("btn-warning");
+                                $("#isfinish").addClass("btn-primary");
+                            }
+                        });
+                        $('#form-unit').keyup(function () {
+                            var unitPrice = document.getElementById("form-unit").value;
+                            var result = 0.00;
+                            if (checkIsDouble(unitPrice))
+                                result = parseFloat(unitPrice);
+                            var days = DateDiff(moment(_start).format("YYYY-MM-DD"), moment(_end).format("YYYY-MM-DD"));
+                            result = result * days;
+                            $('#form-total').val(result.toString());
+                        });
+                        $('#form-total').keyup(function () {
+                            var totalPrice = document.getElementById("form-total").value;
+                            var result = 0.00;
+                            if (checkIsDouble(totalPrice))
+                                result = parseFloat(totalPrice);
+                            var days = DateDiff(moment(_start).format("YYYY-MM-DD"), moment(_end).format("YYYY-MM-DD"));
+                            if (parseFloat(days) > 0)
+                                result = result / days;
+                            $('#form-unit').val(result.toString());
+                        });
+                        if (_ff.isFinance) {
+                            $(".clear-data").attr("disabled","disabled");
+                            var d = dialog({
+                                title: "查看订单",
+                                content: $("#create-form"),
+                                cancelValue: "关闭",
+                                cancel: function () {
+                                }
+                            });
+                            d.width(600).showModal();
+                        }
+
+                        else {
+                            $(".clear-data").removeAttr("disabled", "disabled");
+                            $("#addpay").on('click', function () {
+                                $("#addpay").removeClass("btn-primary");
+                                $("#addpay").addClass("btn-warning");
+                                $(".col-md-4").show();
+                            });
+                            $("#isfront").on('click', function () {
+                                var hl = $("#isfront").html();
+                                if (hl == "前台未审") {
+                                    $('#isfront').html("前台已审");
+                                    $("#isfront").removeClass("btn-primary");
+                                    $("#isfront").addClass("btn-warning");
+                                }
+                                if (hl == "前台已审") {
+                                    $('#isfront').html("前台未审");
+                                    $("#isfront").removeClass("btn-warning");
+                                    $("#isfront").addClass("btn-primary");
+                                }
+                            });
+                            $("#isfinance").on('click', function () {
+                                var hl = $("#isfinance").html();
+                                if (hl == "财务未审") {
+                                    $('#isfinance').html("财务已审");
+                                    $("#isfinance").removeClass("btn-primary");
+                                    $("#isfinance").addClass("btn-warning");
+                                }
+                                if (hl == "财务已审") {
+                                    $('#isfinance').html("财务未审");
+                                    $("#isfinance").removeClass("btn-warning");
+                                    $("#isfinance").addClass("btn-primary");
+                                }
+                            });
+                            var d = dialog({
+                                title: "修改订单",
+                                content: $("#create-form"),
+                                button: [{
+                                    value: '删除订单',
+                                    callback: function () {
+                                        if (confirm("确定删除订单？")) {
+                                            $.ajax({
+                                                type: "post",
+                                                async: true,
+                                                url: "/Branch/FrontCalendar/Delete",
+                                                contentType: "application/json; charset=utf-8",
+                                                dataType: "json",
+                                                data: JSON.stringify({
+                                                    frontDeskAccountsId: event.id,
+                                                }),
+                                                success: function (data) {
+                                                    $("#calendar").fullCalendar("removeEvents", event.id);
+                                                },
+                                                error: function () {
+                                                    alert("Failed");
+                                                }
+
+                                            });
+                                        }
+                                    }
+                                }],
+                                okValue: "确定",
+                                ok: function () {
+                                    var channel = $("#form-channel").val();
+                                    var paydate1 = $('#paydate1').val();
+                                    var payway1 = $('#payway1').val();
+                                    var payamount1 = $('#payamount1').val();
+                                    var paydate2 = $('#paydate2').val();
+                                    var payway2 = $('#payway2').val();
+                                    var payamount2 = $('#payamount2').val();
+                                    var paydate3 = $('#paydate3').val();
+                                    var payway3 = $('#payway3').val();
+                                    var payamount3 = $('#payamount3').val();
+                                    var isfinish = false;
+                                    if ($('#isfinish').html() == "已结账") {
+                                        isfinish = true;
+                                    }
+                                    var isfront = false;
+                                    if ($('#isfront').html() == "前台已审") {
+                                        isfront = true;
+                                    }
+                                    console.log(isfront);
+                                    var isfinance = false;
+                                    if ($('#isfinance').html() == "财务已审") {
+                                        isfinance = true;
+                                    }
+                                    var color = "";
+                                    var channel = $("#form-channel").val();
+                                    for (var i = 0; i < _channel.length; i++) {
+                                        if (_channel[i].channelType == channel)
+                                            color = _channel[i].color;
+                                    }
+                                    $.ajax({
+                                        type: "post",
+                                        async: true,
+                                        url: "/Branch/FrontCalendar/Edit",
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        data: JSON.stringify({
+                                            frontDeskAccountsId: _ff.frontDeskAccountsId,
+                                            houseNumber: _ff.houseNumber,
+                                            customerName: $('#form-name').val(),
+                                            customerCount: $('#form-count').val(),
+                                            startDate: _ff.startDate,
+                                            endDate: _ff.endDate,
+                                            channel: $('#form-channel').val(),
+                                            unitPrice: $('#form-unit').val(),
+                                            totalPrice: $('#form-total').val(),
+                                            receivable: $('#form-receivable').val(),
+                                            received: $('#form-received').val(),
+                                            enteringStaff: _ff.enteringStaff,
+                                            steward: $('#form-steward').val(),
+                                            frontDeskLeader: $('#form-frontleader').val(),
+                                            stewardLeader: $('#form-stewardleader').val(),
+                                            relationStaff: $('#form-relation').val(),
+                                            branch: _ff.branch,
+                                            note: $('#form-note').val(),
+                                            isFinish: isfinish,
+                                            isFront: isfront,
+                                            isFinance: isfinance,
+                                            color: color,
+                                            payDate1: paydate1,
+                                            payDate2: paydate2,
+                                            payDate3: paydate3,
+                                            payWay1: payway1,
+                                            payWay2: payway2,
+                                            payWay3: payway3,
+                                            payAmount1: payamount1,
+                                            payAmount2: payamount2,
+                                            payAmount3: payamount3
+                                        }),
+                                        beforeSend: function () {
+                                            $('#modal-default').modal('show');
+                                        },
+                                        success: function (data) {
+                                            for (var i = 0; i < _frontData.length; i++) {
+                                                if (_frontData[i].frontDeskAccountsId == data.brhFrontDeskAccounts.frontDeskAccountsId) {
+                                                    _frontData[i] = data.brhFrontDeskAccounts;
+                                                }
+                                            }
+                                            var _data = { id: data.brhFrontDeskAccounts.frontDeskAccountsId, resourceId: data.brhFrontDeskAccounts.houseNumber, title: data.brhFrontDeskAccounts.customerName + " " + data.brhFrontDeskAccounts.channel, allDay: true, start: data.brhFrontDeskAccounts.startDate, end: data.brhFrontDeskAccounts.endDate, color: data.brhFrontDeskAccounts.color };
+                                            $("#calendar").fullCalendar("removeEvents", data.brhFrontDeskAccounts.frontDeskAccountsId);
+                                            $("#calendar").fullCalendar("renderEvent", _data, true);
+                                        },
+                                        complete: function () {
+                                            $('#modal-default').modal('hide');
+                                        }, 
+                                        error: function () {
+                                            alert("Failed");
+                                        }
+
+                                    });
+                                },
+                                cancelValue: "关闭",
+                                cancel: function () {
+                                }
+                            });
+                            d.width(600).showModal();
+                        }
+                    },
+                    eventDragStart: function (event, jsEvent, ui, view) {
+                        _resourceId = event.resourceId;
+                    },
+                    eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+                        var start = moment(event.start).format("YYYY-MM-DD");
+                        var end = moment(event.end).format("YYYY-MM-DD");
+                        $.ajax({
+                            type: "post",
+                            async: true,
+                            url: "/Branch/FrontCalendar/Drop",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                frontDeskAccountsId: event.id,
+                                houseNumber: event.resourceId,
+                                startDate: start,
+                                endDate:end,
+                            }),
+                            beforeSend: function () {
+                                $('#modal-default').modal('show');
+                            },
+                            success: function (data) {
+                                for (var i = 0; i < _frontData.length; i++) {
+                                    if (_frontData[i].frontDeskAccountsId == data.brhFrontDeskAccounts.frontDeskAccountsId) {
+                                        _frontData[i] = data.brhFrontDeskAccounts;
+                                    }
+                                }
+                                var _data = { id: data.brhFrontDeskAccounts.frontDeskAccountsId, resourceId: data.brhFrontDeskAccounts.houseNumber, title: data.brhFrontDeskAccounts.customerName + " " + data.brhFrontDeskAccounts.channel, allDay: true, start: data.brhFrontDeskAccounts.startDate, end: data.brhFrontDeskAccounts.endDate, color: data.brhFrontDeskAccounts.color };
+                                $("#calendar").fullCalendar("removeEvents", data.brhFrontDeskAccounts.frontDeskAccountsId);
+                                $("#calendar").fullCalendar("renderEvent", _data, true);
+                            },
+                            complete: function () {
+                                $('#modal-default').modal('hide');
+                            }, 
+                            error: function () {
+                                alert("Failed");
+                            }
+
+                        });
+                    },
+                    eventResizeStart: function (event, jsEvent, ui, view) {
+                    },
+                    eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
+                        var start = moment(event.start).format("YYYY-MM-DD");
+                        var end = moment(event.end).format("YYYY-MM-DD");
+                        $.ajax({
+                            type: "post",
+                            async: true,
+                            url: "/Branch/FrontCalendar/Resize",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                frontDeskAccountsId: event.id,
+                                startDate: start,
+                                endDate: end,
+                            }),
+                            beforeSend: function () {
+                                $('#modal-default').modal('show');
+                            },
+                            success: function (data) {
+                                for (var i = 0; i < _frontData.length; i++) {
+                                    if (_frontData[i].frontDeskAccountsId == data.brhFrontDeskAccounts.frontDeskAccountsId) {
+                                        _frontData[i] = data.brhFrontDeskAccounts;
+                                    }
+                                }
+                                var _data = { id: data.brhFrontDeskAccounts.frontDeskAccountsId, resourceId: data.brhFrontDeskAccounts.houseNumber, title: data.brhFrontDeskAccounts.customerName + " " + data.brhFrontDeskAccounts.channel, allDay: true, start: data.brhFrontDeskAccounts.startDate, end: data.brhFrontDeskAccounts.endDate, color: data.brhFrontDeskAccounts.color };
+                                $("#calendar").fullCalendar("removeEvents", data.brhFrontDeskAccounts.frontDeskAccountsId);
+                                $("#calendar").fullCalendar("renderEvent", _data, true);
+                            },
+                            complete: function () {
+                                $('#modal-default').modal('hide');
+                            }, 
+                            error: function () {
+                                alert("Failed");
+                            }
+
+                        });
+                    }
+                    //dayClick: function (date, allDay, jsEvent, view, resource) {
+                    //    $(".clear-data").removeAttr("disabled", "disabled");
+                    //    $(".clear-data").val("");
+                    //    $(".form1").hide();
+                    //    $('#1isfinish').html("未结账");
+                    //    $('#1isfront').html("前台未审");
+                    //    $('#1isfinance').html("财务未审");
+                    //    //#region change/keyup事件
+                    //    $("#1addpay").on('click', function () {
+                    //        $("#1addpay").removeClass("btn-primary");
+                    //        $("#1addpay").addClass("btn-warning");
+                    //        $(".form1").show();
+                    //    });
+                    //    $("#1isfront").on('click', function () {
+                    //        var hl = $("#1isfront").html();
+                    //        if (hl == "前台未审") {
+                    //            $('#1isfront').html("前台已审");
+                    //            $("#1isfront").removeClass("btn-primary");
+                    //            $("#1isfront").addClass("btn-warning");
+                    //        }
+                    //        if (hl == "前台已审") {
+                    //            $('#1isfront').html("前台未审");
+                    //            $("#1isfront").removeClass("btn-warning");
+                    //            $("#1isfront").addClass("btn-primary");
+                    //        }
+                    //    });
+                    //    $("#1isfinance").on('click', function () {
+                    //        var hl = $("#1isfinance").html();
+                    //        if (hl == "财务未审") {
+                    //            $('#1isfinance').html("财务已审");
+                    //            $("#1isfinance").removeClass("btn-primary");
+                    //            $("#1isfinance").addClass("btn-warning");
+                    //        }
+                    //        if (hl == "财务已审") {
+                    //            $('#1isfinance').html("财务未审");
+                    //            $("#1isfinance").removeClass("btn-warning");
+                    //            $("#1isfinance").addClass("btn-primary");
+                    //        }
+                    //    });
+                    //    if (navigator.platform.indexOf('Win32') != -1) {
+                    //    } else {
+                    //        //#region change/keyup事件
+                    //        $('#1payamount1').keyup(function () {
+                    //            var pay1 = document.getElementById("1payamount1").value;
+                    //            var pay2 = document.getElementById("1payamount2").value;
+                    //            var pay3 = document.getElementById("1payamount3").value;
+                    //            var result = 0.00;
+                    //            if (checkIsDouble(pay1))
+                    //                result += parseFloat(pay1);
+                    //            if (parseFloat(pay2) > 0)
+                    //                result += parseFloat(pay2);
+                    //            if (parseFloat(pay3) > 0)
+                    //                result += parseFloat(pay3);
+                    //            $('#form1-received').val(result.toString());
+                    //            if (result == parseFloat($("#form1-receivable").val())) {
+                    //                $('#1isfinish').html("已结账");
+                    //                $("#1isfinish").removeClass("btn-primary");
+                    //                $("#1isfinish").addClass("btn-warning");
+                    //            }
+                    //            else {
+                    //                $('#1isfinish').html("未结账");
+                    //                $("#1isfinish").removeClass("btn-warning");
+                    //                $("#1isfinish").addClass("btn-primary");
+                    //            }
+                    //        });
+                    //        $('#1payamount2').keyup(function () {
+                    //            var pay1 = document.getElementById("1payamount1").value;
+                    //            var pay2 = document.getElementById("1payamount2").value;
+                    //            var pay3 = document.getElementById("1payamount3").value;
+                    //            var result = 0.00;
+                    //            if (checkIsDouble(pay2))
+                    //                result += parseFloat(pay2);
+                    //            if (parseFloat(pay1) > 0)
+                    //                result += parseFloat(pay1);
+                    //            if (parseFloat(pay3) > 0)
+                    //                result += parseFloat(pay3);
+                    //            $('#form1-received').val(result.toString());
+                    //            if (result == parseFloat($("#form1-receivable").val())) {
+                    //                $('#1isfinish').html("已结账");
+                    //                $("#1isfinish").removeClass("btn-primary");
+                    //                $("#1isfinish").addClass("btn-warning");
+                    //            }
+                    //            else {
+                    //                $('#1isfinish').html("未结账");
+                    //                $("#1isfinish").removeClass("btn-warning");
+                    //                $("#1isfinish").addClass("btn-primary");
+                    //            }
+                    //        });
+                    //        $('#1payamount3').keyup(function () {
+                    //            var pay1 = document.getElementById("1payamount1").value;
+                    //            var pay2 = document.getElementById("1payamount2").value;
+                    //            var pay3 = document.getElementById("1payamount3").value;
+                    //            var result = 0.00;
+                    //            if (checkIsDouble(pay3))
+                    //                result += parseFloat(pay3);
+                    //            if (parseFloat(pay1) > 0)
+                    //                result += parseFloat(pay1);
+                    //            if (parseFloat(pay2) > 0)
+                    //                result += parseFloat(pay2);
+                    //            $('#form1-received').val(result.toString());
+                    //            if (result == parseFloat($("#form1-receivable").val())) {
+                    //                $('#1isfinish').html("已结账");
+                    //                $("#1isfinish").removeClass("btn-primary");
+                    //                $("#1isfinish").addClass("btn-warning");
+                    //            }
+                    //            else {
+                    //                $('#1isfinish').html("未结账");
+                    //                $("#1isfinish").removeClass("btn-warning");
+                    //                $("#1isfinish").addClass("btn-primary");
+                    //            }
+                    //        });
+
+                    //        $("#1addpay").on('ifChecked', function () {
+                    //            $(".form1").show();
+                    //        });
+                    //        $("#1addpay").on('ifUnchecked', function () {
+                    //            $(".form1").hide();
+                    //        });
+                    //        $('#form1-unit').keyup(function () {
+                    //            var unitPrice = document.getElementById("form1-unit").value;
+                    //            var result = 0.00;
+                    //            if (checkIsDouble(unitPrice))
+                    //                result = parseFloat(unitPrice);
+                    //            var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
+                    //            result = result * days;
+                    //            $('#form1-total').val(result.toString());
+                    //        });
+                    //        $('#form1-total').keyup(function () {
+                    //            var totalPrice = document.getElementById("form1-total").value;
+                    //            var result = 0.00;
+                    //            if (checkIsDouble(totalPrice))
+                    //                result = parseFloat(totalPrice);
+                    //            var days = DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD"));
+                    //            if (parseFloat(days) > 0)
+                    //                result = result / days;
+                    //            $('#form1-unit').val(result.toString());
+                    //        });
+                    //    //#endregion
+                    //        var d = dialog({
+                    //            title: "新建订单",
+                    //            content: $("#create-form1"),
+                    //            okValue: "确定",
+                    //            ok: function () {
+                    //                var title = $('#form1-name').val();
+                    //                var count = $('#form1-count').val();
+                    //                var unit = $('#form1-unit').val();
+                    //                var total = $('#form1-total').val();
+                    //                var channel = $('#form1-channel').val();
+                    //                var receivable = $('#form1-receivable').val();
+                    //                var received = $('#form1-received').val();
+                    //                var steward = $("#form1-steward").val();
+                    //                var frontleader = $('#form1-frontleader').val();
+                    //                var stewardleader = $('#form1-stewardleader').val();
+                    //                var relation = $('#form1-relation').val();
+                    //                var note = $('#form1-note').val();
+                    //                var _data = [];
+                    //                $.ajax({
+                    //                    type: "post",
+                    //                    async: true,
+                    //                    url: "/Branch/FrontCalendar/Create",
+                    //                    contentType: "application/json; charset=utf-8",
+                    //                    dataType: "json",
+                    //                    data: JSON.stringify({
+                    //                        houseNumber: resource.id,
+                    //                        customerName: title,
+                    //                        customerCount: count,
+                    //                        startDate: moment(date).format("YYYY-MM-DD"),
+                    //                        endDate: moment(date).format("YYYY-MM-DD"),
+                    //                        channel: channel,
+                    //                        unitPrice: unit,
+                    //                        totalPrice: total,
+                    //                        receivable: receivable,
+                    //                        received: received,
+                    //                        enteringStaff: _userName,
+                    //                        steward: steward,
+                    //                        frontDeskLeader: frontleader,
+                    //                        stewardLeader: stewardleader,
+                    //                        relationStaff: relation,
+                    //                        branch: _branch,
+                    //                        note: note,
+                    //                    }),
+                    //                    beforeSend: function () {
+                    //                        $('#modal-default').modal('show');
+                    //                    },
+                    //                    success: function (data) {
+                    //                        var rid = parseInt(resource.id);
+                    //                        _data.push({ resourceId: rid, title: title, allDay: true, start: moment(start).format("YYYY-MM-DD"), end: moment(end).format("YYYY-MM-DD"), backgroundColor: '#00c0ef', borderColor: '#00c0ef' });
+                    //                        $("#calendar").fullCalendar("renderEvent", _data[0], true);
+                    //                    },
+                    //                    complete: function () {
+                    //                        $('#modal-default').modal('hide');
+                    //                    }, 
+                    //                    error: function () {
+                    //                        alert("Failed");
+                    //                    }
+
+                    //                });
+                    //            },
+                    //            cancelValue: "关闭",
+                    //            cancel: function () {
+                    //            }
+                    //        });
+                    //        d.showModal();
+                    //    }
+                    //},
+                });
+            }
+
+            $('#today').on('click', function () {
+                $('#calendar').fullCalendar('today'); // call method
+            });
+
+            $('#month').on('click', function () {
+                $('#calendar').fullCalendar('changeView', 'timelineThirtyDays', $('#startdate').val());
+            });
+
+            $('#prev').on('click', function () {
+                $('#calendar').fullCalendar('prev'); // call method
+            });
+
+            $('#next').on('click', function () {
+                $('#calendar').fullCalendar('next'); // call method
+            });
+
+            $('#startdate').change(function () {
+                $('#calendar').fullCalendar('changeView', 'timelineThirtyDays', $('#startdate').val());
+            });
+
+            $("#startdate").datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                language: "zh-CN",
+                todayBtn: 'linked',
+                todayHighlight: true,
+            });
+
+            $('#startdate').datepicker('setDate', new Date());
+            //#endregion
+
+            $('.datetimepicker').datetimepicker({
+                format: 'yyyy-mm-dd hh:ii',
+                autoclose: true,
+                language: "zh-CN",
+                todayBtn: 'linked',
+                todayHighlight: true,
+            });
+            $('.datetimepicker').datetimepicker('setDate', new Date());
+
+            //#region 功能模块
+            function checkIsDouble(checkString) {
+
+                var reg = /^[0-9,.]*$/;
+
+                if (reg.test(checkString)) {
+                    return true;
+                }
+                //alert("输入数字");
+                return false;
+            }
+            function DateDiff(sDate1, sDate2) {    //sDate1和sDate2是2002-12-18格式
+                var aDate, oDate1, oDate2, iDays
+                aDate = sDate1.split("-")
+                oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])    //转换为12-18-2002格式
+                aDate = sDate2.split("-")
+                oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0])
+                iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24)    //把相差的毫秒数转换为天数
+                return iDays
+            }
+            //#endregion
+
+            var doc = document.documentElement;
+            document.body.style.height = doc.scrollHeight + 'px';
+            GetCalendarData(_startdate);
+        });
+    </script>
+}
