@@ -1,0 +1,36 @@
+﻿@model JJNG.Data.Finance.FncHouseType
+
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+<div class="col-md-4">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    @if (ViewData["action"].ToString() == "Create")
+    {
+        <div class="form-group">
+            <input type="hidden" asp-for="BranchId" value="@ViewData["BranchId"]" class="form-control" />
+        </div>
+    }
+    else
+    {
+        <input type="hidden" asp-for="HouseTypeId" />
+        <input type="hidden" asp-for="BranchId" class="form-control" />
+    }
+    <div class="form-group">
+        <label asp-for="Order" class="control-label"></label>
+        <input asp-for="Order" class="form-control" />
+        <span asp-validation-for="Order" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="HouseType" class="control-label"></label>
+        <input asp-for="HouseType" class="form-control" />
+        <span asp-validation-for="HouseType" class="text-danger"></span>
+    </div>
+</div>
+

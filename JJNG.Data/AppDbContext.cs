@@ -9,7 +9,11 @@ namespace JJNG.Data
 {
     public partial class AppDbContext : DbContext
     {
+        public virtual DbSet<BrhYun> BrhYun { get; set; }
         public virtual DbSet<AppMenu> AppMenu { get; set; }
+        public virtual DbSet<FncBranch> FncBranch { get; set; }
+        public virtual DbSet<FncHouseType> FncHouseType { get; set; }
+        public virtual DbSet<FncHouseNumber> FncHouseNumber { get; set; }
         public virtual DbSet<FncPaymentType> FncPaymentType { get; set; }
         public virtual DbSet<FncChannelType> FncChannelType { get; set; }
         public virtual DbSet<FncExpendType> FncExpendType { get; set; }

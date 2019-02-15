@@ -93,6 +93,7 @@ namespace JJNG.Web.Areas.Branch.Models
 
         [Display(Name ="分店ID")]
         public int BranchId { get; set; }
+        public DateTime SelectDate { get; set; }
 
         [Display(Name = "备注")]
         public string Note { get; set; }

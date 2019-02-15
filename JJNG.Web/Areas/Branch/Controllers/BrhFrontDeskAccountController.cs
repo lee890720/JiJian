@@ -49,7 +49,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             //}
             //await _context.SaveChangesAsync();
 
-            return View(await _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.Branch).ToListAsync());
+            return View(await _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(DateTime.Now.AddDays(-90), x.StartDate) <= 0 && x.Branch == _user.Branch).ToListAsync());
         }
 
         [HttpPost]
@@ -134,7 +134,6 @@ namespace JJNG.Web.Areas.Branch.Controllers
                     bfp3.PayAmount = 0;
 
                 BrhFrontDeskAccounts brhFrontDeskAccounts = new BrhFrontDeskAccounts();
-                brhFrontDeskAccounts.HouseNumber = brhFrontModel.HouseNumber;
                 brhFrontDeskAccounts.Branch = brhFrontModel.Branch;
                 brhFrontDeskAccounts.Channel = brhFrontModel.Channel;
                 brhFrontDeskAccounts.CustomerName = brhFrontModel.CustomerName;

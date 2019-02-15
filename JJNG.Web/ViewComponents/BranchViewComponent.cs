@@ -19,7 +19,7 @@ namespace JJNG.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var list_branch = _context.UserBranch.Where(x => x.BranchName != "运营中心" && x.BranchName != "町隐学院").ToList();
+            var list_branch = await _context.UserBranch.Where(x => x.BranchName != "运营中心" && x.BranchName != "町隐学院").ToListAsync();
             return View(list_branch);
         }
     }

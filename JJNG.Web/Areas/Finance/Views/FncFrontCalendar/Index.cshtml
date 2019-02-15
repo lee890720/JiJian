@@ -3,7 +3,7 @@
 @{
     Layout = "_Layout3";
 }
-<link href="~/lib/fullcalendar/fullcalendar.min.css" rel="stylesheet" />
+<link href="~/lib/fullcalendar/fullcalendar.css" rel="stylesheet" />
 <link href="~/lib/fullcalendar/fullcalendar.print.min.css" rel="stylesheet" media="print" />
 <link href='~/lib/fullcalendar/scheduler/scheduler.min.css' rel='stylesheet' />
 <link href="~/lib/artDialog/css/ui-dialog.css" rel="stylesheet" />
@@ -88,13 +88,13 @@
             </table>
         </div>
         <div class="col-md-12">
-            <div class="input-group" style="margin-bottom:10px">
+            <div class="input-group" style="margin-bottom:10px;">
                 <div class="input-group-btn">
                     @*<button id="addpay" type="button" class="btn btn-primary">增加收款</button>*@
                     <button id="isfinish" type="button" class="btn btn-primary">未结账</button>
+                    <button id="isfront" type="button" class="btn btn-primary">前台未审</button>
+                    <button id="isfinance" type="button" class="btn btn-primary">财务未审</button>
                 </div>
-                <button id="isfront" type="button" class="btn btn-primary">前台未审</button>
-                <button id="isfinance" type="button" class="btn btn-primary">财务未审</button>
             </div>
         </div>
         <div class="col-md-4">
@@ -102,11 +102,11 @@
                 <span class="input-group-addon">方式</span>
                 <select asp-items="ViewBag.PaymentType" id="payway1" class="form-control"></select>
             </div>
-            <div class="input-group" style="margin-bottom:10px">
+            <div class="input-group" style="margin-bottom:10px;display:none">
                 <span class="input-group-addon">方式</span>
                 <select asp-items="ViewBag.PaymentType" id="payway2" class="form-control"></select>
             </div>
-            <div class="input-group" style="margin-bottom:10px">
+            <div class="input-group" style="margin-bottom:10px;display:none">
                 <span class="input-group-addon">方式</span>
                 <select asp-items="ViewBag.PaymentType" id="payway3" class="form-control"></select>
             </div>
@@ -116,11 +116,11 @@
                 <span class="input-group-addon">日期</span>
                 <input id="paydate1" type="text" class="form-control datetimepicker" />
             </div>
-            <div class="input-group" style="margin-bottom:10px">
+            <div class="input-group" style="margin-bottom:10px;display:none">
                 <span class="input-group-addon">日期</span>
                 <input id="paydate2" type="text" class="form-control datetimepicker" />
             </div>
-            <div class="input-group" style="margin-bottom:10px">
+            <div class="input-group" style="margin-bottom:10px;display:none">
                 <span class="input-group-addon">日期</span>
                 <input id="paydate3" type="text" class="form-control datetimepicker" />
             </div>
@@ -130,11 +130,11 @@
                 <span class="input-group-addon">金额</span>
                 <input id="payamount1" type="text" value="0" class="form-control  clear-data" />
             </div>
-            <div class="input-group" style="margin-bottom:10px">
+            <div class="input-group" style="margin-bottom:10px;display:none">
                 <span class="input-group-addon">金额</span>
                 <input id="payamount2" type="text" value="0" class="form-control  clear-data" />
             </div>
-            <div class="input-group" style="margin-bottom:10px">
+            <div class="input-group" style="margin-bottom:10px;display:none">
                 <span class="input-group-addon">金额</span>
                 <input id="payamount3" type="text" value="0" class="form-control  clear-data" />
             </div>
@@ -170,7 +170,7 @@
             var _brhfront=@Html.Raw(Json.Serialize(Model.Item2));
             var _frontData = [];
             var _branchData = [];
-            var _reData = [];
+            var _resourcesData = [];
             var _eventData = [];
             var _resourceId = "";
             var date = new Date();
@@ -204,34 +204,41 @@
                 optionAjax.data = JSON.stringify({
                     branch: branch,
                     branchId: branchId,
+                    startDate:selectDate,
+                    endDate:moment(selectDate).add(30,"days"),
                 });
                 optionAjax.success = function (result) {
                     //获取数据
-                    _frontData = result.frontdata;
-                    _branchData = result.branchdata;
+                    _frontData = result.frontData;
+                    //_branchData = result.branchdata;
 
-                    for (var i = 0; i < _frontData.length; i++) {
-                        var _id = _frontData[i].frontDeskAccountsId;
-                        var _color = _frontData[i].color;
-                        var _resourceId = _frontData[i].houseNumber;
-                        var _title = _frontData[i].customerName+" "+_frontData[i].channel;
-                        var _start = moment(_frontData[i].startDate).format("YYYY-MM-DD");
-                        var _end = moment(_frontData[i].endDate).format("YYYY-MM-DD");
-                        _eventData.push({
-                            id: _id,
-                            resourceId: _resourceId,
-                            title: _title,
-                            allDay: true,
-                            start: _start,
-                            end: _end,
-                            color: _color,
-                        });
-                    };
-                    for (var i = 0; i < _branchData.length; i++) {
-                        var _id = _branchData[i];
-                        var _title = _branchData[i];
-                        _reData.push({ id: _id, title: _title });
-                    };
+                    //for (var i = 0; i < _frontData.length; i++) {
+                    //    var _id = _frontData[i].frontDeskAccountsId;
+                    //    var _color = _frontData[i].color;
+                    //    var _resourceId = _frontData[i].houseNumber;
+                    //    var _title = _frontData[i].customerName+" "+_frontData[i].channel;
+                    //    var _start = moment(_frontData[i].startDate).format("YYYY-MM-DD");
+                    //    var _end = moment(_frontData[i].endDate).format("YYYY-MM-DD");
+                    //    _eventData.push({
+                    //        id: _id,
+                    //        resourceId: _resourceId,
+                    //        title: _title,
+                    //        allDay: true,
+                    //        start: _start,
+                    //        end: _end,
+                    //        color: _color,
+                    //    });
+                    //};
+                    //for (var i = 0; i < _branchData.length; i++) {
+                    //    var _id = _branchData[i];
+                    //    var _title = _branchData[i];
+                    //    _resourcesData.push({ id: _id, title: _title });
+                    //};
+                    //for(var i=0;i<result.events.length;i++)
+                    //{
+                    //    _eventData.push(result.events[i]);
+                    //}
+                    _resourcesData.push(result.resources2);
                     InitCalendar();
                 };
                 $.ajax(optionAjax);
@@ -250,49 +257,98 @@
                             duration: { days: 30 }
                         }
                     },
-                    slotWidth: '100',
-                    slotLabelFormat: "MM/DD ddd",
+                    viewRender: function (view, element) {//在视图被渲染时触发（切换视图也触发） 参数view为视图对象，参数element为Jquery的视图Dom
+                        //optionAjax.url = "/Finance/FncFrontCalendar/GetCalendarData";
+                        //optionAjax.data = JSON.stringify({
+                        //    branch: _brhfront.branch,
+                        //    branchId: _brhfront.branchId,
+                        //    startDate:view.start,
+                        //    endDate:view.end,
+                        //});
+                        //optionAjax.success = function (result) {
+                        //    //获取数据
+                        //    _frontData = result.frontData;
+                        //    _resourcesData.push(result.resources2);
+                        //};
+                        //$.ajax(optionAjax);
+                    },
+                        //    console.log("↓↓↓viewRender↓↓↓");
+                        //    console.log("name:" + view.name + "|title:" + view.title + "|start:" + view.start + "|end:" + view.end + "|intervalStart:" + view.intervalStart + "|intervalEnd:" + view.intervalEnd);
+                        //    console.log(element);
+                        //    console.log(element.children);
+                        //    console.log(element[0].innerText.length);
+                        //    var sDate=moment(view.start).format("YYYY-MM-DD");
+                        //    var eDate=moment(view.end).format("YYYY-MM-DD");
+                        //    var days=DateDiff(sDate,eDate);
+                        //    console.log(days);
+                        //    for(var i=0;i<days;i++)
+                        //    {
+                        //        var tempStamp=view.start+86400000*i;
+                        //        console.log(tempStamp);
+                        //        var tempDate=moment(tempStamp).format("MM/DD");
+                        //        //element[0].innerHTML=element[0].innerHTML.replace(tempDate,tempDate+"<br>"+i.toString());
+                        //    }
+                        //    console.log(element[0].innerHTML);
+                        //},
+                    slotWidth: '120',
+                    slotLabelFormat: "ddd MM/DD",
                     height: 'parent',
                     defaultDate: _startdate,
                     navLinks: true,
-                    resourceAreaWidth: '50',
+                    resourceAreaWidth: '140',
                     resourceLabelText: '房间',
-                    resources: _reData,
+                    resourceOrder: 'order,title',
+                    resources:_resourcesData,
                     resourceRender: function (resourceObj, labelTds, bodyTds) {
-                        labelTds.css('height', '30px');
+                        labelTds.css('height', '18px');
+                        labelTds.css('vertical-align','middle');
                     },
                     editable: false,
                     selectable: true,
                     selectHelper: true,
-                    events: _eventData,
+                    events: function(start, end, timezone, callback) {
+                            optionAjax.url = "/Finance/FncFrontCalendar/GetCalendarData";
+                            optionAjax.data = JSON.stringify({
+                                branch: _brhfront.branch,
+                                branchId: _brhfront.branchId,
+                                startDate:start,
+                                endDate:end,
+                            });
+                            optionAjax.success = function (result) {
+                                callback(result.events);
+                            };
+                            $.ajax(optionAjax);
+                    },
                     eventOverlap: false, // will cause the event to take up entire resource height
                     eventRender: function (event, element) {//在呈现事件时触发
-                        element.css("height", "30px");
+                        element.css("height", "18px");
                         var el = element.html();
                         var hl = "";
-                        var ffff=_frontData.find(function (x) {
-                            return x.frontDeskAccountsId == event.id;
-                        });
-                        if (ffff != undefined) {
-                            if (ffff.isFinish) {
-                                hl = "<div style='width:80%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='glyphicon glyphicon-ok'></i></div>";
+                        if (!event.isTitle) {
+                            if (event.isFinish) {
+                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:white'><i class='glyphicon glyphicon-ok'></i>";
                             }
                             else {
-                                hl = "<div style='width:80%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='glyphicon glyphicon-remove'></i></div>";
+                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:white'><i class='glyphicon glyphicon-remove' style='color:red'></i>";
                             }
-                            if (ffff.isFinance) {
-                                hl += "<div style='width:50%;float:left;margin-top:5px;margin-left:5px'><i class='fa fa-lock'></i></div>";
-                            }
-                            if (ffff.isFront) {
-                                hl += "<div style='text-align:right;font-size:10px;margin-top:5px'><i class='glyphicon glyphicon-ok'></i></div>";
+                            if (event.isFront) {
+                                hl += "&nbsp;<i class='glyphicon glyphicon-ok'></i>";
                             }
                             else {
-                                hl += "<div style='text-align:right;font-size:10px;color:white;margin-top:5px'><i class='glyphicon glyphicon-remove'></i></div>";
+                                hl += "&nbsp;<i class='glyphicon glyphicon-remove' style='color:red'></i>";
+                            }
+                            if (event.isFinance) {
+                                hl += "&nbsp;<i class='fa fa-lock'></i>&nbsp;&nbsp;</div>";
+                            }
+                            else{
+                                hl+="&nbsp;&nbsp;</div>";
                             }
                             element.html(hl);
                         }
                     },
                     eventClick: function (event, jsEvent, view) {
+                        console.log(event.enteringStaff);
+                        console.log(event.isFinance);
                         $("#addpay").removeClass("btn-warning");
                         $("#addpay").addClass("btn-primary");
                         $("#table-1").show();
@@ -654,9 +710,10 @@
             //#endregion
 
             //#region 加载页面初始化数据
+            //InitCalendar();
+            GetCalendarData(_startdate, _brhfront.branch, _brhfront.branchId);
             //var doc = document.documentElement;
             //document.body.style.height = doc.scrollHeight + 'px';
-            GetCalendarData(_startdate, _brhfront.branch, _brhfront.branchId);
             //#endregion
         });
     </script>

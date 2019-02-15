@@ -260,11 +260,11 @@ namespace JJNG.Web.Areas.Branch.Controllers
             await _context.SaveChangesAsync();
             return Json(new { brhFrontDeskAccounts });
         }
-        public async Task<JsonResult> GetCalendarData()
+        public async Task<JsonResult> GetCalendarData([FromBody]BrhFrontModel brhFrontModel)
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             var branch = _user.Branch;
-            var frontdata = _context.BrhFrontDeskAccounts.Where(x => x.Branch == branch).ToList();
+            var frontdata = _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(DateTime.Now.AddDays(-90), x.StartDate) <= 0 && x.Branch == branch && x.State != StateType.已删除).ToList();
             var list_branch = _identityContext.UserBranchDetial.Include(x => x.UserBranch).GroupBy(x => new
             {
                 x.BranchId,

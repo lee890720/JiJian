@@ -37,9 +37,9 @@ namespace JJNG.Web.Areas.Finance.Controllers
             List<BrhFrontDeskAccounts> brhFrontDeskAccounts = new List<BrhFrontDeskAccounts>();
 
             if (string.IsNullOrEmpty(branch))
-                brhFrontDeskAccounts = await _context.BrhFrontDeskAccounts.Include(x=>x.BrhFrontPaymentDetial).ToListAsync();
+                brhFrontDeskAccounts = await _context.BrhFrontDeskAccounts.Include(x=>x.BrhFrontPaymentDetial).Where(x=>DateTime.Compare(DateTime.Now.AddDays(-90), x.StartDate) <= 0).ToListAsync();
             else
-                brhFrontDeskAccounts = await _context.BrhFrontDeskAccounts.Include(x => x.BrhFrontPaymentDetial).Where(x => x.Branch == branch).ToListAsync();
+                brhFrontDeskAccounts = await _context.BrhFrontDeskAccounts.Include(x => x.BrhFrontPaymentDetial).Where(x => DateTime.Compare(DateTime.Now.AddDays(-90), x.StartDate) <= 0 && x.Branch == branch).ToListAsync();
 
             return View(Tuple.Create<List<BrhFrontDeskAccounts>, List<UserBranch>>(brhFrontDeskAccounts, list_branch));
         }

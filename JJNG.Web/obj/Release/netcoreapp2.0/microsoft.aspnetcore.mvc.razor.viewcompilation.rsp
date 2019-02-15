@@ -80,6 +80,9 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\FrontCalendar\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\_ViewImports.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\_ViewStart.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncBranch\CreateEdit.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncBranch\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncBranch\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncChannelType\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncChannelType\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncChannelType\Index.cshtml
@@ -97,6 +100,14 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontDeskAccount\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontPaymentDetial\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontPaymentDetial\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncHouseNumber\CreateEdit2.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncHouseNumber\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncHouseNumber\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncHouseType\Create2.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncHouseType\CreateEdit.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncHouseType\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncHouseType\Edit2.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncHouseType\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncImprestAccount\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncImprestAccount\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncImprestAccount\Index.cshtml

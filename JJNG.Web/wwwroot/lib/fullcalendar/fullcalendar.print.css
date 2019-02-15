@@ -174,3 +174,26 @@
 .fc button {
   display: none;
   /* don't display any button-related controls */ }
+.fullbranch {
+    text-align: center;
+    background-color: dimgray;
+    border-color: dimgray;
+}
+
+.fullhouse {
+    text-align: center;
+    background-color: darkgray;
+    border-color: darkgray;
+}
+
+.emptybranch {
+    text-align: center;
+    background-color: darkblue;
+    border-color: darkblue;
+}
+
+.emptyhouse {
+    text-align: center;
+    background-color: royalblue;
+    border-color: royalblue;
+}

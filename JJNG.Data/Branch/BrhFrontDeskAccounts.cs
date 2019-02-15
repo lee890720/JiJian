@@ -29,6 +29,9 @@ namespace JJNG.Data.Branch
         [Display(Name = "入住人")]
         public string CustomerName { get; set; }
 
+        [Display(Name ="手机号")]
+        public string Phone { get; set; }
+
         [Required]
         [Display(Name = "入住人数")]
         public int CustomerCount { get; set; }
@@ -42,6 +45,9 @@ namespace JJNG.Data.Branch
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         [Display(Name = "离店日期")]
         public DateTime EndDate { get; set; }
+
+        [Display(Name = "间夜")]
+        public int Count { get; set; }
 
         [Required]
         [Display(Name = "订房渠道")]
@@ -101,6 +107,17 @@ namespace JJNG.Data.Branch
         [Display(Name = "备注")]
         public string Note { get; set; }
 
+        [Display(Name = "订单状态")]
+        public StateType State { get; set; }
+
         public ICollection<BrhFrontPaymentDetial> BrhFrontPaymentDetial { get; set; }
+    }
+
+    public enum StateType
+    {
+        已预订,
+        已入住,
+        已退房,
+        已删除
     }
 }
