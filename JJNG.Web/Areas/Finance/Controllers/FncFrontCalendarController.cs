@@ -162,14 +162,14 @@ namespace JJNG.Web.Areas.Finance.Controllers
             return View(Tuple.Create<List<FncChannelType>, BrhFrontModel>(channel, brhfront));
         }
 
-        public JsonResult Edit([FromBody]BrhFrontModel brhFrontModel)
+        public JsonResult Edit([FromBody]Event eve)
         {
-            var brhFrontDeskAccounts = _context.BrhFrontDeskAccounts.SingleOrDefault(x => x.FrontDeskAccountsId == brhFrontModel.FrontDeskAccountsId);
-            brhFrontDeskAccounts.IsFinance = brhFrontModel.IsFinance;
+            var brhFrontDeskAccounts = _context.BrhFrontDeskAccounts.SingleOrDefault(x => x.FrontDeskAccountsId ==eve.FrontDeskAccountsId);
+            brhFrontDeskAccounts.IsFinance = eve.IsFinance;
             _context.Update(brhFrontDeskAccounts);
             _context.SaveChanges();
 
-            return Json(new { brhFrontDeskAccounts });
+            return Json(new { eve });
         }
 
         public async Task<JsonResult> Delete([FromBody]BrhFrontModel brhFrontModel)
@@ -455,7 +455,6 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 tempevent.IsFinish = f.IsFinish;
                 tempevent.IsFront = f.IsFront;
                 tempevent.EnteringDate = f.EnteringDate;
-                tempevent.FrontDeskAccountsId = f.FrontDeskAccountsId;
                 tempevent.Branch = f.Branch;
                 tempevent.Count = f.Count;
                 tempevent.Channel = f.Channel;
@@ -467,6 +466,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 tempevent.FrontDeskLeader = f.FrontDeskLeader;
                 tempevent.HouseNumber = f.HouseNumber;
                 tempevent.Note = f.Note;
+                tempevent.Phone = f.Phone;
                 tempevent.Receivable = f.Receivable;
                 tempevent.Received = f.Received;
                 tempevent.RelationStaff = f.RelationStaff;

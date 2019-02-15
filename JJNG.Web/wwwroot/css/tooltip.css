@@ -1,0 +1,38 @@
+﻿.toolTip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    display: none;
+    overflow: auto;
+    min-height: 40px;
+    max-width: 200px;
+    padding: 1px;
+    text-align: left;
+    white-space: normal;
+    background-color: #fff;
+    background-clip: padding-box;
+    color: #666;
+    border: 1px solid #ccc;
+    font-family: "Microsoft YaHei",Tahoma,Arial,Helvetica;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2)
+}
+
+.close {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #000;
+    font-weight: bold;
+}
+
+.tipContent {
+    overflow: auto;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}

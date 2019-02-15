@@ -8,6 +8,7 @@
 <link href='~/lib/fullcalendar/scheduler/scheduler.min.css' rel='stylesheet' />
 <link href="~/lib/artDialog/css/ui-dialog.css" rel="stylesheet" />
 <link href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+<link href="~/lib/tooltip/css/tooltip.css" rel="stylesheet" />
 <style>
     #calendar td.div {
         height: 30px !important;
@@ -25,7 +26,6 @@
         color: coral;
     }
 </style>
-
 <div style="background-color:white" id="calendar"></div>
 
 <div id="create-form" style="display:none">
@@ -158,26 +158,26 @@
     </div>
 </div>
 @section Scripts{
+    @*<script src="~/lib/moment/moment.min.js"></script>*@
     <script src='~/lib/fullcalendar/fullcalendar.min.js'></script>
     <script src="~/lib/fullcalendar/locale/zh-cn.js"></script>
     <script src='~/lib/fullcalendar/scheduler/scheduler.min.js'></script>
     <script src="~/lib/artDialog/dist/dialog-min.js"></script>
     <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="utf-8"></script>
+    <script src="~/lib/tooltip/js/tooltip.js"></script>
     <script>
         $(function () {
             var _channel =@Html.Raw(Json.Serialize(Model.Item1));
             var _brhfront=@Html.Raw(Json.Serialize(Model.Item2));
-            var _frontData = [];
-            var _branchData = [];
-            var _resourcesData = [];
-            var _eventData = [];
+            var _resources1Data = [];
+            var _resources2Data=[];
             var _resourceId = "";
             var date = new Date();
             var d = date.getDate(),
                 m = date.getMonth(),
                 y = date.getFullYear();
-            var _startdate = moment(new Date(y, m, d - 3)).format("YYYY-MM-DD");
+            var _startdate = moment(date).add(-3,"days").format("YYYY-MM-DD");
 
             //#region Ajax optionAjax
             var optionAjax = {
@@ -205,40 +205,11 @@
                     branch: branch,
                     branchId: branchId,
                     startDate:selectDate,
-                    endDate:moment(selectDate).add(30,"days"),
+                    endDate:moment(selectDate).add(30,"days").format("YYYY-MM-DD"),
                 });
                 optionAjax.success = function (result) {
-                    //获取数据
-                    _frontData = result.frontData;
-                    //_branchData = result.branchdata;
-
-                    //for (var i = 0; i < _frontData.length; i++) {
-                    //    var _id = _frontData[i].frontDeskAccountsId;
-                    //    var _color = _frontData[i].color;
-                    //    var _resourceId = _frontData[i].houseNumber;
-                    //    var _title = _frontData[i].customerName+" "+_frontData[i].channel;
-                    //    var _start = moment(_frontData[i].startDate).format("YYYY-MM-DD");
-                    //    var _end = moment(_frontData[i].endDate).format("YYYY-MM-DD");
-                    //    _eventData.push({
-                    //        id: _id,
-                    //        resourceId: _resourceId,
-                    //        title: _title,
-                    //        allDay: true,
-                    //        start: _start,
-                    //        end: _end,
-                    //        color: _color,
-                    //    });
-                    //};
-                    //for (var i = 0; i < _branchData.length; i++) {
-                    //    var _id = _branchData[i];
-                    //    var _title = _branchData[i];
-                    //    _resourcesData.push({ id: _id, title: _title });
-                    //};
-                    //for(var i=0;i<result.events.length;i++)
-                    //{
-                    //    _eventData.push(result.events[i]);
-                    //}
-                    _resourcesData.push(result.resources2);
+                    _resources1Data.push(result.resources1);
+                    _resources2Data.push(result.resources2);
                     InitCalendar();
                 };
                 $.ajax(optionAjax);
@@ -257,21 +228,7 @@
                             duration: { days: 30 }
                         }
                     },
-                    viewRender: function (view, element) {//在视图被渲染时触发（切换视图也触发） 参数view为视图对象，参数element为Jquery的视图Dom
-                        //optionAjax.url = "/Finance/FncFrontCalendar/GetCalendarData";
-                        //optionAjax.data = JSON.stringify({
-                        //    branch: _brhfront.branch,
-                        //    branchId: _brhfront.branchId,
-                        //    startDate:view.start,
-                        //    endDate:view.end,
-                        //});
-                        //optionAjax.success = function (result) {
-                        //    //获取数据
-                        //    _frontData = result.frontData;
-                        //    _resourcesData.push(result.resources2);
-                        //};
-                        //$.ajax(optionAjax);
-                    },
+                    viewRender: function (view, element) {  //在视图被渲染时触发（切换视图也触发） 参数view为视图对象，参数element为Jquery的视图Dom
                         //    console.log("↓↓↓viewRender↓↓↓");
                         //    console.log("name:" + view.name + "|title:" + view.title + "|start:" + view.start + "|end:" + view.end + "|intervalStart:" + view.intervalStart + "|intervalEnd:" + view.intervalEnd);
                         //    console.log(element);
@@ -289,7 +246,7 @@
                         //        //element[0].innerHTML=element[0].innerHTML.replace(tempDate,tempDate+"<br>"+i.toString());
                         //    }
                         //    console.log(element[0].innerHTML);
-                        //},
+                    },
                     slotWidth: '120',
                     slotLabelFormat: "ddd MM/DD",
                     height: 'parent',
@@ -298,7 +255,7 @@
                     resourceAreaWidth: '140',
                     resourceLabelText: '房间',
                     resourceOrder: 'order,title',
-                    resources:_resourcesData,
+                    resources:_resources1Data,
                     resourceRender: function (resourceObj, labelTds, bodyTds) {
                         labelTds.css('height', '18px');
                         labelTds.css('vertical-align','middle');
@@ -322,9 +279,25 @@
                     eventOverlap: false, // will cause the event to take up entire resource height
                     eventRender: function (event, element) {//在呈现事件时触发
                         element.css("height", "18px");
+
                         var el = element.html();
                         var hl = "";
                         if (!event.isTitle) {
+                            var phone=event.phone==null?"":event.phone;
+                            var note=event.note==null?"":event.note;
+                            element.tooltip({
+                                html:true,
+                                text: event.customerName+"&nbsp;&lt;"+
+                                    event.channel+"&gt;&nbsp;"+
+                                    phone+"<br/>"+
+                                    event.houseNumber+
+                                    "&nbsp;&lt;"+moment(event.startDate).format("MM-DD")+
+                                    "&sim;"+moment(event.endDate).format("MM-DD")+
+                                    "&gt;&nbsp;<br/>"+
+                                    note,
+                                placement:"auto",
+                            });
+
                             if (event.isFinish) {
                                 hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:white'><i class='glyphicon glyphicon-ok'></i>";
                             }
@@ -347,10 +320,8 @@
                         }
                     },
                     eventClick: function (event, jsEvent, view) {
-                        console.log(event.enteringStaff);
-                        console.log(event.isFinance);
-                        $("#addpay").removeClass("btn-warning");
-                        $("#addpay").addClass("btn-primary");
+                        if(event.isTitle)
+                            return;
                         $("#table-1").show();
                         $("#tbody-form").html("");
                         $.ajax({
@@ -378,16 +349,9 @@
                             }
 
                         });
-                        var _start = moment(event.start).format("YYYY-MM-DD");
-                        var _end = moment(event.end).format("YYYY-MM-DD");
-                        function checkAdult(fro) {
-                            return fro.frontDeskAccountsId==event.id;
-                        }
-                        var _ff = _frontData.find(checkAdult);
                         $(".clear-data").val("");
-                        $("#payamount1,#payamount2,#payamount3").val("0");
                         $(".col-md-4").hide();
-                        if (_ff.isFinish) {
+                        if (event.isFinish) {
                             $('#isfinish').html("已结账");
                             $("#isfinish").removeClass("btn-primary");
                             $("#isfinish").addClass("btn-warning");
@@ -397,7 +361,7 @@
                             $("#isfinish").removeClass("btn-warning");
                             $("#isfinish").addClass("btn-primary");
                         }
-                        if (_ff.isFront) {
+                        if (event.isFront) {
                             $('#isfront').html("前台已审");
                             $("#isfront").removeClass("btn-primary");
                             $("#isfront").addClass("btn-warning");
@@ -407,7 +371,7 @@
                             $("#isfront").removeClass("btn-warning");
                             $("#isfront").addClass("btn-primary");
                         }
-                        if (_ff.isFinance) {
+                        if (event.isFinance) {
                             $('#isfinance').html("财务已审");
                             $("#isfinance").removeClass("btn-primary");
                             $("#isfinance").addClass("btn-warning");
@@ -417,116 +381,30 @@
                             $("#isfinance").removeClass("btn-warning");
                             $("#isfinance").addClass("btn-primary");
                         }
-                        $('#form-name').val(_ff.customerName);
-                        $('#form-count').val(_ff.customerCount);
-                        $('#form-unit').val(_ff.unitPrice);
-                        $('#form-total').val(_ff.totalPrice);
-                        $('#form-channel').val(_ff.channel);
-                        $('#form-receivable').val(_ff.receivable);
-                        $('#form-received').val(_ff.received);
-                        $("#form-steward").val(_ff.steward);
-                        $('#form-frontleader').val(_ff.frontDeskLeader);
-                        $('#form-stewardleader').val(_ff.stewardLeader);
-                        $('#form-relation').val(_ff.relationStaff);
-                        $('#form-note').val(_ff.note);
-                        $('#payamount1').keyup(function () {
-                            var pay1 = document.getElementById("payamount1").value;
-                            var pay2 = document.getElementById("payamount2").value;
-                            var pay3 = document.getElementById("payamount3").value;
-                            var result = parseFloat(_ff.received);
-                            if (checkIsDouble(pay1))
-                                result += parseFloat(pay1);
-                            if (parseFloat(pay2) > 0)
-                                result += parseFloat(pay2);
-                            if (parseFloat(pay3) > 0)
-                                result += parseFloat(pay3);
-                            $('#form-received').val(result.toString());
-                            if (result == parseFloat($("#form-receivable").val())) {
-                                $('#isfinish').html("已结账");
-                                $("#isfinish").removeClass("btn-primary");
-                                $("#isfinish").addClass("btn-warning");
-                            }
-                            else {
-                                $('#isfinish').html("未结账");
-                                $("#isfinish").removeClass("btn-warning");
-                                $("#isfinish").addClass("btn-primary");
-                            }
-                        });
-                        $('#payamount2').keyup(function () {
-                            var pay1 = document.getElementById("payamount1").value;
-                            var pay2 = document.getElementById("payamount2").value;
-                            var pay3 = document.getElementById("payamount3").value;
-                            var result = parseFloat(_ff.received);
-                            if (checkIsDouble(pay2))
-                                result += parseFloat(pay2);
-                            if (parseFloat(pay1) > 0)
-                                result += parseFloat(pay1);
-                            if (parseFloat(pay3) > 0)
-                                result += parseFloat(pay3);
-                            $('#form-received').val(result.toString());
-                            if (result == parseFloat($("#form-receivable").val())) {
-                                $('#isfinish').html("已结账");
-                                $("#isfinish").removeClass("btn-primary");
-                                $("#isfinish").addClass("btn-warning");
-                            }
-                            else {
-                                $('#isfinish').html("未结账");
-                                $("#isfinish").removeClass("btn-warning");
-                                $("#isfinish").addClass("btn-primary");
-                            }
-                        });
-                        $('#payamount3').keyup(function () {
-                            var pay1 = document.getElementById("payamount1").value;
-                            var pay2 = document.getElementById("payamount2").value;
-                            var pay3 = document.getElementById("payamount3").value;
-                            var result = parseFloat(_ff.received);
-                            if (checkIsDouble(pay3))
-                                result += parseFloat(pay3);
-                            if (parseFloat(pay1) > 0)
-                                result += parseFloat(pay1);
-                            if (parseFloat(pay2) > 0)
-                                result += parseFloat(pay2);
-                            $('#form-received').val(result.toString());
-                            if (result == parseFloat($("#form-receivable").val())) {
-                                $('#isfinish').html("已结账");
-                                $("#isfinish").removeClass("btn-primary");
-                                $("#isfinish").addClass("btn-warning");
-                            }
-                            else {
-                                $('#isfinish').html("未结账");
-                                $("#isfinish").removeClass("btn-warning");
-                                $("#isfinish").addClass("btn-primary");
-                            }
-                        });
-                        $('#form-unit').keyup(function () {
-                            var unitPrice = document.getElementById("form-unit").value;
-                            var result = 0.00;
-                            if (checkIsDouble(unitPrice))
-                                result = parseFloat(unitPrice);
-                            var days = DateDiff(moment(_start).format("YYYY-MM-DD"), moment(_end).format("YYYY-MM-DD"));
-                            result = result * days;
-                            $('#form-total').val(result.toString());
-                        });
-                        $('#form-total').keyup(function () {
-                            var totalPrice = document.getElementById("form-total").value;
-                            var result = 0.00;
-                            if (checkIsDouble(totalPrice))
-                                result = parseFloat(totalPrice);
-                            var days = DateDiff(moment(_start).format("YYYY-MM-DD"), moment(_end).format("YYYY-MM-DD"));
-                            if (parseFloat(days) > 0)
-                                result = result / days;
-                            $('#form-unit').val(result.toString());
-                        });
-                            $(".clear-data").attr("disabled","disabled");
-                            $("#isfinance").on('click', function () {
+                        $('#form-name').val(event.customerName);
+                        $('#form-count').val(event.customerCount);
+                        $('#form-unit').val(event.unitPrice);
+                        $('#form-total').val(event.totalPrice);
+                        $('#form-channel').val(event.channel);
+                        $('#form-receivable').val(event.receivable);
+                        $('#form-received').val(event.received);
+                        $("#form-steward").val(event.steward);
+                        $('#form-frontleader').val(event.frontDeskLeader);
+                        $('#form-stewardleader').val(event.stewardLeader);
+                        $('#form-relation').val(event.relationStaff);
+                        $('#form-note').val(event.note);
+                        $(".clear-data").attr("disabled","disabled");
+                        $("#isfinance").on('click', function () {
                                 var hl = $("#isfinance").html();
                                 if (hl == "财务未审") {
                                     $('#isfinance').html("财务已审");
+                                    event.isFinance=true;
                                     $("#isfinance").removeClass("btn-primary");
                                     $("#isfinance").addClass("btn-warning");
                                 }
                                 if (hl == "财务已审") {
                                     $('#isfinance').html("财务未审");
+                                    event.isFinance=false;
                                     $("#isfinance").removeClass("btn-warning");
                                     $("#isfinance").addClass("btn-primary");
                                 }
@@ -536,35 +414,6 @@
                                 content: $("#create-form"),
                                 okValue: "确定",
                                 ok: function () {
-                                    var channel = $("#form-channel").val();
-                                    var paydate1 = $('#paydate1').val();
-                                    var payway1 = $('#payway1').val();
-                                    var payamount1 = $('#payamount1').val();
-                                    var paydate2 = $('#paydate2').val();
-                                    var payway2 = $('#payway2').val();
-                                    var payamount2 = $('#payamount2').val();
-                                    var paydate3 = $('#paydate3').val();
-                                    var payway3 = $('#payway3').val();
-                                    var payamount3 = $('#payamount3').val();
-                                    var isfinish = false;
-                                    if ($('#isfinish').html() == "已结账") {
-                                        isfinish = true;
-                                    }
-                                    var isfront = false;
-                                    if ($('#isfront').html() == "前台已审") {
-                                        isfront = true;
-                                    }
-                                    console.log(isfront);
-                                    var isfinance = false;
-                                    if ($('#isfinance').html() == "财务已审") {
-                                        isfinance = true;
-                                    }
-                                    var color = "";
-                                    var channel = $("#form-channel").val();
-                                    for (var i = 0; i < _channel.length; i++) {
-                                        if (_channel[i].channelType == channel)
-                                            color = _channel[i].color;
-                                    }
                                     $.ajax({
                                         type: "post",
                                         async: true,
@@ -572,50 +421,45 @@
                                         contentType: "application/json; charset=utf-8",
                                         dataType: "json",
                                         data: JSON.stringify({
-                                            frontDeskAccountsId: _ff.frontDeskAccountsId,
-                                            houseNumber: _ff.houseNumber,
-                                            customerName: $('#form-name').val(),
-                                            customerCount: $('#form-count').val(),
-                                            startDate: _ff.startDate,
-                                            endDate: _ff.endDate,
-                                            channel: $('#form-channel').val(),
-                                            unitPrice: $('#form-unit').val(),
-                                            totalPrice: $('#form-total').val(),
-                                            receivable: $('#form-receivable').val(),
-                                            received: $('#form-received').val(),
-                                            enteringStaff: _ff.enteringStaff,
-                                            steward: $('#form-steward').val(),
-                                            frontDeskLeader: $('#form-frontleader').val(),
-                                            stewardLeader: $('#form-stewardleader').val(),
-                                            relationStaff: $('#form-relation').val(),
-                                            branch: _ff.branch,
-                                            note: $('#form-note').val(),
-                                            isFinish: isfinish,
-                                            isFront: isfront,
-                                            isFinance: isfinance,
-                                            color: color,
-                                            payDate1: paydate1,
-                                            payDate2: paydate2,
-                                            payDate3: paydate3,
-                                            payWay1: payway1,
-                                            payWay2: payway2,
-                                            payWay3: payway3,
-                                            payAmount1: payamount1,
-                                            payAmount2: payamount2,
-                                            payAmount3: payamount3
+                                            id :event.id,
+                                            resourceId :event.resourceId,
+                                            title :event.title,
+                                            allDay: event.allDay,
+                                            start :event.start,
+                                            end :event.end,
+                                            color :event.color,
+                                            isFinance :event.isFinance,
+                                            isFinish :event.isFinish,
+                                            isFront :event.isFront,
+                                            enteringDate :event.enteringDate,
+                                            branch :event.branch,
+                                            count :event.count,
+                                            channel :event.channel,
+                                            customerName :event.customerName,
+                                            customerCount :event.customerCount,
+                                            endDate :event.endDate,
+                                            enteringStaff :event.enteringStaff,
+                                            frontDeskAccountsId :event.frontDeskAccountsId,
+                                            frontDeskLeader :event.frontDeskLeader,
+                                            houseNumber :event.houseNumber,
+                                            note :event.note,
+                                            phone:event.phone,
+                                            receivable :event.receivable,
+                                            received :event.received,
+                                            relationStaff :event.relationStaff,
+                                            state :event.state,
+                                            startDate :event.startDate,
+                                            steward :event.steward,
+                                            stewardLeader :event.stewardLeader,
+                                            totalPrice :event.totalPrice,
+                                            unitPrice :event.unitPrice,
                                         }),
                                         beforeSend: function () {
                                             $('#modal-default').modal('show');
                                         },
                                         success: function (data) {
-                                            for (var i = 0; i < _frontData.length; i++) {
-                                                if (_frontData[i].frontDeskAccountsId == data.brhFrontDeskAccounts.frontDeskAccountsId) {
-                                                    _frontData[i] = data.brhFrontDeskAccounts;
-                                                }
-                                            }
-                                            var _data = { id: data.brhFrontDeskAccounts.frontDeskAccountsId, resourceId: data.brhFrontDeskAccounts.houseNumber, title: data.brhFrontDeskAccounts.customerName + " " + data.brhFrontDeskAccounts.channel, allDay: true, start: data.brhFrontDeskAccounts.startDate, end: data.brhFrontDeskAccounts.endDate, color: data.brhFrontDeskAccounts.color };
-                                            $("#calendar").fullCalendar("removeEvents", data.brhFrontDeskAccounts.frontDeskAccountsId);
-                                            $("#calendar").fullCalendar("renderEvent", _data, true);
+                                            $("#calendar").fullCalendar("removeEvents", data.eve.frontDeskAccountsId);
+                                            $("#calendar").fullCalendar("renderEvent", data.eve,true);
                                         },
                                         complete: function () {
                                             $('#modal-default').modal('hide');
@@ -638,7 +482,6 @@
             $('#today').on('click', function () {
                 $('#calendar').fullCalendar('today');
                 var tempdate = moment();
-                console.log(moment(tempdate).format("YYYY-MM-DD"));
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 
@@ -649,14 +492,12 @@
             $('#prev').on('click', function () {
                 $('#calendar').fullCalendar('prev');
                 var tempdate = moment($('#startdate').val()).add(-30, 'days');
-                console.log(moment(tempdate).format("YYYY-MM-DD"));
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 
             $('#next').on('click', function () {
                 $('#calendar').fullCalendar('next');
                 var tempdate = moment($('#startdate').val()).add(30, 'days');
-                console.log(moment(tempdate).format("YYYY-MM-DD"));
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 
@@ -712,8 +553,6 @@
             //#region 加载页面初始化数据
             //InitCalendar();
             GetCalendarData(_startdate, _brhfront.branch, _brhfront.branchId);
-            //var doc = document.documentElement;
-            //document.body.style.height = doc.scrollHeight + 'px';
             //#endregion
         });
     </script>
