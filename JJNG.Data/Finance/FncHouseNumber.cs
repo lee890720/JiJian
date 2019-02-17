@@ -7,7 +7,8 @@ namespace JJNG.Data.Finance
     public partial class FncHouseNumber
     {
         [Key]
-        public string HouseNumberId { get; set; }
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int HouseNumberId { get; set; }
         public int HouseTypeId { get; set; }
 
         [Display(Name = "房号")]

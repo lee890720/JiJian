@@ -8,7 +8,7 @@
   {
     "outputFileName": "wwwroot/css/adminlte.min.css",
     "inputFiles": [
-      "wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+      "wwwroot/lib/bootstrap/dist/css/bootstrap.css",
       "wwwroot/lib/font-awesome/css/font-awesome.min.css",
       "wwwroot/lib/Ionicons/css/ionicons.min.css",
       "wwwroot/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css",
@@ -36,7 +36,7 @@
     "outputFileName": "wwwroot/js/adminlte.min.js",
     "inputFiles": [
       "wwwroot/lib/jquery/dist/jquery.min.js",
-      "wwwroot/lib/bootstrap/dist/js/bootstrap.min.js",
+      "wwwroot/lib/bootstrap/dist/js/bootstrap.js",
       "wwwroot/lib/jquery-slimscroll/jquery.slimscroll.min.js",
       "wwwroot/lib/fastclick/lib/fastclick.js",
       "wwwroot/lib/input-mask/jquery.inputmask.js",

@@ -12,8 +12,8 @@ using System;
 namespace JJNG.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190212142819_fncbranch3")]
-    partial class fncbranch3
+    [Migration("20190216071652_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -482,6 +482,8 @@ namespace JJNG.Data.Migrations
 
                     b.Property<string>("BranchName");
 
+                    b.Property<bool>("IsType");
+
                     b.HasKey("BranchId");
 
                     b.ToTable("Fnc_Branch");
@@ -533,7 +535,7 @@ namespace JJNG.Data.Migrations
 
             modelBuilder.Entity("JJNG.Data.Finance.FncHouseNumber", b =>
                 {
-                    b.Property<string>("HouseNumberId")
+                    b.Property<int>("HouseNumberId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("HouseNumber");
@@ -555,6 +557,8 @@ namespace JJNG.Data.Migrations
                     b.Property<int>("BranchId");
 
                     b.Property<string>("HouseType");
+
+                    b.Property<string>("Order");
 
                     b.HasKey("HouseTypeId");
 

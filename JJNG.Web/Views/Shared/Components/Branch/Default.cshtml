@@ -1,6 +1,8 @@
-﻿@model IEnumerable<UserBranch>
+﻿@model IEnumerable<JJNG.Data.Finance.FncBranch>
 <div class="input-group">
-    <span class="input-group-addon">分店</span>
+    <div class="input-group-btn">
+        <button type="button" class="btn btn-primary">店名</button>
+    </div>
     <select id="branch" onchange="selectfun()" class="form-control" style="width: 150px;">
         @foreach (var b in Model)
         {
@@ -22,6 +24,6 @@
     function selectfun() {
         var vs = $('#branch option:selected').val();
         var vt = $('#branch option:selected').html();
-        window.location.href = "/Finance/FncFrontCalendar/Index?branchId="+vs+"&branch="+vt;
+        window.location.href = "/Finance/FncFrontCalendar/Index?branchId="+vs+"&branchName="+vt;
     }
 </script>

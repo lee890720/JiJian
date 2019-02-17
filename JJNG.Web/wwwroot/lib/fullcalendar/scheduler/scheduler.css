@@ -181,6 +181,7 @@ TODO: figure out better styling
   position: relative; }
 
 .fc-resource-area th .fc-cell-content {
+  text-align:center;
   position: relative;
   z-index: 1; }
 

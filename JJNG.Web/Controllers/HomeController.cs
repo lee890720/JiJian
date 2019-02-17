@@ -21,7 +21,7 @@ namespace JJNG.Web.Controllers
             if (User.IsInRole("管家"))
                 return Redirect("/Branch/BrhStewardAccount");
             if (User.IsInRole("财务"))
-                return Redirect("/Finance/FncCollect");
+                return Redirect("/Finance/FncFrontCalendar");
             if (User.IsInRole("人事"))
                 return Redirect("/AppIdentity/UserAdmin");
             if (User.IsInRole("Admins"))

@@ -12,8 +12,8 @@ using System;
 namespace JJNG.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190211031425_bfda")]
-    partial class bfda
+    [Migration("20190217053830_changeenum")]
+    partial class changeenum
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -446,6 +446,49 @@ namespace JJNG.Data.Migrations
                     b.ToTable("Brh_StewardPaymentDetial");
                 });
 
+            modelBuilder.Entity("JJNG.Data.Branch.BrhYun", b =>
+                {
+                    b.Property<long>("系统订单号");
+
+                    b.Property<DateTime>("到店时间");
+
+                    b.Property<string>("客人");
+
+                    b.Property<decimal>("房费");
+
+                    b.Property<string>("房间号");
+
+                    b.Property<string>("订单备注");
+
+                    b.Property<string>("订单来源");
+
+                    b.Property<string>("订单状态");
+
+                    b.Property<DateTime>("退房时间");
+
+                    b.Property<int>("间夜");
+
+                    b.Property<DateTime>("预订日期");
+
+                    b.HasKey("系统订单号");
+
+                    b.ToTable("Brh_Yun");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncBranch", b =>
+                {
+                    b.Property<int>("BranchId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BranchName");
+
+                    b.Property<bool>("IsType");
+
+                    b.HasKey("BranchId");
+
+                    b.ToTable("Fnc_Branch");
+                });
+
             modelBuilder.Entity("JJNG.Data.Finance.FncChannelType", b =>
                 {
                     b.Property<int>("Id")
@@ -488,6 +531,40 @@ namespace JJNG.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Fnc_ExpendType");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncHouseNumber", b =>
+                {
+                    b.Property<int>("HouseNumberId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("HouseNumber");
+
+                    b.Property<int>("HouseTypeId");
+
+                    b.HasKey("HouseNumberId");
+
+                    b.HasIndex("HouseTypeId");
+
+                    b.ToTable("Fnc_HouseNumber");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncHouseType", b =>
+                {
+                    b.Property<int>("HouseTypeId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("BranchId");
+
+                    b.Property<string>("HouseType");
+
+                    b.Property<string>("Order");
+
+                    b.HasKey("HouseTypeId");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("Fnc_HouseType");
                 });
 
             modelBuilder.Entity("JJNG.Data.Finance.FncPaymentType", b =>
@@ -619,6 +696,22 @@ namespace JJNG.Data.Migrations
                     b.HasOne("JJNG.Data.Branch.BrhStewardAccounts", "BrhStewardAccounts")
                         .WithMany("BrhStewardPaymentDetial")
                         .HasForeignKey("StewardAccountsId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncHouseNumber", b =>
+                {
+                    b.HasOne("JJNG.Data.Finance.FncHouseType", "FncHouseType")
+                        .WithMany("FncHouseNumber")
+                        .HasForeignKey("HouseTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncHouseType", b =>
+                {
+                    b.HasOne("JJNG.Data.Finance.FncBranch", "FncBranch")
+                        .WithMany("FncHouseType")
+                        .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

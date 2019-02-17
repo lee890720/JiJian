@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace JJNG.Data.Migrations
 {
-    public partial class initialCreate12 : Migration
+    public partial class changeenum : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

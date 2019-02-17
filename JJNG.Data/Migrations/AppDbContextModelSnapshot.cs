@@ -481,6 +481,8 @@ namespace JJNG.Data.Migrations
 
                     b.Property<string>("BranchName");
 
+                    b.Property<bool>("IsType");
+
                     b.HasKey("BranchId");
 
                     b.ToTable("Fnc_Branch");
@@ -532,7 +534,7 @@ namespace JJNG.Data.Migrations
 
             modelBuilder.Entity("JJNG.Data.Finance.FncHouseNumber", b =>
                 {
-                    b.Property<string>("HouseNumberId")
+                    b.Property<int>("HouseNumberId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("HouseNumber");

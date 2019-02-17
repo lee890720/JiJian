@@ -68,7 +68,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("HouseTypeId,BranchId,Order,HouseType")] FncHouseType fncHouseType)
+        public async Task<IActionResult> Edit(int? id, [Bind("HouseTypeId,BranchId,Order,HouseType")] FncHouseType fncHouseType)
         {
             if (id != fncHouseType.HouseTypeId)
             {
@@ -119,7 +119,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
         }
 
 
-        public async Task<IActionResult> Edit2(string id)
+        public async Task<IActionResult> Edit2(int? id)
         {
             if (id == null)
             {
@@ -136,7 +136,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit2(string id, [Bind("HouseNumberId,HouseTypeId,HouseNumber")] FncHouseNumber fncHouseNumber)
+        public async Task<IActionResult> Edit2(int? id, [Bind("HouseNumberId,HouseTypeId,HouseNumber")] FncHouseNumber fncHouseNumber)
         {
             if (id != fncHouseNumber.HouseNumberId)
             {
@@ -147,15 +147,12 @@ namespace JJNG.Web.Areas.Finance.Controllers
             {
                 try
                 {
-                    var temp = _context.FncHouseNumber.SingleOrDefault(x => x.HouseNumberId == fncHouseNumber.HouseNumberId);
-                    _context.Remove(temp);
-                    fncHouseNumber.HouseNumberId = fncHouseNumber.HouseNumber;
-                    _context.Add(fncHouseNumber);
+                    _context.Update(fncHouseNumber);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FncHouseNumberExists(fncHouseNumber.HouseNumberId))
+                    if (!FncHouseTypeExists(fncHouseNumber.HouseTypeId))
                     {
                         return NotFound();
                     }
@@ -198,7 +195,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             return RedirectToAction(nameof(Index), new { id = fncHouseType.BranchId });
         }
 
-        public async Task<IActionResult> Delete2(string id)
+        public async Task<IActionResult> Delete2(int? id)
         {
             if (id == null)
             {
@@ -218,7 +215,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete2(string id, IFormCollection form)
+        public async Task<IActionResult> Delete2(int? id, IFormCollection form)
         {
             var fncHouseNumber = await _context.FncHouseNumber.Include(x => x.FncHouseType).SingleOrDefaultAsync(m => m.HouseNumberId == id);
             _context.FncHouseNumber.Remove(fncHouseNumber);
@@ -226,14 +223,14 @@ namespace JJNG.Web.Areas.Finance.Controllers
             return RedirectToAction(nameof(Index), new { id = fncHouseNumber.FncHouseType.BranchId });
         }
 
-        private bool FncHouseTypeExists(int id)
+        private bool FncHouseTypeExists(int? id)
         {
             return _context.FncHouseType.Any(e => e.HouseTypeId == id);
         }
 
-        private bool FncHouseNumberExists(string id)
+        private bool FncHouseNumberExists(int? id)
         {
-            return _context.FncHouseNumber.Any(e => e.HouseNumberId == id);
+            return _context.FncHouseNumber.Any(e => e.HouseNumberId ==id);
         }
     }
 }

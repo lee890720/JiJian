@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using JJNG.Data;
-using JJNG.Data.Finance;
+﻿using JJNG.Data;
 using JJNG.Data.AppIdentity;
+using JJNG.Data.Finance;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace JJNG.Web.Areas.Finance.Controllers
 {
@@ -130,41 +125,6 @@ namespace JJNG.Web.Areas.Finance.Controllers
         private bool FncBranchExists(int id)
         {
             return _context.FncBranch.Any(e => e.BranchId == id);
-        }
-
-        public async Task<JsonResult> GetHouse()
-        {
-            Branch brData = new Branch();
-            List<RoomType> roomTypeList = new List<RoomType>();
-            var fncBranch = _context.FncBranch.SingleOrDefault(x => x.BranchId == 2);
-            var fncHouseTypeList = _context.FncHouseType.Where(x=>x.BranchId==2).ToList();
-            var fncHouseNumberList = _context.FncHouseNumber.ToList();
-
-            foreach (var fncHouseType in fncHouseTypeList)
-            {      
-                var roomType = new RoomType();
-                var roomList = new List<Room>();
-                roomType.id = fncHouseType.HouseTypeId.ToString();
-                roomType.title = fncHouseType.HouseType;
-                foreach (var fncHouseNumber in fncHouseNumberList)
-                {
-                    var room = new Room();
-                    if (fncHouseType.HouseTypeId == fncHouseNumber.HouseTypeId)
-                    {
-                        room.id = fncHouseNumber.HouseNumberId;
-                        room.title = fncHouseNumber.HouseNumber;
-                        roomList.Add(room);
-                    }
-                }
-                roomType.children = roomList;
-                roomTypeList.Add(roomType);
-            }
-
-            brData.id = fncBranch.BranchId.ToString();
-            brData.title = fncBranch.BranchName;
-            brData.children = roomTypeList;
-
-            return Json(new { brData});
         }
     }
 }

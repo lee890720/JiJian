@@ -33,8 +33,9 @@
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <li>
-                            <div class="input-group" style="width:250px;margin-right:10px;margin-top:9px">
+                            <div class="input-group" style="width:330px;margin-right:10px;margin-top:9px">
                                 <div class="input-group-btn">
+                                    <button id="isType" type="button" class="btn btn-primary">显示模式</button>
                                     <button id="today" type="button" class="btn btn-primary">今天</button>
                                     <button id="month" type="button" class="btn btn-primary">月</button>
                                     <button id="prev" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-left"></i></button>
@@ -108,13 +109,10 @@
         </aside>
         <div class="control-sidebar-bg"></div>
     </div>
-    @Html.Partial("_Modal", new BootstrapModel { ID = "modal-action", AreaLabeledId = "modal-action-label", Size = ModalSize.Large })
-    @Html.Partial("_ModalM", new BootstrapModel { ID = "modal-action-m", AreaLabeledId = "modal-action-m-label", Size = ModalSize.Medium })
     <script src="~/js/adminlte.min.js"></script>
     <script src="~/js/dateFormat.js"></script>
     <script src="~/js/site.min.js"></script>
     <script src="~/js/layout.js"></script>
-    <script src="~/js/modal.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

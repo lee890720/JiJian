@@ -115,9 +115,9 @@ namespace JJNG.Data.Branch
 
     public enum StateType
     {
-        已预订,
-        已入住,
-        已退房,
+        已预订=0,
+        已入住=1,
+        已退房=2,
         已删除
     }
 }
