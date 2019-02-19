@@ -16,7 +16,7 @@ namespace JJNG.Web.Controllers
         }
         public IActionResult Index()
         {
-            if (User.IsInRole("前台"))
+            if (User.IsInRole("前台")|| User.IsInRole("前台审核"))
                 return Redirect("/Branch/FrontCalendar");
             if (User.IsInRole("管家"))
                 return Redirect("/Branch/BrhStewardAccount");

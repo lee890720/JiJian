@@ -16,7 +16,7 @@ using JJNG.Web.Areas.Branch.Models;
 namespace JJNG.Web.Areas.Branch.Controllers
 {
     [Area("Branch")]
-    [Authorize(Roles = "Admins,前台")]
+    [Authorize(Roles = "Admins,前台,前台审核")]
     public class BrhFrontDeskAccountController : Controller
     {
         private readonly AppDbContext _context;

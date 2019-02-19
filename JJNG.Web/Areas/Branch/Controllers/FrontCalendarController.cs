@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace JJNG.Web.Areas.Branch.Controllers
 {
     [Area("Branch")]
-    [Authorize(Roles = "Admins,前台,管家")]
+    [Authorize(Roles = "Admins,前台,管家,前台审核,管家审核")]
     public class FrontCalendarController : Controller
     {
         private readonly AppDbContext _context;
@@ -172,6 +172,15 @@ namespace JJNG.Web.Areas.Branch.Controllers
             _context.Update(brh);
             _context.SaveChanges();
             return Json(new { brh });
+        }
+
+        public async Task<JsonResult> EditHouseNumber([FromBody]Room temp)
+        {
+            var room = _context.FncHouseNumber.SingleOrDefault(x => x.HouseNumber == temp.id && x.HouseTypeId == temp.typeId);
+            room.isClean = temp.isClean;
+            _context.Update(room);
+            await _context.SaveChangesAsync();
+            return Json(new { room });
         }
 
         public async Task<JsonResult> Delete([FromBody]BranchModel branchModel)
@@ -411,6 +420,100 @@ namespace JJNG.Web.Areas.Branch.Controllers
             #endregion
 
             return Json(new { events, resources1, resources2, frontData, channel });
+        }
+
+        public async Task<JsonResult> GetResources([FromBody]BranchModel branchModel)
+        {
+            AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var channel = _context.FncChannelType.ToList();
+
+            #region GetEvents
+            var todayData = _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0 && DateTime.Compare(DateTime.Now, x.EndDate) < 0 && x.Branch == branchModel.Branch && x.State != StateType.已删除).ToList();
+
+            Branch1 resources1 = new Branch1();
+            Branch2 resources2 = new Branch2();
+            List<RoomType> roomTypeList = new List<RoomType>();
+            var fncBranch = _context.FncBranch.SingleOrDefault(x => x.BranchName == branchModel.Branch);
+            var fncHouseTypeList = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fncBranch.BranchId).ToList();
+            var typeCollet = fncHouseTypeList.Select(x => x.HouseTypeId).ToArray();
+            var fncHouseNumberList = _context.FncHouseNumber.Where(x => typeCollet.Contains(x.HouseTypeId)).ToList();
+            List<Room> roomNumberList = new List<Room>();
+            foreach (var fncHouseNumber in fncHouseNumberList)
+            {
+                var room = new Room();
+                room.id = fncHouseNumber.HouseNumber;
+                if (fncHouseNumber.isClean)
+                    room.title = fncHouseNumber.HouseNumber;
+                else
+                    room.title = fncHouseNumber.HouseNumber + " 脏";
+                room.typeId = fncHouseNumber.HouseTypeId;
+                room.isClean = fncHouseNumber.isClean;
+                foreach (var fh in todayData)
+                {
+                    if (fh.HouseNumber == fncHouseNumber.HouseNumber)
+                    {
+                        room.state = Enum.GetName(typeof(StateType), (int)fh.State);
+                        break;
+                    }
+                }
+                if (string.IsNullOrEmpty(room.state))
+                    room.state = "空";
+                roomNumberList.Add(room);
+            }
+            foreach (var fncHouseType in fncHouseTypeList)
+            {
+                var count1 = 0;
+                var count2 = 0;
+                var roomType = new RoomType();
+                var roomList = new List<Room>();
+                roomType.id = fncHouseType.HouseTypeId.ToString();
+                roomType.title = fncHouseType.HouseType;
+                roomType.order = fncHouseType.Order;
+                foreach (var rrr in roomNumberList)
+                {
+                    var room = new Room();
+                    if (fncHouseType.HouseTypeId == rrr.typeId)
+                    {
+                        count1++;
+                        room.id = rrr.id;
+                        room.title = rrr.title;
+                        room.state = rrr.state;
+                        room.typeId = rrr.typeId;
+                        room.isClean = rrr.isClean;
+                        if (room.state != "空")
+                            count2++;
+                        roomList.Add(room);
+                    }
+                }
+                if (count1 != count2)
+                    roomType.state = (count1 - count2).ToString() + " 间";
+                else
+                    roomType.state = "无房";
+                roomType.children = roomList;
+                roomTypeList.Add(roomType);
+            }
+
+            resources1.id = fncBranch.BranchName;
+            resources1.title = fncBranch.BranchName;
+            resources1.isType = fncBranch.IsType;
+            resources1.children = roomTypeList;
+            resources2.id = fncBranch.BranchName;
+            resources2.title = fncBranch.BranchName;
+            resources2.isType = fncBranch.IsType;
+            resources2.children = roomNumberList;
+            if (fncHouseNumberList.Count != todayData.Count)
+            {
+                resources1.state = (fncHouseNumberList.Count - todayData.Count).ToString() + " 间";
+                resources2.state = (fncHouseNumberList.Count - todayData.Count).ToString() + " 间";
+            }
+            else
+            {
+                resources1.state = "满房";
+                resources2.state = "满房";
+            }
+            #endregion
+
+            return Json(new {resources1, resources2, channel });
         }
 
         public static TChild AutoCopy<TParent, TChild>(TParent parent) where TChild : TParent, new()

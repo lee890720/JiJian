@@ -1,4 +1,10 @@
-﻿@model AppIdentityUser
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@inject UserManager<AppIdentityUser> _userManager
+@model AppIdentityUser
+@{
+    AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+    var list_roles = await _userManager.GetRolesAsync(_user);
+}
 
 @{
     Layout = "_Layout2";
@@ -58,7 +64,7 @@
         <div class="col-md-6">
             <div class="input-group" style="margin-bottom:10px;width:100%">
                 <span class="input-group-addon" style="width:25%;">渠道</span>
-                <select id="form-channel" asp-items="ViewBag.ChannelType" class="form-control"></select>
+                <select id="form-channel" asp-items="ViewBag.ChannelType" class="form-control clear-data"></select>
             </div>
             <div class="input-group" style="margin-bottom:10px;width:100%">
                 <span class="input-group-addon" style="width:25%;">手机</span>
@@ -96,28 +102,38 @@
                     <button id="isFinish" type="button" class="btn btn-primary">未结账</button>
                     <button id="isFront" type="button" class="btn btn-primary">前台未审</button>
                     <button id="isFinance" type="button" class="btn btn-primary">财务未审</button>
-                    <select id="form-stateType" onchange="selectState()" asp-items="@Html.GetEnumSelectList(typeof(StateType))" class="btn btn-primary"></select>
+                    <select id="form-stateType" onchange="selectState()" asp-items="@Html.GetEnumSelectList(typeof(StateType))" class="btn btn-primary  clear-data"></select>
                     <script>
                         function selectState() {
                             var vs = $('#form-stateType option:selected').val();
                             var vt = $('#form-stateType option:selected').html();
                             if(vs==0)
                             {
+                                $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-success");
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").addClass("btn-primary");
                             }
                             if(vs==1)
                             {
+                                $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-success");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").addClass("btn-warning");
                             }
                             if(vs==2)
                             {
+                                $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").addClass("btn-success");
+                            }
+                            if(vs==3)
+                            {
+                                $("#form-stateType").removeClass("btn-warning");
+                                $("#form-stateType").removeClass("btn-primary");
+                                $("#form-stateType").removeClass("btn-success");
+                                $("#form-stateType").addClass("btn-danger");
                             }
                         }
                     </script>
@@ -170,6 +186,7 @@
     <script>
         $(function () {
             var _user=@Html.Raw(Json.Serialize(Model));
+            var _roles=@Json.Serialize(list_roles);
             var _channel =[];
             var _resourcesData = [];
             var _resourceId = "";
@@ -197,7 +214,7 @@
 
             //#region Ajax GetCalendarData
             function GetCalendarData() {
-                optionAjax.url = "/Branch/FrontCalendar/GetCalendarData";
+                optionAjax.url = "/Branch/FrontCalendar/GetResources";
                 optionAjax.data = JSON.stringify({
                     branch: _user.branch,
                     branchId: _user.branchId,
@@ -248,7 +265,91 @@
                     resourceColumns: [
                     {
                         labelText: '房间',
-                        field: 'title'
+                        field: 'title',
+                        render:function(resource,el){
+                            //var p = /[0-9]/;
+                            //var b = p.test(resourceObj.title);
+                            if(resource.hasOwnProperty("isClean"))
+                            {
+                                if(!resource.isClean)
+                                {
+                                    el.css("color","red");
+                                }
+                                el.on('click', function() {
+                                    if(_resourcesData[0].isType)
+                                    {
+                                        for(var i=0;i<_resourcesData[0].children.length;i++)
+                                        {
+                                            for(var j=0;j<_resourcesData[0].children[i].children.length;j++)
+                                            {
+                                                if(_resourcesData[0].children[i].children[j].id==resource.id)
+                                                {
+                                                    if(_resourcesData[0].children[i].children[j].isClean)
+                                                    {
+                                                        _resourcesData[0].children[i].children[j].title+=" 脏";
+                                                        _resourcesData[0].children[i].children[j].isClean=false;
+                                                        //console.log(_resourcesData[0].children[i].children[j].title);
+                                                    }
+                                                    else
+                                                    {
+                                                        _resourcesData[0].children[i].children[j].title=parseInt(_resourcesData[0].children[i].children[j].title);
+                                                        _resourcesData[0].children[i].children[j].isClean=true;
+                                                        //console.log(_resourcesData[0].children[i].children[j].title);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else{
+                                        for(var i=0;i<_resourcesData[0].children.length;i++)
+                                        {
+                                            {
+                                                if(_resourcesData[0].children[i].id==resource.id)
+                                                {
+                                                    if(_resourcesData[0].children[i].isClean)
+                                                    {
+                                                        _resourcesData[0].children[i].title+=" 脏";
+                                                        _resourcesData[0].children[i].isClean=false;
+                                                        console.log(_resourcesData[0].children[i].title);
+                                                    }
+                                                    else
+                                                    {
+                                                        _resourcesData[0].children[i].title=parseInt(_resourcesData[0].children[i].title);
+                                                        _resourcesData[0].children[i].isClean=true;
+                                                        console.log(_resourcesData[0].children[i].title);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    $("#calendar").fullCalendar("refetchResources");
+                                    $.ajax({
+                                        type: "post",
+                                        async: true,
+                                        url: "/Branch/FrontCalendar/EditHouseNumber",
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        data: JSON.stringify({
+                                            id:resource.id,
+                                            typeId:resource.typeId,
+                                            isClean:!resource.isClean,
+                                        }),
+                                        beforeSend: function () {
+                                            $('#modal-default').modal('show');
+                                        },
+                                        success: function (data) {
+                                        },
+                                        complete: function () {
+                                            $('#modal-default').modal('hide');
+                                        },
+                                        error: function () {
+                                            alert("Failed");
+                                        }
+
+                                    });
+                                });
+                            }
+                        }
                     },
                     {
                         labelText: '状态',
@@ -263,7 +364,10 @@
                         }
                     }
                                     ],
-                    resources:_resourcesData,
+                    //resources:_resourcesData,
+                    resources: function(callback, start, end, timezone) {
+                            callback(_resourcesData);
+                    },
                     resourceRender: function (resourceObj, labelTds, bodyTds) {
                         labelTds.css('height', '18px');
                         labelTds.css('vertical-align','middle');
@@ -283,10 +387,10 @@
                         $("#isFront").addClass("btn-primary");
                         $("#isFinance").removeClass("btn-warning");
                         $("#isFinance").addClass("btn-primary");
-                        selectState(0);
                         $("#table-1").hide();
                         $(".clear-data").val("");
                         $("#form-received,#payAmount,#form-stateType").val("0");
+                        selectState(0);
                         $(".col-md-4").hide();
                         $('#isFinish').html("未结账");
                         $('#isFront').html("前台未审");
@@ -297,7 +401,7 @@
                             $("#addPay").addClass("btn-warning");
                             $(".col-md-4").show();
                         });
-                        if(_user.position!="普通员工")
+                        if(_roles.indexOf("前台审核")>-1)
                         {
                             $("#isFront").on('click', function () {
                                 var hl = $("#isFront").html();
@@ -432,6 +536,7 @@
                                         $('#modal-default').modal('show');
                                     },
                                     success: function (data) {
+                                        if(data.eve.state!=3)
                                         $("#calendar").fullCalendar("renderEvent", data.eve, true);
                                     },
                                     complete: function () {
@@ -594,7 +699,6 @@
                             $("#isFinance").removeClass("btn-warning");
                             $("#isFinance").addClass("btn-primary");
                         }
-                        selectState(event.state);
                         $('#form-name').val(event.customerName);
                         $('#form-count').val(event.customerCount);
                         $('#form-unitPrice').val(event.unitPrice);
@@ -609,6 +713,7 @@
                         $('#form-relationStaff').val(event.relationStaff);
                         $('#form-note').val(event.note);
                         $('#form-stateType').val(event.state);
+                        selectState(event.state);
                         if (event.isFinance) {
                             $(".clear-data").attr("disabled","disabled");
                             var d = dialog({
@@ -627,7 +732,7 @@
                                 $("#addPay").addClass("btn-warning");
                                 $(".col-md-4").show();
                             });
-                            if(_user.position!="普通员工")
+                            if(_roles.indexOf("前台审核")>-1)
                             {
                                 $("#isFront").on('click', function () {
                                     var hl = $("#isFront").html();
@@ -807,6 +912,7 @@
                                         },
                                         success: function (data) {
                                             $("#calendar").fullCalendar("removeEvents", data.eve.id);
+                                            if(data.eve.state!=3)
                                             $("#calendar").fullCalendar("renderEvent", data.eve, true);
                                         },
                                         complete: function () {
@@ -1051,21 +1157,31 @@
             function selectState(vs) {
                 if(vs==0)
                 {
+                    $("#form-stateType").removeClass("btn-danger");
                     $("#form-stateType").removeClass("btn-success");
                     $("#form-stateType").removeClass("btn-warning");
                     $("#form-stateType").addClass("btn-primary");
                 }
                 if(vs==1)
                 {
+                    $("#form-stateType").removeClass("btn-danger");
                     $("#form-stateType").removeClass("btn-success");
                     $("#form-stateType").removeClass("btn-primary");
                     $("#form-stateType").addClass("btn-warning");
                 }
                 if(vs==2)
                 {
+                    $("#form-stateType").removeClass("btn-danger");
                     $("#form-stateType").removeClass("btn-warning");
                     $("#form-stateType").removeClass("btn-primary");
                     $("#form-stateType").addClass("btn-success");
+                }
+                if(vs==3)
+                {
+                    $("#form-stateType").removeClass("btn-warning");
+                    $("#form-stateType").removeClass("btn-primary");
+                    $("#form-stateType").removeClass("btn-success");
+                    $("#form-stateType").addClass("btn-danger");
                 }
             }
             //#endregion

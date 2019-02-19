@@ -47,6 +47,7 @@ namespace JJNG.Web.Areas.Branch.Models
         public string id { get; set; }
         public string title { get; set; }
         public string state { get; set; }
+        public bool isClean { get; set; }
         public int typeId { get; set; }
     }
     public class Event : BrhFrontDeskAccounts

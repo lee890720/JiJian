@@ -58,7 +58,7 @@
         <div class="col-md-6">
             <div class="input-group" style="margin-bottom:10px;width:100%">
                 <span class="input-group-addon" style="width:25%;">渠道</span>
-                <select id="form-channel" asp-items="ViewBag.ChannelType" class="form-control clear-data"></select>
+                <select id="form-channel" asp-items="ViewBag.ChannelType" class="form-control"></select>
             </div>
             <div class="input-group" style="margin-bottom:10px;width:100%">
                 <span class="input-group-addon" style="width:25%;">手机</span>
@@ -95,38 +95,28 @@
                     <button id="isFinish" type="button" class="btn btn-primary">未结账</button>
                     <button id="isFront" type="button" class="btn btn-primary">前台未审</button>
                     <button id="isFinance" type="button" class="btn btn-primary">财务未审</button>
-                    <select id="form-stateType" onchange="selectState()" asp-items="@Html.GetEnumSelectList(typeof(StateType))" class="btn btn-primary  clear-data"></select>
+                    <select id="form-stateType" onchange="selectState()" asp-items="@Html.GetEnumSelectList(typeof(StateType))" class="btn btn-primary"></select>
                     <script>
                         function selectState() {
                             var vs = $('#form-stateType option:selected').val();
                             var vt = $('#form-stateType option:selected').html();
                             if(vs==0)
                             {
-                                $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-success");
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").addClass("btn-primary");
                             }
                             if(vs==1)
                             {
-                                $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-success");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").addClass("btn-warning");
                             }
                             if(vs==2)
                             {
-                                $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").addClass("btn-success");
-                            }
-                            if(vs==3)
-                            {
-                                $("#form-stateType").removeClass("btn-warning");
-                                $("#form-stateType").removeClass("btn-primary");
-                                $("#form-stateType").removeClass("btn-success");
-                                $("#form-stateType").addClass("btn-danger");
                             }
                         }
                     </script>
@@ -188,7 +178,7 @@
 
             //#region Ajax GetCalendarData
             function GetCalendarData() {
-                optionAjax.url = "/Branch/FrontCalendar/GetResources";
+                optionAjax.url = "/Finance/FncFrontCalendar2/GetCalendarData";
                 optionAjax.data = JSON.stringify({
                     branch: _fncBranch.branchName,
                     branchId: _fncBranch.branchId,
@@ -207,7 +197,7 @@
                     else
                     {
                         $("#isType").html("房号");
-                        $('#calendar').fullCalendar('option', {resourceAreaWidth: '150'});   //option支持set，注：不仅限于locale，还包括其它option操作
+                        $('#calendar').fullCalendar('option', {resourceAreaWidth: '110'});   //option支持set，注：不仅限于locale，还包括其它option操作
                     }
                 };
                 $.ajax(optionAjax);
@@ -233,39 +223,10 @@
                     height: 'parent',
                     defaultDate: _startdate,
                     navLinks: true,
-                    resourceAreaWidth: '180',
-                    resourceLabelText:false,
+                    resourceAreaWidth: '140',
+                    resourceLabelText: '房间',
                     resourceOrder: 'order,title',
-                    resourceColumns: [
-                    {
-                        labelText: '房间',
-                        field: 'title',
-                        render:function(resource,el){
-                            if(resource.hasOwnProperty("isClean"))
-                            {
-                                if(!resource.isClean)
-                                {
-                                    el.css("color","red");
-                                }
-                            }
-                        }
-                    },
-                    {
-                        labelText: '状态',
-                        field: 'state',
-                        width:"60",
-                        render: function(resource, el) {
-                            el.css("text-align","center");
-                            if (resource.state=="空") {
-                                el.css("color",'red');
-                            }
-                        }
-                    }
-                    ],
-                    //resources:_resourcesData,
-                    resources: function(callback, start, end, timezone) {
-                            callback(_resourcesData);
-                    },
+                    resources:_resourcesData,
                     resourceRender: function (resourceObj, labelTds, bodyTds) {
                         labelTds.css('height', '18px');
                         labelTds.css('vertical-align','middle');
@@ -274,7 +235,7 @@
                     selectable: true,
                     selectHelper: true,
                     events: function(start, end, timezone, callback) {
-                            optionAjax.url = "/Finance/FncFrontCalendar/GetCalendarData";
+                            optionAjax.url = "/Finance/FncFrontCalendar2/GetCalendarData";
                             optionAjax.data = JSON.stringify({
                                 branch: _fncBranch.branchName,
                                 branchId: _fncBranch.branchId,
@@ -367,7 +328,7 @@
                         $.ajax({
                             type: "post",
                             async: true,
-                            url: "/Finance/FncFrontCalendar/List",
+                            url: "/Finance/FncFrontCalendar2/List",
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             data: JSON.stringify({
@@ -418,6 +379,7 @@
                             $("#isFinance").removeClass("btn-warning");
                             $("#isFinance").addClass("btn-primary");
                         }
+                        selectState(event.state);
                         $('#form-name').val(event.customerName);
                         $('#form-count').val(event.customerCount);
                         $('#form-unitPrice').val(event.unitPrice);
@@ -431,8 +393,7 @@
                         $('#form-stewardLeader').val(event.stewardLeader);
                         $('#form-relationStaff').val(event.relationStaff);
                         $('#form-note').val(event.note);
-                        $('#form-stateType').val(event.state);
-                        selectState(event.state);
+		                $('#form-stateType').val(event.state);
                         $(".clear-data").attr("disabled","disabled");
                         $("#isFinance").on('click', function () {
                                 var hl = $("#isFinance").html();
@@ -487,7 +448,7 @@
                                     $.ajax({
                                         type: "post",
                                         async: true,
-                                        url: "/Finance/FncFrontCalendar/Edit",
+                                        url: "/Finance/FncFrontCalendar2/Edit",
                                         contentType: "application/json; charset=utf-8",
                                         dataType: "json",
                                         data: JSON.stringify({
@@ -560,7 +521,7 @@
                 $.ajax({
                     type: "post",
                     async: true,
-                    url: "/Finance/FncFrontCalendar/EditBranch",
+                    url: "/Finance/FncFrontCalendar2/EditBranch",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({
@@ -572,7 +533,7 @@
                         $('#modal-default').modal('show');
                     },
                     success: function (data) {
-                        window.location.href="/Finance/FncFrontCalendar/Index/?branchId="+_fncBranch.branchId+"&branchName="+_fncBranch.branchName;
+                        window.location.href="/Finance/FncFrontCalendar2/Index/?branchId="+_fncBranch.branchId+"&branchName="+_fncBranch.branchName;
                     },
                     complete: function () {
                         $('#modal-default').modal('hide');
@@ -656,31 +617,21 @@
             function selectState(vs) {
                 if(vs==0)
                 {
-                    $("#form-stateType").removeClass("btn-danger");
                     $("#form-stateType").removeClass("btn-success");
                     $("#form-stateType").removeClass("btn-warning");
                     $("#form-stateType").addClass("btn-primary");
                 }
                 if(vs==1)
                 {
-                    $("#form-stateType").removeClass("btn-danger");
                     $("#form-stateType").removeClass("btn-success");
                     $("#form-stateType").removeClass("btn-primary");
                     $("#form-stateType").addClass("btn-warning");
                 }
                 if(vs==2)
                 {
-                    $("#form-stateType").removeClass("btn-danger");
                     $("#form-stateType").removeClass("btn-warning");
                     $("#form-stateType").removeClass("btn-primary");
                     $("#form-stateType").addClass("btn-success");
-                }
-                if(vs==3)
-                {
-                    $("#form-stateType").removeClass("btn-warning");
-                    $("#form-stateType").removeClass("btn-primary");
-                    $("#form-stateType").removeClass("btn-success");
-                    $("#form-stateType").addClass("btn-danger");
                 }
             }
             //#endregion

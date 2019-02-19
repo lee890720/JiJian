@@ -13,6 +13,7 @@ namespace JJNG.Data.Finance
 
         [Display(Name = "房号")]
         public string HouseNumber { get; set; }
+        public bool isClean { get; set; }
         public FncHouseType FncHouseType { get; set; }
     }
 }

@@ -16,7 +16,7 @@ using JJNG.Web;
 namespace JJNG.Web.Areas.Branch.Controllers
 {
     [Area("Branch")]
-    [Authorize(Roles = "Admins,前台,管家")]
+    [Authorize(Roles = "Admins,前台,管家,前台审核,管家审核")]
     public class BrhImprestRecordController : Controller
     {
         private readonly AppDbContext _context;

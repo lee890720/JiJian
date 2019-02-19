@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace JJNG.Web.Areas.Branch.Controllers
 {
     [Area("Branch")]
-    [Authorize(Roles = "Admins,前台")]
+    [Authorize(Roles = "Admins,前台,前台审核")]
     public class BrhEarningRecordController : Controller
     {
         private readonly AppDbContext _context;

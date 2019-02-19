@@ -541,6 +541,8 @@ namespace JJNG.Data.Migrations
 
                     b.Property<int>("HouseTypeId");
 
+                    b.Property<bool>("isClean");
+
                     b.HasKey("HouseNumberId");
 
                     b.HasIndex("HouseTypeId");

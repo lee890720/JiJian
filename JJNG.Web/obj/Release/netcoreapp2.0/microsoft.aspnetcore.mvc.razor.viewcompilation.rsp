@@ -95,6 +95,7 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncExpendType\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncExpendType\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncExpendType\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontCalendar2\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontCalendar\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontDeskAccount\DetialList.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncFrontDeskAccount\Index.cshtml

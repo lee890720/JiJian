@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace JJNG.Web.Areas.Branch.Controllers
 {
     [Area("Branch")]
-    [Authorize(Roles = "Admins,管家")]
+    [Authorize(Roles = "Admins,管家,管家审核")]
     public class BrhClientController : Controller
     {
         private readonly AppDbContext _context;
