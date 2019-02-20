@@ -88,7 +88,7 @@
             </div>
         </div>
         <div class="col-md-12">
-            <textarea id="form-note" class="form-control clear-data" rows="4" style="margin-bottom:10px;width:100%"></textarea>
+            <textarea id="form-note" class="form-control clear-data" rows="4" style="margin-bottom:10px;width:100%;"></textarea>
         </div>
         <div id="table-1" class="col-md-12">
             <table class="table">
@@ -254,7 +254,7 @@
                     },
                     viewRender:function( view, element ){
                     },
-                    slotWidth: '120',
+                    slotWidth: '140',
                     slotLabelFormat: "ddd MM/DD",
                     height: 'parent',
                     defaultDate: _startdate,
@@ -372,7 +372,7 @@
                         labelTds.css('height', '18px');
                         labelTds.css('vertical-align','middle');
                     },
-                    editable: true,
+                    editable: false,
                     selectable: true,
                     selectHelper: true,
                     select: function (start, end, jsEvent, view, resource) {
@@ -601,21 +601,33 @@
                                 html:true,
                                 placement:"auto",
                             });
+                            if(event.state==0)
+                            {
+                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa  fa-user-times'></i>";
+                            }
+                            else if(event.state==1)
+                            {
+                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa fa-user'></i>";
+                            }
+                            else if(event.state==2)
+                            {
+                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;'>";
+                            }
 
                             if (event.isFinish) {
-                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:white'><i class='glyphicon glyphicon-ok'></i>";
+                                hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
                             }
                             else {
-                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:white'><i class='glyphicon glyphicon-remove' style='color:red'></i>";
+                                hl += "&nbsp;<i class='glyphicon glyphicon-yen' style='color:red'></i>";
                             }
                             if (event.isFront) {
-                                hl += "&nbsp;<i class='glyphicon glyphicon-ok'></i>";
+                                hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
                             }
                             else {
                                 hl += "&nbsp;<i class='glyphicon glyphicon-remove' style='color:red'></i>";
                             }
                             if (event.isFinance) {
-                                hl += "&nbsp;<i class='fa fa-lock'></i>&nbsp;&nbsp;</div>";
+                                hl += "&nbsp;<i class='fa fa-lock' style='color:white'></i>&nbsp;&nbsp;</div>";
                             }
                             else{
                                 hl+="&nbsp;&nbsp;</div>";
@@ -714,18 +726,19 @@
                         $('#form-note').val(event.note);
                         $('#form-stateType').val(event.state);
                         selectState(event.state);
-                        if (event.isFinance) {
-                            $(".clear-data").attr("disabled","disabled");
-                            var d = dialog({
-                                title: "查看订单",
-                                content: $("#create-form"),
-                                cancelValue: "关闭",
-                                cancel: function () {
-                                }
-                            });
-                            d.width(600).showModal();
-                        }
-                        else {
+                        //if (event.isFinance) {
+                        //    $(".clear-data").attr("disabled","disabled");
+                        //    var d = dialog({
+                        //        title: "查看订单",
+                        //        content: $("#create-form"),
+                        //        cancelValue: "关闭",
+                        //        cancel: function () {
+                        //        }
+                        //    });
+                        //    d.width(600).showModal();
+                        //}
+                        //else {
+                        {
                             //#region change/keyup事件
                             $("#addPay").on('click', function () {
                                 $("#addPay").removeClass("btn-primary");
@@ -859,6 +872,10 @@
                                     if ($('#isFront').html() == "前台已审") {
                                         isFront = true;
                                     }
+                                    var isFinance = false;
+                                    if ($('#isFinance').html() == "财务已审") {
+                                        isFinance = true;
+                                    }
                                     var color = "";
                                     for (var i = 0; i < _channel.length; i++) {
                                         if (_channel[i].channelType == channel)
@@ -902,6 +919,7 @@
                                             state:state,
                                             isFinish: isFinish,
                                             isFront: isFront,
+                                            isFinance:isFinance,
                                             color: color,
                                             payDate: payDate,
                                             payWay: payWay,
@@ -935,6 +953,8 @@
                         _resourceId = event.resourceId;
                     },
                     eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+                        if(event.isFinance)
+                            return;
                         var start = moment(event.start).format("YYYY-MM-DD");
                         var end = moment(event.end).format("YYYY-MM-DD");
                         $.ajax({
@@ -994,6 +1014,8 @@
                     eventResizeStart: function (event, jsEvent, ui, view) {
                     },
                     eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
+                        if(event.isFinance)
+                            return;
                         var start = moment(event.start).format("YYYY-MM-DD");
                         var end = moment(event.end).format("YYYY-MM-DD");
                         $.ajax({

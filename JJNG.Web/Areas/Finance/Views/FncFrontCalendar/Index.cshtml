@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="col-md-12">
-            <textarea id="form-note" class="form-control clear-data" rows="4" style="margin-bottom:10px;width:100%"></textarea>
+            <textarea id="form-note" class="form-control clear-data" rows="4" style="margin-bottom:10px;width:100%;"></textarea>
         </div>
         <div id="table-1" class="col-md-12">
             <table class="table">
@@ -188,7 +188,7 @@
 
             //#region Ajax GetCalendarData
             function GetCalendarData() {
-                optionAjax.url = "/Branch/FrontCalendar/GetResources";
+                optionAjax.url = "/Finance/FncFrontCalendar/GetResources";
                 optionAjax.data = JSON.stringify({
                     branch: _fncBranch.branchName,
                     branchId: _fncBranch.branchId,
@@ -228,7 +228,7 @@
                     },
                     viewRender:function( view, element ){
                     },
-                    slotWidth: '120',
+                    slotWidth: '140',
                     slotLabelFormat: "ddd MM/DD",
                     height: 'parent',
                     defaultDate: _startdate,
@@ -241,6 +241,8 @@
                         labelText: '房间',
                         field: 'title',
                         render:function(resource,el){
+                            //var p = /[0-9]/;
+                            //var b = p.test(resourceObj.title);
                             if(resource.hasOwnProperty("isClean"))
                             {
                                 if(!resource.isClean)
@@ -320,21 +322,33 @@
                                 html:true,
                                 placement:"auto",
                             });
+                            if(event.state==0)
+                            {
+                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa  fa-user-times'></i>";
+                            }
+                            else if(event.state==1)
+                            {
+                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa fa-user'></i>";
+                            }
+                            else if(event.state==2)
+                            {
+                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;'>";
+                            }
 
                             if (event.isFinish) {
-                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:white'><i class='glyphicon glyphicon-ok'></i>";
+                                hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
                             }
                             else {
-                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:white'><i class='glyphicon glyphicon-remove' style='color:red'></i>";
+                                hl += "&nbsp;<i class='glyphicon glyphicon-yen' style='color:red'></i>";
                             }
                             if (event.isFront) {
-                                hl += "&nbsp;<i class='glyphicon glyphicon-ok'></i>";
+                                hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
                             }
                             else {
                                 hl += "&nbsp;<i class='glyphicon glyphicon-remove' style='color:red'></i>";
                             }
                             if (event.isFinance) {
-                                hl += "&nbsp;<i class='fa fa-lock'></i>&nbsp;&nbsp;</div>";
+                                hl += "&nbsp;<i class='fa fa-lock' style='color:white'></i>&nbsp;&nbsp;</div>";
                             }
                             else{
                                 hl+="&nbsp;&nbsp;</div>";
@@ -479,6 +493,10 @@
                                     if ($('#isFront').html() == "前台已审") {
                                         isFront = true;
                                     }
+                                    var isFinance = false;
+                                    if ($('#isFinance').html() == "财务已审") {
+                                        isFinance = true;
+                                    }
                                     var color = "";
                                     for (var i = 0; i < _channel.length; i++) {
                                         if (_channel[i].channelType == channel)
@@ -522,6 +540,7 @@
                                             state:state,
                                             isFinish: isFinish,
                                             isFront: isFront,
+                                            isFinance:isFinance,
                                             color: color,
                                             payDate: payDate,
                                             payWay: payWay,

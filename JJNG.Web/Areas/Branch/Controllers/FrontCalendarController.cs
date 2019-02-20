@@ -243,11 +243,10 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var branch = _user.Branch;
             var frontData = _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(startDate, x.EndDate) <= 0 && DateTime.Compare(x.StartDate, endDate) < 0 && x.Branch == branch && x.State != StateType.已删除).ToList();
             var todayData = _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0 && DateTime.Compare(DateTime.Now, x.EndDate) < 0 && x.Branch == branch && x.State != StateType.已删除).ToList();
-
             Branch1 resources1 = new Branch1();
             Branch2 resources2 = new Branch2();
             List<RoomType> roomTypeList = new List<RoomType>();
-            var fncBranch = _context.FncBranch.SingleOrDefault(x => x.BranchName == branchModel.Branch);
+            var fncBranch = _context.FncBranch.SingleOrDefault(x => x.BranchName == branch);
             var fncHouseTypeList = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fncBranch.BranchId).ToList();
             var typeCollet = fncHouseTypeList.Select(x => x.HouseTypeId).ToArray();
             var fncHouseNumberList = _context.FncHouseNumber.Where(x => typeCollet.Contains(x.HouseTypeId)).ToList();
@@ -256,8 +255,12 @@ namespace JJNG.Web.Areas.Branch.Controllers
             {
                 var room = new Room();
                 room.id = fncHouseNumber.HouseNumber;
-                room.title = fncHouseNumber.HouseNumber;
+                if (fncHouseNumber.isClean)
+                    room.title = fncHouseNumber.HouseNumber;
+                else
+                    room.title = fncHouseNumber.HouseNumber + " 脏";
                 room.typeId = fncHouseNumber.HouseTypeId;
+                room.isClean = fncHouseNumber.isClean;
                 foreach (var fh in todayData)
                 {
                     if (fh.HouseNumber == fncHouseNumber.HouseNumber)
@@ -276,7 +279,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 var count2 = 0;
                 var roomType = new RoomType();
                 var roomList = new List<Room>();
-                roomType.id = fncHouseType.HouseTypeId.ToString();
+                roomType.id = fncHouseType.Order.ToString();
                 roomType.title = fncHouseType.HouseType;
                 roomType.order = fncHouseType.Order;
                 foreach (var rrr in roomNumberList)
@@ -288,6 +291,8 @@ namespace JJNG.Web.Areas.Branch.Controllers
                         room.id = rrr.id;
                         room.title = rrr.title;
                         room.state = rrr.state;
+                        room.typeId = rrr.typeId;
+                        room.isClean = rrr.isClean;
                         if (room.state != "空")
                             count2++;
                         roomList.Add(room);
@@ -385,7 +390,10 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 tempevent.resourceId = f.HouseNumber;
                 tempevent.title = f.CustomerName + " " + f.Channel;
                 tempevent.allDay = true;
-                tempevent.editable = true;
+                if (tempevent.IsFinance)
+                    tempevent.editable = false;
+                else
+                    tempevent.editable = true;
                 tempevent.start = f.StartDate.Date.ToString();
                 tempevent.end = f.EndDate.Date.ToString();
                 tempevent.Color = f.Color;
@@ -428,12 +436,12 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var channel = _context.FncChannelType.ToList();
 
             #region GetEvents
-            var todayData = _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0 && DateTime.Compare(DateTime.Now, x.EndDate) < 0 && x.Branch == branchModel.Branch && x.State != StateType.已删除).ToList();
-
+            var branch = _user.Branch;
+            var todayData = _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0 && DateTime.Compare(DateTime.Now, x.EndDate) < 0 && x.Branch == branch && x.State != StateType.已删除).ToList();
             Branch1 resources1 = new Branch1();
             Branch2 resources2 = new Branch2();
             List<RoomType> roomTypeList = new List<RoomType>();
-            var fncBranch = _context.FncBranch.SingleOrDefault(x => x.BranchName == branchModel.Branch);
+            var fncBranch = _context.FncBranch.SingleOrDefault(x => x.BranchName == branch);
             var fncHouseTypeList = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fncBranch.BranchId).ToList();
             var typeCollet = fncHouseTypeList.Select(x => x.HouseTypeId).ToArray();
             var fncHouseNumberList = _context.FncHouseNumber.Where(x => typeCollet.Contains(x.HouseTypeId)).ToList();
@@ -466,7 +474,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 var count2 = 0;
                 var roomType = new RoomType();
                 var roomList = new List<Room>();
-                roomType.id = fncHouseType.HouseTypeId.ToString();
+                roomType.id = fncHouseType.Order.ToString();
                 roomType.title = fncHouseType.HouseType;
                 roomType.order = fncHouseType.Order;
                 foreach (var rrr in roomNumberList)
@@ -513,7 +521,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             }
             #endregion
 
-            return Json(new {resources1, resources2, channel });
+            return Json(new { resources1, resources2, channel });
         }
 
         public static TChild AutoCopy<TParent, TChild>(TParent parent) where TChild : TParent, new()
