@@ -103,10 +103,10 @@ namespace JJNG.Web.Areas.Branch.Controllers
             eve.resourceId = eve.HouseNumber;
             eve.title = eve.CustomerName + " " + eve.Channel;
             eve.allDay = true;
-            eve.editable = true;
             eve.className = "tooltip-hide";
             eve.start = eve.StartDate.Date.ToString();
             eve.end = eve.EndDate.Date.ToString();
+            eve.editable = true;
 
             return Json(new { eve });
         }
@@ -191,6 +191,26 @@ namespace JJNG.Web.Areas.Branch.Controllers
             return Json(new { brhFrontDeskAccounts });
         }
 
+        public async Task<JsonResult> DeleteRecord([FromBody]BrhFrontPaymentDetial bfp)
+        {
+            BrhFrontPaymentDetial bfp1 = new BrhFrontPaymentDetial();
+            BrhFrontPaymentDetial2 bfp2 = new BrhFrontPaymentDetial2();
+            if (_context.BrhFrontPaymentDetials.Where(m => m.FrontDeskAccountsId == bfp.FrontDeskAccountsId && m.FrontPaymentDetialId == bfp.FrontPaymentDetialId).ToList().Count > 0)
+            {
+                bfp1 = await _context.BrhFrontPaymentDetials.SingleOrDefaultAsync(m => m.FrontDeskAccountsId == bfp.FrontDeskAccountsId && m.FrontPaymentDetialId == bfp.FrontPaymentDetialId);
+                if (bfp1 != null)
+                    _context.BrhFrontPaymentDetials.Remove(bfp1);
+            }
+            else
+            {
+                bfp2 = await _context.BrhFrontPaymentDetials2.SingleOrDefaultAsync(m => m.FrontDeskAccountsId == bfp.FrontDeskAccountsId && m.FrontPaymentDetialId == bfp.FrontPaymentDetialId);
+                if (bfp2 != null)
+                    _context.BrhFrontPaymentDetials2.Remove(bfp2);
+            }
+            await _context.SaveChangesAsync();
+            return Json(new { bfp });
+        }
+
         public async Task<JsonResult> List([FromBody]BranchModel branchModel)
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -212,6 +232,9 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
         public async Task<JsonResult> Resize([FromBody]Event eve)
         {
+            eve.Count = (eve.EndDate - eve.StartDate).Days;
+            eve.TotalPrice = eve.UnitPrice * eve.Count;
+            eve.Receivable = eve.TotalPrice;
             if (eve.Receivable == eve.Received)
             {
                 eve.IsFinish = true;
@@ -220,13 +243,14 @@ namespace JJNG.Web.Areas.Branch.Controllers
             {
                 eve.IsFinish = false;
             }
+
             var brhFrontDeskAccounts = await _context.BrhFrontDeskAccounts.SingleOrDefaultAsync(m => m.FrontDeskAccountsId == eve.FrontDeskAccountsId);
             brhFrontDeskAccounts.StartDate = eve.StartDate;
             brhFrontDeskAccounts.EndDate = eve.EndDate;
-            brhFrontDeskAccounts.IsFinish = eve.IsFinish;
-            brhFrontDeskAccounts.Receivable = eve.Receivable;
-            brhFrontDeskAccounts.Received = eve.Received;
             brhFrontDeskAccounts.Count = eve.Count;
+            brhFrontDeskAccounts.IsFinish = eve.IsFinish;
+            brhFrontDeskAccounts.TotalPrice = eve.TotalPrice;
+            brhFrontDeskAccounts.Receivable = eve.Receivable;
             _context.Update(brhFrontDeskAccounts);
             await _context.SaveChangesAsync();
             return Json(new { eve });
@@ -390,10 +414,6 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 tempevent.resourceId = f.HouseNumber;
                 tempevent.title = f.CustomerName + " " + f.Channel;
                 tempevent.allDay = true;
-                if (tempevent.IsFinance)
-                    tempevent.editable = false;
-                else
-                    tempevent.editable = true;
                 tempevent.start = f.StartDate.Date.ToString();
                 tempevent.end = f.EndDate.Date.ToString();
                 tempevent.Color = f.Color;
@@ -422,12 +442,16 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 tempevent.StewardLeader = f.StewardLeader;
                 tempevent.TotalPrice = f.TotalPrice;
                 tempevent.UnitPrice = f.UnitPrice;
+                if (tempevent.IsFinance)
+                    tempevent.editable = false;
+                else
+                    tempevent.editable = true;
 
                 events.Add(tempevent);
             }
             #endregion
 
-            return Json(new { events, resources1, resources2, frontData, channel });
+            return Json(new { events, resources1, resources2, channel });
         }
 
         public async Task<JsonResult> GetResources([FromBody]BranchModel branchModel)

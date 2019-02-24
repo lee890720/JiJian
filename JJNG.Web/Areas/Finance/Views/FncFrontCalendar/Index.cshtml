@@ -193,7 +193,7 @@
                     branch: _fncBranch.branchName,
                     branchId: _fncBranch.branchId,
                     startDate:_startdate,
-                    endDate:moment(_startdate).add(30,"days").format("YYYY-MM-DD"),
+                    endDate:moment(_startdate).add(31,"days").format("YYYY-MM-DD"),
                 });
                 optionAjax.success = function (result) {
                     _channel=result.channel;
@@ -223,7 +223,7 @@
                     views: {
                         timelineThirtyDays: {
                             type: 'timeline',
-                            duration: { days: 30 }
+                            duration: { days: 31 }
                         }
                     },
                     viewRender:function( view, element ){
@@ -615,13 +615,13 @@
 
             $('#prev').on('click', function () {
                 $('#calendar').fullCalendar('prev');
-                var tempdate = moment($('#startdate').val()).add(-30, 'days');
+                var tempdate = moment($('#startdate').val()).add(-31, 'days');
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 
             $('#next').on('click', function () {
                 $('#calendar').fullCalendar('next');
-                var tempdate = moment($('#startdate').val()).add(30, 'days');
+                var tempdate = moment($('#startdate').val()).add(31, 'days');
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 

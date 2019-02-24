@@ -219,7 +219,7 @@
                     branch: _user.branch,
                     branchId: _user.branchId,
                     startDate:_startdate,
-                    endDate:moment(_startdate).add(30,"days").format("YYYY-MM-DD"),
+                    endDate:moment(_startdate).add(31,"days").format("YYYY-MM-DD"),
                 });
                 optionAjax.success = function (result) {
                     _channel=result.channel;
@@ -249,7 +249,7 @@
                     views: {
                         timelineThirtyDays: {
                             type: 'timeline',
-                            duration: { days: 30 }
+                            duration: { days: 31 }
                         }
                     },
                     viewRender:function( view, element ){
@@ -358,12 +358,11 @@
                         render: function(resource, el) {
                             el.css("text-align","center");
                             if (resource.state=="空") {
-                                //el.css('background-color', 'royalblue');
                                 el.css("color",'red');
                             }
                         }
                     }
-                                    ],
+                    ],
                     //resources:_resourcesData,
                     resources: function(callback, start, end, timezone) {
                             callback(_resourcesData);
@@ -953,8 +952,6 @@
                         _resourceId = event.resourceId;
                     },
                     eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
-                        if(event.isFinance)
-                            return;
                         var start = moment(event.start).format("YYYY-MM-DD");
                         var end = moment(event.end).format("YYYY-MM-DD");
                         $.ajax({
@@ -975,6 +972,7 @@
                                 count:event.count,
                                 startDate: event.start,
                                 endDate: event.end,
+                                enteringDate:event.enteringDate,
                                 enteringStaff: event.enteringStaff,
                                 branch: event.branch,
                                 title:event.title,
@@ -991,8 +989,10 @@
                                 stewardLeader: event.stewardLeader,
                                 relationStaff: event.relationStaff,
                                 note: event.note,
+                                state:event.state,
                                 isFinish: event.isFinish,
                                 isFront: event.isFront,
+                                isFinance:event.isFinance,
                                 color: event.color,
                             }),
                             beforeSend: function () {
@@ -1014,8 +1014,6 @@
                     eventResizeStart: function (event, jsEvent, ui, view) {
                     },
                     eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
-                        if(event.isFinance)
-                            return;
                         var start = moment(event.start).format("YYYY-MM-DD");
                         var end = moment(event.end).format("YYYY-MM-DD");
                         $.ajax({
@@ -1036,6 +1034,7 @@
                                 count:DateDiff(start,end),
                                 startDate: start,
                                 endDate: end,
+                                enteringDate:event.enteringDate,
                                 enteringStaff: event.enteringStaff,
                                 branch: event.branch,
                                 title:event.title,
@@ -1052,8 +1051,10 @@
                                 stewardLeader: event.stewardLeader,
                                 relationStaff: event.relationStaff,
                                 note: event.note,
+                                state:event.state,
                                 isFinish: event.isFinish,
                                 isFront: event.isFront,
+                                isFinance:event.isFinance,
                                 color: event.color,
                             }),
                             beforeSend: function () {
@@ -1119,13 +1120,13 @@
 
             $('#prev').on('click', function () {
                 $('#calendar').fullCalendar('prev');
-                var tempdate = moment($('#startdate').val()).add(-30, 'days');
+                var tempdate = moment($('#startdate').val()).add(-31, 'days');
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 
             $('#next').on('click', function () {
                 $('#calendar').fullCalendar('next');
-                var tempdate = moment($('#startdate').val()).add(30, 'days');
+                var tempdate = moment($('#startdate').val()).add(31, 'days');
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 

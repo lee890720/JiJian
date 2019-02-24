@@ -351,7 +351,6 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 tempevent.resourceId = f.HouseNumber;
                 tempevent.title = f.CustomerName + " " + f.Channel;
                 tempevent.allDay = true;
-                tempevent.editable = false;
                 tempevent.start = f.StartDate.Date.ToString();
                 tempevent.end = f.EndDate.Date.ToString();
                 tempevent.Color = f.Color;
@@ -380,12 +379,16 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 tempevent.StewardLeader = f.StewardLeader;
                 tempevent.TotalPrice = f.TotalPrice;
                 tempevent.UnitPrice = f.UnitPrice;
+                if (tempevent.IsFinance)
+                    tempevent.editable = false;
+                else
+                    tempevent.editable = true;
 
                 events.Add(tempevent);
             }
             #endregion
 
-            return Json(new { events, resources1, resources2, frontData, channel });
+            return Json(new { events, resources1, resources2,  channel });
         }
 
         public async Task<JsonResult> GetResources([FromBody]BranchModel branchModel)

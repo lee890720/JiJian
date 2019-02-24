@@ -14,12 +14,14 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly AppIdentityDbContext _identityContext;
         private UserManager<AppIdentityUser> userManager;
         private SignInManager<AppIdentityUser> signInManager;
 
-        public AccountController(UserManager<AppIdentityUser> userMgr,
+        public AccountController(AppIdentityDbContext identitycontext,UserManager<AppIdentityUser> userMgr,
                 SignInManager<AppIdentityUser> signinMgr)
         {
+            _identityContext = identitycontext;
             userManager = userMgr;
             signInManager = signinMgr;
         }
