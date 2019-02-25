@@ -6007,7 +6007,7 @@ button.close {
   white-space: normal;
   filter: alpha(opacity=0);
   opacity: 0;
-  width:200px;
+  width:280px;
 
   line-break: auto;
 }
@@ -6032,7 +6032,7 @@ button.close {
   margin-left: -3px;
 }
 .tooltip-inner {
-  max-width: 200px;
+  max-width: 280px;
   padding: 3px 8px;
   color: #fff;
   text-align: center;
