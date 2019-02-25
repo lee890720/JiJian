@@ -172,7 +172,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             var list = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).ToList();
-            return Json(new { list });
+            return Json(new { list});
         }
 
         public async Task<JsonResult> GetCalendarData([FromBody]BranchModel branchModel)

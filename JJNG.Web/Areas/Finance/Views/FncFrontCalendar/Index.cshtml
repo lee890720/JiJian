@@ -309,6 +309,8 @@
                             var note=event.note==null?"":event.note;
                             var fstart  = moment(event.startDate).format("MM-DD");
                             var fend  = moment(event.endDate).format("MM-DD");
+                            var unit=event.unitPrice;
+                            var total=event.totalPrice;
                             element.attr('data-toggle',"tooltip");
                             element.attr('title',event.customerName+"&nbsp;&lt;"+
                                     event.channel+"&gt;&nbsp;"+
@@ -316,7 +318,9 @@
                                     event.houseNumber+
                                     "&nbsp;&lt;"+fstart+
                                     "&sim;"+fend+
-                                    "&gt;&nbsp;<br/>"+
+                                    "&gt;&nbsp;"+
+                                    "&nbsp;&yen;"+total+
+                                    "&nbsp;<br/>"+
                                     note);
                             element.tooltip({
                                 html:true,
@@ -389,11 +393,8 @@
                             }),
                             success: function (data) {
                                 var hls = "";
-                                for (var i = 0; i < data.list1.length; i++) {
-                                    hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list1[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list1[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list1[i].payAmount+"</td></tr>";
-                                }
-                                for (var i = 0; i < data.list2.length; i++) {
-                                    hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list2[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list2[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list2[i].payAmount + "</td></tr>";
+                                for (var i = 0; i < data.list.length; i++) {
+                                    hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list[i].payAmount+"</td></tr>";
                                 }
                                 var ahl = $(hls);
                                 ahl.appendTo($("#tbody-form"));

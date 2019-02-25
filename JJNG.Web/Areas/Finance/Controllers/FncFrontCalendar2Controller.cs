@@ -56,6 +56,46 @@ namespace JJNG.Web.Areas.Finance.Controllers
             //_context.SaveChanges();
             #endregion
 
+            #region 增加收款明细
+            //var start = new DateTime(2018, 7, 1);
+            //var end = new DateTime(2018, 11, 26);
+            //var templist = _context.BrhFrontDeskAccounts.Where(x => x.Branch == "既见·南国" && DateTime.Compare(start, x.StartDate) <= 0 && DateTime.Compare(x.StartDate, end) < 0).ToList();
+            //var templist = _context.BrhFrontDeskAccounts.Where(x => x.Branch == "既见·苍海").ToList();
+            //foreach (var t in templist)
+            //{
+            //    var total = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == t.FrontDeskAccountsId).Sum(x => x.PayAmount);
+            //    if (total != t.Receivable && t.Receivable != 0)
+            //    {
+            //        var bfp = new BrhFrontPaymentDetial();
+            //        bfp.FrontDeskAccountsId = t.FrontDeskAccountsId;
+            //        bfp.PayDate = t.StartDate;
+            //        bfp.PayAmount = t.Receivable - total;
+            //        if (t.Channel == "美团")
+            //            bfp.PayWay = "美团代收";
+            //        else if (t.Channel == "自来客")
+            //            bfp.PayWay = "现金";
+            //        else if (t.Channel == "携程预付" || t.Channel == "携程")
+            //            bfp.PayWay = "携程代收";
+            //        else if (t.Channel == "飞猪")
+            //            bfp.PayWay = "飞猪代收";
+            //        else if (t.Channel == "去哪预付" || t.Channel == "去哪儿" || t.Channel == "去哪儿预付单")
+            //            bfp.PayWay = "去哪代收";
+            //        else if (t.Channel == "町隐接待")
+            //            bfp.PayWay = "町隐结算";
+            //        else if (t.Channel == "驴妈妈")
+            //            bfp.PayWay = "驴妈妈代收";
+            //        else if (t.Channel == "几何")
+            //            bfp.PayWay = "几何代收";
+            //        else if (t.Channel == "途家")
+            //            bfp.PayWay = "途家代收";
+            //        else
+            //            bfp.PayWay = "现金";
+            //        _context.Add(bfp);
+            //        _context.SaveChanges();
+            //    }
+            //}
+            #endregion
+
             #region 云掌柜导入后台
             //var templist = _context.BrhYun.ToList();
             //foreach (var t in templist)

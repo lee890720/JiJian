@@ -620,6 +620,8 @@
                             var note=event.note==null?"":event.note;
                             var fstart  = moment(event.startDate).format("MM-DD");
                             var fend  = moment(event.endDate).format("MM-DD");
+                            var unit=event.unitPrice;
+                            var total=event.totalPrice;
                             element.attr('data-toggle',"tooltip");
                             element.attr('title',event.customerName+"&nbsp;&lt;"+
                                     event.channel+"&gt;&nbsp;"+
@@ -627,7 +629,9 @@
                                     event.houseNumber+
                                     "&nbsp;&lt;"+fstart+
                                     "&sim;"+fend+
-                                    "&gt;&nbsp;<br/>"+
+                                    "&gt;&nbsp;"+
+                                    "&nbsp;&yen;"+total+
+                                    "&nbsp;<br/>"+
                                     note);
                             element.tooltip({
                                 html:true,
