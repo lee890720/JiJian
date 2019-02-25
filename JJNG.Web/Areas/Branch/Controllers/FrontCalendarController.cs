@@ -39,23 +39,6 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var list_channelType = _context.FncChannelType.ToList();
             ViewData["ChannelType"] = new SelectList(list_channelType, "ChannelType", "ChannelType");
 
-            var d_list = _context.BrhFrontPaymentDetials2.ToList();
-            if (d_list.Count > 0)
-                foreach (var d in d_list)
-                {
-                    var test = _context.BrhFrontDeskAccounts.Where(x => x.FrontDeskAccountsId == d.FrontDeskAccountsId).Count();
-                    if (test > 0)
-                    {
-                        BrhFrontPaymentDetial brf = new BrhFrontPaymentDetial();
-                        brf.FrontDeskAccountsId = d.FrontDeskAccountsId;
-                        brf.PayAmount = d.PayAmount;
-                        brf.PayDate = d.PayDate;
-                        brf.PayWay = d.PayWay;
-                        _context.Add(brf);
-                    }
-                }
-            _context.RemoveRange(d_list);
-            await _context.SaveChangesAsync();
             return View(_user);
         }
 
@@ -66,7 +49,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var frontId = Convert.ToInt64(_user.BranchId.ToString() + ConvertJson.DateTimeToStamp(DateTime.Now).ToString());
             branchModel.FrontDeskAccountsId = frontId;
             BrhFrontDeskAccounts brhFrontDeskAccounts = new BrhFrontDeskAccounts();
-            BrhFrontPaymentDetial2 bfp = new BrhFrontPaymentDetial2();
+            BrhFrontPaymentDetial bfp = new BrhFrontPaymentDetial();
 
             if (branchModel.PayAmount != 0)
             {
@@ -74,7 +57,6 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 bfp.PayWay = branchModel.PayWay;
                 bfp.PayDate = branchModel.PayDate;
                 bfp.PayAmount = branchModel.PayAmount;
-                _context.Add(bfp);
             }
             else
                 bfp.PayAmount = 0;
@@ -87,44 +69,39 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var Properties = ParentType.GetProperties();
             foreach (var Propertie in Properties)
             {
-                //循环遍历属性
                 if (Propertie.CanRead && Propertie.CanWrite)
                 {
-                    //进行属性拷贝
                     Propertie.SetValue(brhFrontDeskAccounts, Propertie.GetValue(branchModel, null), null);
                 }
             }
+            if (branchModel.PayAmount != 0)
+                brhFrontDeskAccounts.BrhFrontPaymentDetial.Add(bfp);
             _context.Add(brhFrontDeskAccounts);
             _context.SaveChanges();
 
-            Event eve = AutoCopy<BrhFrontDeskAccounts, Event>(brhFrontDeskAccounts);
-
-            eve.id = eve.FrontDeskAccountsId.ToString();
-            eve.resourceId = eve.HouseNumber;
-            eve.title = eve.CustomerName + " " + eve.Channel;
-            eve.allDay = true;
-            eve.className = "tooltip-hide";
-            eve.start = eve.StartDate.Date.ToString();
-            eve.end = eve.EndDate.Date.ToString();
-            eve.editable = true;
-
-            return Json(new { eve });
+            return Json(new
+            {
+                id = brhFrontDeskAccounts.FrontDeskAccountsId,
+                enteringDate = brhFrontDeskAccounts.EnteringDate,
+                state = branchModel.State,
+                received = brhFrontDeskAccounts.Received,
+                isFinish = brhFrontDeskAccounts.IsFinish
+            });
         }
+
 
         public async Task<JsonResult> Edit([FromBody]BranchModel branchModel)
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             BrhFrontDeskAccounts brhFrontDeskAccounts = new BrhFrontDeskAccounts();
-            BrhFrontPaymentDetial2 bfp = new BrhFrontPaymentDetial2();
+            BrhFrontPaymentDetial bfp = new BrhFrontPaymentDetial();
             var rtotal = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).Sum(x => x.PayAmount);
-            rtotal += _context.BrhFrontPaymentDetials2.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).Sum(x => x.PayAmount);
             if (branchModel.PayAmount != 0)
             {
                 bfp.FrontDeskAccountsId = branchModel.FrontDeskAccountsId;
                 bfp.PayWay = branchModel.PayWay;
                 bfp.PayDate = branchModel.PayDate;
                 bfp.PayAmount = branchModel.PayAmount;
-                _context.Add(bfp);
             }
             else
                 bfp.PayAmount = 0;
@@ -136,10 +113,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 branchModel.IsFinish = false;
 
             var ParentType = typeof(BrhFrontDeskAccounts);
-            var ParentType2 = typeof(Event);
             var Properties = ParentType.GetProperties();
-            var Properties2 = ParentType2.GetProperties();
-            Event eve = new Event();
             foreach (var Propertie in Properties)
             {
                 //循环遍历属性
@@ -149,19 +123,16 @@ namespace JJNG.Web.Areas.Branch.Controllers
                     Propertie.SetValue(brhFrontDeskAccounts, Propertie.GetValue(branchModel, null), null);
                 }
             }
-            foreach (var Propertie2 in Properties2)
-            {
-                //循环遍历属性
-                if (Propertie2.CanRead && Propertie2.CanWrite)
-                {
-                    //进行属性拷贝
-                    Propertie2.SetValue(eve, Propertie2.GetValue(branchModel, null), null);
-                }
-            }
+            if (branchModel.PayAmount != 0)
+                brhFrontDeskAccounts.BrhFrontPaymentDetial.Add(bfp);
             _context.Update(brhFrontDeskAccounts);
             _context.SaveChanges();
-
-            return Json(new { eve });
+            return Json(new
+            {
+                state = branchModel.State,
+                received = brhFrontDeskAccounts.Received,
+                isFinish = brhFrontDeskAccounts.IsFinish
+            });
         }
 
         public async Task<JsonResult> EditBranch([FromBody]FncBranch fncBranch)
@@ -191,32 +162,11 @@ namespace JJNG.Web.Areas.Branch.Controllers
             return Json(new { brhFrontDeskAccounts });
         }
 
-        public async Task<JsonResult> DeleteRecord([FromBody]BrhFrontPaymentDetial bfp)
-        {
-            BrhFrontPaymentDetial bfp1 = new BrhFrontPaymentDetial();
-            BrhFrontPaymentDetial2 bfp2 = new BrhFrontPaymentDetial2();
-            if (_context.BrhFrontPaymentDetials.Where(m => m.FrontDeskAccountsId == bfp.FrontDeskAccountsId && m.FrontPaymentDetialId == bfp.FrontPaymentDetialId).ToList().Count > 0)
-            {
-                bfp1 = await _context.BrhFrontPaymentDetials.SingleOrDefaultAsync(m => m.FrontDeskAccountsId == bfp.FrontDeskAccountsId && m.FrontPaymentDetialId == bfp.FrontPaymentDetialId);
-                if (bfp1 != null)
-                    _context.BrhFrontPaymentDetials.Remove(bfp1);
-            }
-            else
-            {
-                bfp2 = await _context.BrhFrontPaymentDetials2.SingleOrDefaultAsync(m => m.FrontDeskAccountsId == bfp.FrontDeskAccountsId && m.FrontPaymentDetialId == bfp.FrontPaymentDetialId);
-                if (bfp2 != null)
-                    _context.BrhFrontPaymentDetials2.Remove(bfp2);
-            }
-            await _context.SaveChangesAsync();
-            return Json(new { bfp });
-        }
-
         public async Task<JsonResult> List([FromBody]BranchModel branchModel)
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var list1 = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).ToList();
-            var list2 = _context.BrhFrontPaymentDetials2.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).ToList();
-            return Json(new { list1, list2 });
+            var list = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).ToList();
+            return Json(new { list});
         }
 
         public async Task<JsonResult> Drop([FromBody]Event eve)
@@ -350,7 +300,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             }
 
             List<Event> events = new List<Event>();
-            for (var i = 0; i < 30; i++)
+            for (var i = 0; i < 31; i++)
             {
                 var eventTotal = new Event();
                 var tempDate = startDate.AddDays(i);

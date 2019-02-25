@@ -131,28 +131,11 @@ namespace JJNG.Web.Areas.Finance.Controllers
             fncBranch.BranchName = branchName;
             fncBranch.BranchId = branchId;
 
-            var list_paymentType = _context.FncPaymentType.ToList();
+            var list_paymentType = await _context.FncPaymentType.ToListAsync();
             ViewData["PaymentType"] = new SelectList(list_paymentType, "PaymentType", "PaymentType");
-            var list_channelType = _context.FncChannelType.ToList();
+            var list_channelType = await _context.FncChannelType.ToListAsync();
             ViewData["ChannelType"] = new SelectList(list_channelType, "ChannelType", "ChannelType");
 
-            var d_list = _context.BrhFrontPaymentDetials2.ToList();
-            if (d_list.Count > 0)
-                foreach (var d in d_list)
-                {
-                    var test = _context.BrhFrontDeskAccounts.Where(x => x.FrontDeskAccountsId == d.FrontDeskAccountsId).Count();
-                    if (test > 0)
-                    {
-                        BrhFrontPaymentDetial brf = new BrhFrontPaymentDetial();
-                        brf.FrontDeskAccountsId = d.FrontDeskAccountsId;
-                        brf.PayAmount = d.PayAmount;
-                        brf.PayDate = d.PayDate;
-                        brf.PayWay = d.PayWay;
-                        _context.Add(brf);
-                    }
-                }
-            _context.RemoveRange(d_list);
-            await _context.SaveChangesAsync();
             return View(fncBranch);
         }
 
@@ -188,9 +171,8 @@ namespace JJNG.Web.Areas.Finance.Controllers
         public async Task<JsonResult> List([FromBody]BranchModel branchModel)
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var list1 = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).ToList();
-            var list2 = _context.BrhFrontPaymentDetials2.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).ToList();
-            return Json(new { list1, list2 });
+            var list = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).ToList();
+            return Json(new { list });
         }
 
         public async Task<JsonResult> GetCalendarData([FromBody]BranchModel branchModel)
@@ -287,7 +269,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             }
 
             List<Event> events = new List<Event>();
-            for (var i = 0; i < 30; i++)
+            for (var i = 0; i < 31; i++)
             {
                 var eventTotal = new Event();
                 var tempDate = startDate.AddDays(i);

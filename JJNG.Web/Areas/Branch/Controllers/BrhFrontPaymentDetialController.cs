@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace JJNG.Web.Areas.Branch.Controllers
 {
     [Area("Branch")]
-    [Authorize(Roles = "Admins,财务")]
+    [Authorize(Roles = "Admins,前台,前台审核")]
     public class BrhFrontPaymentDetialController : Controller
     {
         private readonly AppDbContext _context;
@@ -31,7 +31,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             ViewData["UserName"] = _user.UserName;
             ViewData["Branch"] = _user.Branch;
             var account = _context.BrhFrontDeskAccounts.SingleOrDefault(x => x.FrontDeskAccountsId == id);
-            var details = _context.BrhFrontPaymentDetials.Include(b => b.BrhFrontDeskAccounts).Where(x=>x.FrontDeskAccountsId==id).ToList();
+            var details = _context.BrhFrontPaymentDetials.Include(b => b.BrhFrontDeskAccounts).Where(x => x.FrontDeskAccountsId == id).ToList();
             return View(details);
         }
 
@@ -60,7 +60,18 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var brhFrontPaymentDetial = await _context.BrhFrontPaymentDetials.SingleOrDefaultAsync(m => m.FrontPaymentDetialId == id);
             _context.BrhFrontPaymentDetials.Remove(brhFrontPaymentDetial);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            var total = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == brhFrontPaymentDetial.FrontDeskAccountsId).Sum(x => x.PayAmount);
+            var brhaccount = _context.BrhFrontDeskAccounts.SingleOrDefault(x => x.FrontDeskAccountsId == brhFrontPaymentDetial.FrontDeskAccountsId);
+            brhaccount.Received = total;
+            if (brhaccount.Received == brhaccount.Receivable)
+                brhaccount.IsFinish = true;
+            else
+                brhaccount.IsFinish = false;
+
+            _context.Update(brhaccount);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index), new { id = brhFrontPaymentDetial.FrontDeskAccountsId });
         }
 
         private bool BrhFrontPaymentDetialExists(int id)

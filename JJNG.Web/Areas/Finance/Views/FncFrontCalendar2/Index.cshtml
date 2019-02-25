@@ -58,7 +58,7 @@
         <div class="col-md-6">
             <div class="input-group" style="margin-bottom:10px;width:100%">
                 <span class="input-group-addon" style="width:25%;">渠道</span>
-                <select id="form-channel" asp-items="ViewBag.ChannelType" class="form-control"></select>
+                <select id="form-channel" asp-items="ViewBag.ChannelType" class="form-control clear-data"></select>
             </div>
             <div class="input-group" style="margin-bottom:10px;width:100%">
                 <span class="input-group-addon" style="width:25%;">手机</span>
@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="col-md-12">
-            <textarea id="form-note" class="form-control clear-data" rows="4" style="margin-bottom:10px;width:100%"></textarea>
+            <textarea id="form-note" class="form-control clear-data" rows="4" style="margin-bottom:10px;width:100%;"></textarea>
         </div>
         <div id="table-1" class="col-md-12">
             <table class="table">
@@ -95,28 +95,38 @@
                     <button id="isFinish" type="button" class="btn btn-primary">未结账</button>
                     <button id="isFront" type="button" class="btn btn-primary">前台未审</button>
                     <button id="isFinance" type="button" class="btn btn-primary">财务未审</button>
-                    <select id="form-stateType" onchange="selectState()" asp-items="@Html.GetEnumSelectList(typeof(StateType))" class="btn btn-primary"></select>
+                    <select id="form-stateType" onchange="selectState()" asp-items="@Html.GetEnumSelectList(typeof(StateType))" class="btn btn-primary  clear-data"></select>
                     <script>
                         function selectState() {
                             var vs = $('#form-stateType option:selected').val();
                             var vt = $('#form-stateType option:selected').html();
                             if(vs==0)
                             {
+                                $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-success");
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").addClass("btn-primary");
                             }
                             if(vs==1)
                             {
+                                $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-success");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").addClass("btn-warning");
                             }
                             if(vs==2)
                             {
+                                $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").addClass("btn-success");
+                            }
+                            if(vs==3)
+                            {
+                                $("#form-stateType").removeClass("btn-warning");
+                                $("#form-stateType").removeClass("btn-primary");
+                                $("#form-stateType").removeClass("btn-success");
+                                $("#form-stateType").addClass("btn-danger");
                             }
                         }
                     </script>
@@ -178,12 +188,12 @@
 
             //#region Ajax GetCalendarData
             function GetCalendarData() {
-                optionAjax.url = "/Finance/FncFrontCalendar2/GetCalendarData";
+                optionAjax.url = "/Finance/FncFrontCalendar2/GetResources";
                 optionAjax.data = JSON.stringify({
                     branch: _fncBranch.branchName,
                     branchId: _fncBranch.branchId,
                     startDate:_startdate,
-                    endDate:moment(_startdate).add(30,"days").format("YYYY-MM-DD"),
+                    endDate:moment(_startdate).add(31,"days").format("YYYY-MM-DD"),
                 });
                 optionAjax.success = function (result) {
                     _channel=result.channel;
@@ -197,7 +207,7 @@
                     else
                     {
                         $("#isType").html("房号");
-                        $('#calendar').fullCalendar('option', {resourceAreaWidth: '110'});   //option支持set，注：不仅限于locale，还包括其它option操作
+                        $('#calendar').fullCalendar('option', {resourceAreaWidth: '150'});   //option支持set，注：不仅限于locale，还包括其它option操作
                     }
                 };
                 $.ajax(optionAjax);
@@ -213,20 +223,51 @@
                     views: {
                         timelineThirtyDays: {
                             type: 'timeline',
-                            duration: { days: 30 }
+                            duration: { days: 31 }
                         }
                     },
                     viewRender:function( view, element ){
                     },
-                    slotWidth: '120',
+                    slotWidth: '140',
                     slotLabelFormat: "ddd MM/DD",
                     height: 'parent',
                     defaultDate: _startdate,
                     navLinks: true,
-                    resourceAreaWidth: '140',
-                    resourceLabelText: '房间',
+                    resourceAreaWidth: '180',
+                    resourceLabelText:false,
                     resourceOrder: 'order,title',
-                    resources:_resourcesData,
+                    resourceColumns: [
+                    {
+                        labelText: '房间',
+                        field: 'title',
+                        render:function(resource,el){
+                            //var p = /[0-9]/;
+                            //var b = p.test(resourceObj.title);
+                            if(resource.hasOwnProperty("isClean"))
+                            {
+                                if(!resource.isClean)
+                                {
+                                    el.css("color","red");
+                                }
+                            }
+                        }
+                    },
+                    {
+                        labelText: '状态',
+                        field: 'state',
+                        width:"60",
+                        render: function(resource, el) {
+                            el.css("text-align","center");
+                            if (resource.state=="空") {
+                                el.css("color",'red');
+                            }
+                        }
+                    }
+                    ],
+                    //resources:_resourcesData,
+                    resources: function(callback, start, end, timezone) {
+                            callback(_resourcesData);
+                    },
                     resourceRender: function (resourceObj, labelTds, bodyTds) {
                         labelTds.css('height', '18px');
                         labelTds.css('vertical-align','middle');
@@ -281,21 +322,33 @@
                                 html:true,
                                 placement:"auto",
                             });
+                            if(event.state==0)
+                            {
+                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa  fa-user-times'></i>";
+                            }
+                            else if(event.state==1)
+                            {
+                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa fa-user'></i>";
+                            }
+                            else if(event.state==2)
+                            {
+                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;'>";
+                            }
 
                             if (event.isFinish) {
-                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:white'><i class='glyphicon glyphicon-ok'></i>";
+                                hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
                             }
                             else {
-                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:white'><i class='glyphicon glyphicon-remove' style='color:red'></i>";
+                                hl += "&nbsp;<i class='glyphicon glyphicon-yen' style='color:red'></i>";
                             }
                             if (event.isFront) {
-                                hl += "&nbsp;<i class='glyphicon glyphicon-ok'></i>";
+                                hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
                             }
                             else {
                                 hl += "&nbsp;<i class='glyphicon glyphicon-remove' style='color:red'></i>";
                             }
                             if (event.isFinance) {
-                                hl += "&nbsp;<i class='fa fa-lock'></i>&nbsp;&nbsp;</div>";
+                                hl += "&nbsp;<i class='fa fa-lock' style='color:white'></i>&nbsp;&nbsp;</div>";
                             }
                             else{
                                 hl+="&nbsp;&nbsp;</div>";
@@ -379,7 +432,6 @@
                             $("#isFinance").removeClass("btn-warning");
                             $("#isFinance").addClass("btn-primary");
                         }
-                        selectState(event.state);
                         $('#form-name').val(event.customerName);
                         $('#form-count').val(event.customerCount);
                         $('#form-unitPrice').val(event.unitPrice);
@@ -393,7 +445,8 @@
                         $('#form-stewardLeader').val(event.stewardLeader);
                         $('#form-relationStaff').val(event.relationStaff);
                         $('#form-note').val(event.note);
-		                $('#form-stateType').val(event.state);
+                        $('#form-stateType').val(event.state);
+                        selectState(event.state);
                         $(".clear-data").attr("disabled","disabled");
                         $("#isFinance").on('click', function () {
                                 var hl = $("#isFinance").html();
@@ -413,6 +466,12 @@
                             var d = dialog({
                                 title: "修改订单",
                                 content: $("#create-form"),
+                                button: [{
+                                    value: '收款明细',
+                                    callback: function () {
+                                        window.location.href="/Finance/FncFrontPaymentDetial/Index/?id="+event.id;
+                                    }
+                                }],
                                 okValue: "确定",
                                 ok: function () {
                                     var name = $('#form-name').val();
@@ -439,6 +498,10 @@
                                     var isFront = false;
                                     if ($('#isFront').html() == "前台已审") {
                                         isFront = true;
+                                    }
+                                    var isFinance = false;
+                                    if ($('#isFinance').html() == "财务已审") {
+                                        isFinance = true;
                                     }
                                     var color = "";
                                     for (var i = 0; i < _channel.length; i++) {
@@ -483,6 +546,7 @@
                                             state:state,
                                             isFinish: isFinish,
                                             isFront: isFront,
+                                            isFinance:isFinance,
                                             color: color,
                                             payDate: payDate,
                                             payWay: payWay,
@@ -557,13 +621,13 @@
 
             $('#prev').on('click', function () {
                 $('#calendar').fullCalendar('prev');
-                var tempdate = moment($('#startdate').val()).add(-30, 'days');
+                var tempdate = moment($('#startdate').val()).add(-31, 'days');
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 
             $('#next').on('click', function () {
                 $('#calendar').fullCalendar('next');
-                var tempdate = moment($('#startdate').val()).add(30, 'days');
+                var tempdate = moment($('#startdate').val()).add(31, 'days');
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 
@@ -617,21 +681,31 @@
             function selectState(vs) {
                 if(vs==0)
                 {
+                    $("#form-stateType").removeClass("btn-danger");
                     $("#form-stateType").removeClass("btn-success");
                     $("#form-stateType").removeClass("btn-warning");
                     $("#form-stateType").addClass("btn-primary");
                 }
                 if(vs==1)
                 {
+                    $("#form-stateType").removeClass("btn-danger");
                     $("#form-stateType").removeClass("btn-success");
                     $("#form-stateType").removeClass("btn-primary");
                     $("#form-stateType").addClass("btn-warning");
                 }
                 if(vs==2)
                 {
+                    $("#form-stateType").removeClass("btn-danger");
                     $("#form-stateType").removeClass("btn-warning");
                     $("#form-stateType").removeClass("btn-primary");
                     $("#form-stateType").addClass("btn-success");
+                }
+                if(vs==3)
+                {
+                    $("#form-stateType").removeClass("btn-warning");
+                    $("#form-stateType").removeClass("btn-primary");
+                    $("#form-stateType").removeClass("btn-success");
+                    $("#form-stateType").addClass("btn-danger");
                 }
             }
             //#endregion

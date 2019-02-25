@@ -466,6 +466,12 @@
                             var d = dialog({
                                 title: "修改订单",
                                 content: $("#create-form"),
+                                button: [{
+                                    value: '收款明细',
+                                    callback: function () {
+                                        window.location.href="/Finance/FncFrontPaymentDetial/Index/?id="+event.id;
+                                    }
+                                }],
                                 okValue: "确定",
                                 ok: function () {
                                     var name = $('#form-name').val();

@@ -57,6 +57,8 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhFrontDeskAccount\DetialList.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhFrontDeskAccount\Edit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhFrontDeskAccount\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhFrontPaymentDetial\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhFrontPaymentDetial\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestAccount\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestRecord\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhImprestRecord\Delete.cshtml

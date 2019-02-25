@@ -535,8 +535,41 @@
                                         $('#modal-default').modal('show');
                                     },
                                     success: function (data) {
-                                        if(data.eve.state!=3)
-                                        $("#calendar").fullCalendar("renderEvent", data.eve, true);
+                                        if(data.state!=3)
+                                            $("#calendar").fullCalendar("renderEvent", {
+                                                id:data.id,
+                                                resourceId:resource.id,
+                                                allDay:true,
+                                                editable:true,
+                                                start:moment(start).format("YYYY-MM-DD"),
+                                                end :moment(end).format("YYYY-MM-DD"),
+                                                frontDeskAccountsId:data.id,
+                                                houseNumber: resource.id,
+                                                count:DateDiff(moment(start).format("YYYY-MM-DD"),moment(end).format("YYYY-MM-DD")),
+                                                startDate: moment(start).format("YYYY-MM-DD"),
+                                                endDate: moment(end).format("YYYY-MM-DD"),
+                                                enteringDate:data.enteringDate,
+                                                enteringStaff: _user.userName,
+                                                branch: _user.branch,
+                                                title:name+" "+channel,
+                                                customerName:name,
+                                                customerCount: count,
+                                                channel: channel,
+                                                phone:phone,
+                                                unitPrice: unitPrice,
+                                                totalPrice: totalPrice,
+                                                receivable: receivable,
+                                                received: data.received,
+                                                steward: steward,
+                                                frontDeskLeader: frontDeskLeader,
+                                                stewardLeader: stewardLeader,
+                                                relationStaff: relationStaff,
+                                                note: note,
+                                                state:state,
+                                                isFinish: data.isFinish,
+                                                isFront: isFront,
+                                                color: color,
+                                            }, true);
                                     },
                                     complete: function () {
                                         $('#modal-default').modal('hide');
@@ -667,11 +700,8 @@
                             }),
                             success: function (data) {
                                 var hls = "";
-                                for (var i = 0; i < data.list1.length; i++) {
-                                    hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list1[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list1[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list1[i].payAmount+"</td></tr>";
-                                }
-                                for (var i = 0; i < data.list2.length; i++) {
-                                    hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list2[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list2[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list2[i].payAmount + "</td></tr>";
+                                for (var i = 0; i < data.list.length; i++) {
+                                    hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list[i].payAmount+"</td></tr>";
                                 }
                                 var ahl = $(hls);
                                 ahl.appendTo($("#tbody-form"));
@@ -821,27 +851,9 @@
                                 title: "修改订单",
                                 content: $("#create-form"),
                                 button: [{
-                                    value: '删除订单',
+                                    value: '收款明细',
                                     callback: function () {
-                                        if (confirm("确定删除订单？")) {
-                                            $.ajax({
-                                                type: "post",
-                                                async: true,
-                                                url: "/Branch/FrontCalendar/Delete",
-                                                contentType: "application/json; charset=utf-8",
-                                                dataType: "json",
-                                                data: JSON.stringify({
-                                                    frontDeskAccountsId: event.id,
-                                                }),
-                                                success: function (data) {
-                                                    $("#calendar").fullCalendar("removeEvents", event.id);
-                                                },
-                                                error: function () {
-                                                    alert("Failed");
-                                                }
-
-                                            });
-                                        }
+                                        window.location.href="/Branch/BrhFrontPaymentDetial/Index/?id="+event.id;
                                     }
                                 }],
                                 okValue: "确定",
@@ -928,9 +940,43 @@
                                             $('#modal-default').modal('show');
                                         },
                                         success: function (data) {
-                                            $("#calendar").fullCalendar("removeEvents", data.eve.id);
-                                            if(data.eve.state!=3)
-                                            $("#calendar").fullCalendar("renderEvent", data.eve, true);
+                                            $("#calendar").fullCalendar("removeEvents", event.id);
+                                            if(data.state!=3)
+                                                $("#calendar").fullCalendar("renderEvent", {
+                                                    id:event.id,
+                                                    resourceId:event.resourceId,
+                                                    allDay:event.allDay,
+                                                    editable:event.editable,
+                                                    start:event.start,
+                                                    end :event.end,
+                                                    frontDeskAccountsId:event.frontDeskAccountsId,
+                                                    houseNumber:event.resourceId,
+                                                    count:event.count,
+                                                    startDate: event.startDate,
+                                                    endDate: event.endDate,
+                                                    enteringDate:event.enteringDate,
+                                                    enteringStaff: event.enteringStaff,
+                                                    branch: event.branch,
+                                                    title:name+" "+channel,
+                                                    customerName:name,
+                                                    customerCount: count,
+                                                    channel: channel,
+                                                    phone:phone,
+                                                    unitPrice: unitPrice,
+                                                    totalPrice: totalPrice,
+                                                    receivable: receivable,
+                                                    received: data.received,
+                                                    steward: steward,
+                                                    frontDeskLeader: frontDeskLeader,
+                                                    stewardLeader: stewardLeader,
+                                                    relationStaff: relationStaff,
+                                                    note: note,
+                                                    state:state,
+                                                    isFinish: data.isFinish,
+                                                    isFront: isFront,
+                                                    isFinance:isFinance,
+                                                    color: color,
+                                                }, true);
                                         },
                                         complete: function () {
                                             $('#modal-default').modal('hide');

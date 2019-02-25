@@ -25,14 +25,14 @@ namespace JJNG.Web.Areas.Finance.Controllers
             _userManager = usrMgr;
         }
 
-        public async Task<IActionResult> Index(string branch)
+        public async Task<IActionResult> Index(long id)
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["Position"] = _user.Position;
             ViewData["Branch"] = _user.Branch;
-            var appDbContext = _context.BrhFrontPaymentDetials.Include(b => b.BrhFrontDeskAccounts);
-            return View(await appDbContext.ToListAsync());
+            var account = _context.BrhFrontDeskAccounts.SingleOrDefault(x => x.FrontDeskAccountsId == id);
+            var details = _context.BrhFrontPaymentDetials.Include(b => b.BrhFrontDeskAccounts).Where(x => x.FrontDeskAccountsId == id).ToList();
+            return View(details);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -60,7 +60,18 @@ namespace JJNG.Web.Areas.Finance.Controllers
             var brhFrontPaymentDetial = await _context.BrhFrontPaymentDetials.SingleOrDefaultAsync(m => m.FrontPaymentDetialId == id);
             _context.BrhFrontPaymentDetials.Remove(brhFrontPaymentDetial);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            var total = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == brhFrontPaymentDetial.FrontDeskAccountsId).Sum(x => x.PayAmount);
+            var brhaccount = _context.BrhFrontDeskAccounts.SingleOrDefault(x => x.FrontDeskAccountsId == brhFrontPaymentDetial.FrontDeskAccountsId);
+            brhaccount.Received = total;
+            if (brhaccount.Received == brhaccount.Receivable)
+                brhaccount.IsFinish = true;
+            else
+                brhaccount.IsFinish = false;
+
+            _context.Update(brhaccount);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index), new { id = brhFrontPaymentDetial.FrontDeskAccountsId });
         }
 
         private bool BrhFrontPaymentDetialExists(int id)

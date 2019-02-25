@@ -56,7 +56,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             //_context.SaveChanges();
             #endregion
 
-            //#region 云掌柜导入后台
+            #region 云掌柜导入后台
             //var templist = _context.BrhYun.ToList();
             //foreach (var t in templist)
             //{
@@ -119,7 +119,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             //        await _context.SaveChangesAsync();
             //    }
             //}
-            //#endregion
+            #endregion
 
             #region 计算间夜和订单状态
             //var templist = _context.BrhFrontDeskAccounts.Where(x=>DateTime.Compare(x.EndDate, Convert.ToDateTime("2018-11-26"))<=0&&x.Color=="yellow").ToList();
@@ -146,28 +146,11 @@ namespace JJNG.Web.Areas.Finance.Controllers
             fncBranch.BranchName = branchName;
             fncBranch.BranchId = branchId;
 
-            var list_paymentType = _context.FncPaymentType.ToList();
+            var list_paymentType = await _context.FncPaymentType.ToListAsync();
             ViewData["PaymentType"] = new SelectList(list_paymentType, "PaymentType", "PaymentType");
-            var list_channelType = _context.FncChannelType.ToList();
+            var list_channelType = await _context.FncChannelType.ToListAsync();
             ViewData["ChannelType"] = new SelectList(list_channelType, "ChannelType", "ChannelType");
 
-            var d_list = _context.BrhFrontPaymentDetials2.ToList();
-            if (d_list.Count > 0)
-                foreach (var d in d_list)
-                {
-                    var test = _context.BrhFrontDeskAccounts.Where(x => x.FrontDeskAccountsId == d.FrontDeskAccountsId).Count();
-                    if (test > 0)
-                    {
-                        BrhFrontPaymentDetial brf = new BrhFrontPaymentDetial();
-                        brf.FrontDeskAccountsId = d.FrontDeskAccountsId;
-                        brf.PayAmount = d.PayAmount;
-                        brf.PayDate = d.PayDate;
-                        brf.PayWay = d.PayWay;
-                        _context.Add(brf);
-                    }
-                }
-            _context.RemoveRange(d_list);
-            await _context.SaveChangesAsync();
             return View(fncBranch);
         }
 
@@ -203,9 +186,8 @@ namespace JJNG.Web.Areas.Finance.Controllers
         public async Task<JsonResult> List([FromBody]BranchModel branchModel)
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var list1 = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).ToList();
-            var list2 = _context.BrhFrontPaymentDetials2.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).ToList();
-            return Json(new { list1, list2 });
+            var list = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).ToList();
+            return Json(new { list });
         }
 
         public async Task<JsonResult> GetCalendarData([FromBody]BranchModel branchModel)
@@ -218,7 +200,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             var endDate = branchModel.EndDate;
             var branch = branchModel.Branch;
             var frontData = _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(startDate, x.EndDate) <= 0 && DateTime.Compare(x.StartDate, endDate) < 0 && x.Branch == branch && x.State != StateType.已删除).ToList();
-
+            var todayData = _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0 && DateTime.Compare(DateTime.Now, x.EndDate) < 0 && x.Branch == branch && x.State != StateType.已删除).ToList();
             Branch1 resources1 = new Branch1();
             Branch2 resources2 = new Branch2();
             List<RoomType> roomTypeList = new List<RoomType>();
@@ -226,33 +208,60 @@ namespace JJNG.Web.Areas.Finance.Controllers
             var fncHouseTypeList = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fncBranch.BranchId).ToList();
             var typeCollet = fncHouseTypeList.Select(x => x.HouseTypeId).ToArray();
             var fncHouseNumberList = _context.FncHouseNumber.Where(x => typeCollet.Contains(x.HouseTypeId)).ToList();
-            foreach (var fncHouseType in fncHouseTypeList)
-            {
-                var roomType = new RoomType();
-                var roomList = new List<Room>();
-                roomType.id = fncHouseType.Order.ToString();
-                roomType.title = fncHouseType.HouseType;
-                roomType.order = fncHouseType.Order;
-                foreach (var fncHouseNumber in fncHouseNumberList)
-                {
-                    var room = new Room();
-                    if (fncHouseType.HouseTypeId == fncHouseNumber.HouseTypeId)
-                    {
-                        room.id = fncHouseNumber.HouseNumber;
-                        room.title = fncHouseNumber.HouseNumber;
-                        roomList.Add(room);
-                    }
-                }
-                roomType.children = roomList;
-                roomTypeList.Add(roomType);
-            }
             List<Room> roomNumberList = new List<Room>();
             foreach (var fncHouseNumber in fncHouseNumberList)
             {
                 var room = new Room();
                 room.id = fncHouseNumber.HouseNumber;
-                room.title = fncHouseNumber.HouseNumber;
+                if (fncHouseNumber.isClean)
+                    room.title = fncHouseNumber.HouseNumber;
+                else
+                    room.title = fncHouseNumber.HouseNumber + " 脏";
+                room.typeId = fncHouseNumber.HouseTypeId;
+                room.isClean = fncHouseNumber.isClean;
+                foreach (var fh in todayData)
+                {
+                    if (fh.HouseNumber == fncHouseNumber.HouseNumber)
+                    {
+                        room.state = Enum.GetName(typeof(StateType), (int)fh.State);
+                        break;
+                    }
+                }
+                if (string.IsNullOrEmpty(room.state))
+                    room.state = "空";
                 roomNumberList.Add(room);
+            }
+            foreach (var fncHouseType in fncHouseTypeList)
+            {
+                var count1 = 0;
+                var count2 = 0;
+                var roomType = new RoomType();
+                var roomList = new List<Room>();
+                roomType.id = fncHouseType.Order.ToString();
+                roomType.title = fncHouseType.HouseType;
+                roomType.order = fncHouseType.Order;
+                foreach (var rrr in roomNumberList)
+                {
+                    var room = new Room();
+                    if (fncHouseType.HouseTypeId == rrr.typeId)
+                    {
+                        count1++;
+                        room.id = rrr.id;
+                        room.title = rrr.title;
+                        room.state = rrr.state;
+                        room.typeId = rrr.typeId;
+                        room.isClean = rrr.isClean;
+                        if (room.state != "空")
+                            count2++;
+                        roomList.Add(room);
+                    }
+                }
+                if (count1 != count2)
+                    roomType.state = (count1 - count2).ToString() + " 间";
+                else
+                    roomType.state = "无房";
+                roomType.children = roomList;
+                roomTypeList.Add(roomType);
             }
 
             resources1.id = fncBranch.BranchName;
@@ -261,8 +270,18 @@ namespace JJNG.Web.Areas.Finance.Controllers
             resources1.children = roomTypeList;
             resources2.id = fncBranch.BranchName;
             resources2.title = fncBranch.BranchName;
-            resources1.isType = fncBranch.IsType;
+            resources2.isType = fncBranch.IsType;
             resources2.children = roomNumberList;
+            if (fncHouseNumberList.Count != todayData.Count)
+            {
+                resources1.state = (fncHouseNumberList.Count - todayData.Count).ToString() + " 间";
+                resources2.state = (fncHouseNumberList.Count - todayData.Count).ToString() + " 间";
+            }
+            else
+            {
+                resources1.state = "满房";
+                resources2.state = "满房";
+            }
 
             List<Event> events = new List<Event>();
             for (var i = 0; i < 30; i++)
@@ -357,12 +376,127 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 tempevent.StewardLeader = f.StewardLeader;
                 tempevent.TotalPrice = f.TotalPrice;
                 tempevent.UnitPrice = f.UnitPrice;
+                if (tempevent.IsFinance)
+                    tempevent.editable = false;
+                else
+                    tempevent.editable = true;
 
                 events.Add(tempevent);
             }
             #endregion
 
-            return Json(new { events, resources1, resources2, frontData, channel });
+            return Json(new { events, resources1, resources2,  channel });
+        }
+
+        public async Task<JsonResult> GetResources([FromBody]BranchModel branchModel)
+        {
+            AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var channel = _context.FncChannelType.ToList();
+
+            #region GetEvents
+            var branch = branchModel.Branch;
+            var todayData = _context.BrhFrontDeskAccounts.Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0 && DateTime.Compare(DateTime.Now, x.EndDate) < 0 && x.Branch == branch && x.State != StateType.已删除).ToList();
+            Branch1 resources1 = new Branch1();
+            Branch2 resources2 = new Branch2();
+            List<RoomType> roomTypeList = new List<RoomType>();
+            var fncBranch = _context.FncBranch.SingleOrDefault(x => x.BranchName == branch);
+            var fncHouseTypeList = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fncBranch.BranchId).ToList();
+            var typeCollet = fncHouseTypeList.Select(x => x.HouseTypeId).ToArray();
+            var fncHouseNumberList = _context.FncHouseNumber.Where(x => typeCollet.Contains(x.HouseTypeId)).ToList();
+            List<Room> roomNumberList = new List<Room>();
+            foreach (var fncHouseNumber in fncHouseNumberList)
+            {
+                var room = new Room();
+                room.id = fncHouseNumber.HouseNumber;
+                if (fncHouseNumber.isClean)
+                    room.title = fncHouseNumber.HouseNumber;
+                else
+                    room.title = fncHouseNumber.HouseNumber + " 脏";
+                room.typeId = fncHouseNumber.HouseTypeId;
+                room.isClean = fncHouseNumber.isClean;
+                foreach (var fh in todayData)
+                {
+                    if (fh.HouseNumber == fncHouseNumber.HouseNumber)
+                    {
+                        room.state = Enum.GetName(typeof(StateType), (int)fh.State);
+                        break;
+                    }
+                }
+                if (string.IsNullOrEmpty(room.state))
+                    room.state = "空";
+                roomNumberList.Add(room);
+            }
+            foreach (var fncHouseType in fncHouseTypeList)
+            {
+                var count1 = 0;
+                var count2 = 0;
+                var roomType = new RoomType();
+                var roomList = new List<Room>();
+                roomType.id = fncHouseType.Order.ToString();
+                roomType.title = fncHouseType.HouseType;
+                roomType.order = fncHouseType.Order;
+                foreach (var rrr in roomNumberList)
+                {
+                    var room = new Room();
+                    if (fncHouseType.HouseTypeId == rrr.typeId)
+                    {
+                        count1++;
+                        room.id = rrr.id;
+                        room.title = rrr.title;
+                        room.state = rrr.state;
+                        room.typeId = rrr.typeId;
+                        room.isClean = rrr.isClean;
+                        if (room.state != "空")
+                            count2++;
+                        roomList.Add(room);
+                    }
+                }
+                if (count1 != count2)
+                    roomType.state = (count1 - count2).ToString() + " 间";
+                else
+                    roomType.state = "无房";
+                roomType.children = roomList;
+                roomTypeList.Add(roomType);
+            }
+
+            resources1.id = fncBranch.BranchName;
+            resources1.title = fncBranch.BranchName;
+            resources1.isType = fncBranch.IsType;
+            resources1.children = roomTypeList;
+            resources2.id = fncBranch.BranchName;
+            resources2.title = fncBranch.BranchName;
+            resources2.isType = fncBranch.IsType;
+            resources2.children = roomNumberList;
+            if (fncHouseNumberList.Count != todayData.Count)
+            {
+                resources1.state = (fncHouseNumberList.Count - todayData.Count).ToString() + " 间";
+                resources2.state = (fncHouseNumberList.Count - todayData.Count).ToString() + " 间";
+            }
+            else
+            {
+                resources1.state = "满房";
+                resources2.state = "满房";
+            }
+            #endregion
+
+            return Json(new { resources1, resources2, channel });
+        }
+
+        public static TChild AutoCopy<TParent, TChild>(TParent parent) where TChild : TParent, new()
+        {
+            TChild child = new TChild();
+            var ParentType = typeof(TParent);
+            var Properties = ParentType.GetProperties();
+            foreach (var Propertie in Properties)
+            {
+                //循环遍历属性
+                if (Propertie.CanRead && Propertie.CanWrite)
+                {
+                    //进行属性拷贝
+                    Propertie.SetValue(child, Propertie.GetValue(parent, null), null);
+                }
+            }
+            return child;
         }
     }
 }
