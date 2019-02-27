@@ -1,0 +1,685 @@
+﻿@model Tuple<FncBranch, List<FncBranch>>
+
+@{
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+    ViewData["Title"] = controllerName;
+    string path = "/" + areaName + "/" + controllerName;
+}
+<section class="content">
+    <!--月数据分析-->
+    <div class="row hidden-xs">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">月度分析报告</h3>
+                    <div class="box-tools pull-right">
+                        <button id="MonthProfitRateBtn" title="房费流水" type="button" class="btn btn-box-tool hidden-xs">房费流水</button>
+                        <button id="MonthProfitBtn" title="出租率" type="button" class="btn btn-box-tool hidden-xs">出租率</button>
+                        <button id="MonthHandBtn" title="均价" type="button" class="btn btn-box-tool hidden-xs">均价</button>
+                        <button id="MonthPointBtn" title="有效均价" type="button" class="btn btn-box-tool hidden-xs">有效均价</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                @foreach (var u in Model.Item2)
+                                {
+                                    <li><a asp-action="Index" asp-route-branchId="@u.BranchId" asp-route-branchName="@u.BranchName" asp-route-count="@u.Count"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <div id="MonthBaseChart" style="height: 300px;">
+                            <!--月分析图表位置-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box  box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">月汇总</h3>
+                    <div class="box-tools pull-right">
+                        @*<a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-box-tool" asp-action="Create"> 新增</a>*@
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body table-responsive">
+                    <div class="form-group">
+                        <div class="col-md-3 col-sm-6 col-xs-12 no-padding pull-right">
+                            <input type="text" placeholder="搜索" id="search" class="form-control">
+                        </div>
+                    </div>
+                    <table id="table-1" class="table  table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    月份
+                                </th>
+                                <th>
+                                    房费流水
+                                </th>
+                                <th>
+                                    实售间夜
+                                </th>
+                                <th>
+                                    总间夜
+                                </th>
+                                <th>
+                                    均价（实售）
+                                </th>
+                                <th>
+                                    均价（总）
+                                </th>
+                                <th>
+                                    出租率
+                                </th>
+                                @*<th>
+                                        同比增长额
+                                    </th>
+                                    <th>
+                                        同比增长率
+                                    </th>
+                                    <th>
+                                        环比增长额
+                                    </th>
+                                    <th>
+                                        环比增长率
+                                    </th>
+                                    <th>
+                                        出同比增长额
+                                    </th>
+                                    <th>
+                                        出同比增长率
+                                    </th>
+                                    <th>
+                                        出环比增长额
+                                    </th>
+                                    <th>
+                                        出环比增长率
+                                    </th>*@
+                                <th>
+                                    收入
+                                </th>
+                                <th>
+                                    支出
+                                </th>
+                                <th>
+                                    外销流水
+                                </th>
+                                <th>
+                                    外销利润
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">提示</h4>
+                </div>
+                <div class="modal-body">
+                    <p>执行中，请稍后&hellip;</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts{
+    <script type="text/javascript" src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
+    <script>
+        $(function () {
+            var _fncBranch=@Html.Raw(Json.Serialize(Model.Item1));
+            var MonthBaseData=[];
+            var MonthBaseChart = echarts.init(document.getElementById('MonthBaseChart'));
+
+            //#region 月度分析报告
+            $("#MonthProfitRateBtn").click(function () {
+                Render_MonthBaseChart(MonthBaseData, 1);
+            });
+
+            $("#MonthProfitBtn").click(function () {
+                Render_MonthBaseChart(MonthBaseData, 2);
+            });
+
+            $("#MonthHandBtn").click(function () {
+                Render_MonthBaseChart(MonthBaseData, 3);
+            });
+
+            $("#MonthPointBtn").click(function () {
+                Render_MonthBaseChart(MonthBaseData, 4);
+            });
+            MonthBaseChart.on('click', function (params) {
+                //Render_MonthPieChart(params.dataIndex);
+                //Render_BuySellRateChart(params.dataIndex);
+                //table_buysell.api().clear();
+                //table_buysell.api().rows.add(MonthBaseData[params.dataIndex].buySellData).draw();
+            });
+
+            var optionMonthBase = {
+                //color: ['#3398DB','gray'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend:{
+                    data:[],
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        dataView : {show: true, readOnly: false},
+                        magicType : {show: true, type: ['line', 'bar']},
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                grid: {
+                    left: '3%',
+                    right: '8%',
+                    top: '15%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                dataZoom: [
+                    {
+                        id: 'dataZoomX',
+                        type: 'inside',
+                        xAxisIndex: [0],
+                        filterMode: 'filter'
+                    }
+                ],
+                xAxis:
+                    {
+                        type: 'category',
+                        data: []
+                    },
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value}'
+                        },
+                    }
+
+                ],
+                series:[
+                    {
+                        name: '',
+                        type: 'bar',
+                        //barWidth: '60%',
+                        data: [],
+                        markPoint : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值'}
+                            ]
+                        },
+                        markLine : {
+                            data : [
+                                {type : 'average', name: '平均值'}
+                            ]
+                        },
+                        label: {
+                            normal: {
+                                show: false,
+                                formatter: '{c}',
+                                position: 'top',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        name: '',
+                        type: 'bar',
+                        //barWidth: '60%',
+                        data: [],
+                        markPoint : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值'}
+                            ]
+                        },
+                        markLine : {
+                            data : [
+                                {type : 'average', name: '平均值'}
+                            ]
+                        },
+                        label: {
+                            normal: {
+                                show: false,
+                                formatter: '{c}',
+                                position: 'top',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        }
+                    },
+                ]
+            };
+
+            function Render_MonthBaseChart(data, type) {
+
+                optionMonthBase.xAxis.data = [];
+                optionMonthBase.series[0].data = [];
+                optionMonthBase.series[1].data = [];
+                var seriesName = "";
+
+                if (type == 1) {
+                    seriesName = "房费流水";
+                }
+                else if (type == 2) {
+                    seriesName = "出租率";
+                }
+                else if (type == 3) {
+                    seriesName = "均价";
+                }
+                else if (type == 4) {
+                    seriesName = "有效均价";
+                }
+
+                optionMonthBase.series[0].name = seriesName;
+                optionMonthBase.series[1].name="去年同期";
+                optionMonthBase.legend.data.push(seriesName);
+                optionMonthBase.legend.data.push("去年同期");
+                if (data != null) {
+                    $.each(data, function () {
+                        optionMonthBase.xAxis.data.push(moment(this.month).format("YYYY年MM月"));
+                        //房费流水
+                        if (type == 1) {
+                            optionMonthBase.series[0].data.push((this.houseAmount).toFixed(0));
+                            optionMonthBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('￥'+p.value) : '';
+                            };
+                            var tempMonth=moment(this.month).add(-1,"years");
+                            var item=data.find(item=>{return moment(item.month).format("YYYY年MM月")==moment(tempMonth).format("YYYY年MM月")});
+                            if(item==undefined){
+                                optionMonthBase.series[1].data.push(0);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('￥'+p.value) : '';
+                                };
+                            }
+                            else{
+                                optionMonthBase.series[1].data.push(item.houseAmount);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('￥'+p.value) : '';
+                                };
+                            }
+                        }
+                        //出租率
+                        else if (type == 2) {
+                            optionMonthBase.series[0].data.push((this.rate*100).toFixed(2));
+                            optionMonthBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? (p.value+" %") : '';
+                            };
+                            var tempMonth=moment(this.month).add(-1,"years");
+                            var item=data.find(item=>{return moment(item.month).format("YYYY年MM月")==moment(tempMonth).format("YYYY年MM月")});
+                            if(item==undefined){
+                                optionMonthBase.series[1].data.push(0);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? (p.value+" %") : '';
+                                };
+                            }
+                            else{
+                                optionMonthBase.series[1].data.push((item.rate*100).toFixed(2));
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? (p.value+" %") : '';
+                                };
+                            }
+                        }
+                        //均价
+                        else if (type == 3) {
+                            optionMonthBase.series[0].data.push(this.average.toFixed(0));
+                            optionMonthBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('a.' + p.value) : '';
+                            };
+                            var tempMonth=moment(this.month).add(-1,"years");
+                            var item=data.find(item=>{return moment(item.month).format("YYYY年MM月")==moment(tempMonth).format("YYYY年MM月")});
+                            if(item==undefined){
+                                optionMonthBase.series[1].data.push(0);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('a.' + p.value) : '';
+                                };
+                            }
+                            else{
+                                optionMonthBase.series[1].data.push(item.average);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('a.' + p.value) : '';
+                                };
+                            }
+                        }
+                        //有效均价
+                        else if (type == 4) {
+                            optionMonthBase.series[0].data.push(this.validAverage.toFixed(0));
+                            optionMonthBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('v.' + p.value) : '';
+                            };
+                            var tempMonth=moment(this.month).add(-1,"years");
+                            var item=data.find(item=>{return moment(item.month).format("YYYY年MM月")==moment(tempMonth).format("YYYY年MM月")});
+                            if(item==undefined){
+                                optionMonthBase.series[1].data.push(0);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('v.' + p.value) : '';
+                                };
+                            }
+                            else{
+                                optionMonthBase.series[1].data.push(item.validAverage);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('v.' + p.value) : '';
+                                };
+                            }
+                        }
+                    })
+
+                    if(type==1) {
+                        optionMonthBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionMonthBase.tooltip.formatter=function(params) {
+                            var res = params[0].seriesName+'<br/>'+
+                                params[0].name+"："+params[0].value+" 元";
+                            var item=data.find(item=>{return moment(item.month).format("YYYY年MM月")==params[0].name});
+                            var item1=data.find(item=>{return moment(item.month).add('1',"y").format("YYYY年MM月")==params[0].name});
+                            var item2=data.find(item=>{return moment(item.month).add('1',"M").format("YYYY年MM月")==params[0].name});
+                            if(item1!=undefined)
+                            {
+                                res+='<br/>'+"去年同期："+parseFloat(item1.houseAmount).toFixed(0)+" 元";
+                                res+="<br/>"+"同比增长额："+parseFloat(item.同比增长额).toFixed(0)+" 元";
+                                res+="<br/>"+"同比增长率："+parseFloat(item.同比增长率*100).toFixed(2)+" %";
+                            }
+                            if(item2!=undefined)
+                            {
+                                res+='<br/>'+"上月："+parseFloat(item2.houseAmount).toFixed(0)+" 元";
+                                res+="<br/>"+"环比增长额："+parseFloat(item.环比增长额).toFixed(0)+" 元";
+                                res+="<br/>"+"环比增长率："+parseFloat(item.环比增长率*100).toFixed(2)+" %";
+                            }
+                            return res;
+                        }
+                    }else if(type==2){
+                        optionMonthBase.yAxis[0].axisLabel.formatter = '{value} %';
+                        optionMonthBase.tooltip.formatter=function(params) {
+                            var res = params[0].seriesName+'<br/>'+
+                                params[0].name+"："+params[0].value+" %";
+                            var item=data.find(item=>{return moment(item.month).format("YYYY年MM月")==params[0].name});
+                            var item1=data.find(item=>{return moment(item.month).add('1',"y").format("YYYY年MM月")==params[0].name});
+                            var item2=data.find(item=>{return moment(item.month).add('1',"M").format("YYYY年MM月")==params[0].name});
+                            if(item1!=undefined)
+                            {
+                                res+='<br/>'+"去年同期："+parseFloat(item1.rate*100).toFixed(2)+" %";
+                                res+="<br/>"+"同比增长点："+parseFloat(item.出同比增长额*100).toFixed(2)+" 点";
+                                res+="<br/>"+"同比增长率："+parseFloat(item.出同比增长率*100).toFixed(2)+" %";
+                            }
+                            if(item2!=undefined)
+                            {
+                                res+='<br/>'+"上月："+parseFloat(item2.rate*100).toFixed(2)+" %";
+                                res+="<br/>"+"环比增长额："+parseFloat(item.出环比增长额*100).toFixed(2)+" 点";
+                                res+="<br/>"+"环比增长率："+parseFloat(item.出环比增长率*100).toFixed(2)+" %";
+                            }
+                            return res;
+                        }
+                    }else if(type==3){
+                        optionMonthBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionMonthBase.tooltip.formatter=function(params) {
+                            var res = params[0].seriesName+'<br/>'+
+                                params[0].name+"："+params[0].value+" 元";
+                            var item=data.find(item=>{return moment(item.month).format("YYYY年MM月")==params[0].name});
+                            var item1=data.find(item=>{return moment(item.month).add('1',"y").format("YYYY年MM月")==params[0].name});
+                            var item2=data.find(item=>{return moment(item.month).add('1',"M").format("YYYY年MM月")==params[0].name});
+                            if(item1!=undefined)
+                            {
+                                res+='<br/>'+"去年同期："+parseFloat(item1.average).toFixed(0)+" 元";
+                                res+="<br/>"+"同比增长额："+parseFloat(item.均同比增长额).toFixed(0)+" 元";
+                                res+="<br/>"+"同比增长率："+parseFloat(item.均同比增长率*100).toFixed(2)+" %";
+                            }
+                            if(item2!=undefined)
+                            {
+                                res+='<br/>'+"上月："+parseFloat(item2.average).toFixed(0)+" 元";
+                                res+="<br/>"+"环比增长额："+parseFloat(item.均环比增长额).toFixed(0)+" 元";
+                                res+="<br/>"+"环比增长率："+parseFloat(item.均环比增长率*100).toFixed(2)+" %";
+                            }
+                            return res;
+                        }
+                    }else if(type==4){
+                        optionMonthBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionMonthBase.tooltip.formatter=function(params) {
+                            var res = params[0].seriesName+'<br/>'+
+                                params[0].name+"："+params[0].value+" 元";
+                            var item=data.find(item=>{return moment(item.month).format("YYYY年MM月")==params[0].name});
+                            var item1=data.find(item=>{return moment(item.month).add('1',"y").format("YYYY年MM月")==params[0].name});
+                            var item2=data.find(item=>{return moment(item.month).add('1',"M").format("YYYY年MM月")==params[0].name});
+                            if(item1!=undefined)
+                            {
+                                res+='<br/>'+"去年同期："+parseFloat(item1.validAverage).toFixed(0)+" 元";
+                                res+="<br/>"+"同比增长额："+parseFloat(item.有同比增长额).toFixed(0)+" 元";
+                                res+="<br/>"+"同比增长率："+parseFloat(item.有同比增长率*100).toFixed(2)+" %";
+                            }
+                            if(item2!=undefined)
+                            {
+                                res+='<br/>'+"上月："+parseFloat(item2.validAverage).toFixed(0)+" 元";
+                                res+="<br/>"+"环比增长额："+parseFloat(item.有环比增长额).toFixed(0)+" 元";
+                                res+="<br/>"+"环比增长率："+parseFloat(item.有环比增长率*100).toFixed(2)+" %";
+                            }
+                            return res;
+                        }
+                    }
+                    MonthBaseChart.setOption(optionMonthBase);
+                }
+            };
+            //#endregion
+
+            //#region table1初始化
+            var table1 = $('#table-1').dataTable(
+                {
+                    responsive: true,
+                    order: [[0, "desc"]],
+                    dom:
+                        "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    language: {
+                        processing: "加载中...",
+                        lengthMenu: "每页显示 _MENU_ 条数据",
+                        zeroRecords: "没有匹配结果",
+                        info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                        infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                        infoFiltered: "(由 _MAX_ 项结果过滤)",
+                        infoPostFix: "",
+                        search: "搜索:",
+                        url: "",
+                        emptyTable: "没有匹配结果",
+                        loadingRecords: "载入中...",
+                        thousands: ",",
+                        paginate: {
+                            first: "首页",
+                            previous: "上一页",
+                            next: "下一页",
+                            last: "末页"
+                        },
+                        aria: {
+                            sortAscending: ": 以升序排列此列",
+                            sortDescending: ": 以降序排列此列"
+                        }
+                    },
+                    data:[],
+                    columns: [
+                        { data: "month" },
+                        { data: "houseAmount" },
+                        { data: "houseCount" },
+                        { data: "houseTotal" },
+                        { data: "average" },
+                        { data: "validAverage" },
+                        { data: "rate" },
+                        //{ data: "同比增长额" },
+                        //{ data: "同比增长率" },
+                        //{ data: "环比增长额" },
+                        //{ data: "环比增长率" },
+                        //{ data: "出同比增长额" },
+                        //{ data: "出同比增长率" },
+                        //{ data: "出环比增长额" },
+                        //{ data: "出环比增长率" },
+                        { data: "earning" },
+                        { data: "expend" },
+                        { data: "saleAmount" },
+                        { data: "saleProfit" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            render: function (data, type, row, meta) {
+                                var temp = new Date(data);
+                                return temp.Format('YYYY年MM月');
+                            }
+                        },
+                        {
+                            targets: [1,4,5],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data);
+                                return Math.round(result);
+                            }
+                        },
+                        {
+                            targets: [],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data)*100;
+                                return Math.round(result)+" 点";
+                            }
+                        },
+                        {
+                            targets: [6],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data)*100;
+                                return result.toFixed(2)+" %";
+                            }
+                        },
+                    ],
+                });
+            $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
+            //#endregion
+
+            //Select2
+            $('.select2').select2();
+            //#endregion
+
+            //#region 日期区间选择事件
+            $("#date_select").change(function () {
+                var flag = parseInt($("#date_select").val());
+                switch (flag) {
+                    // 当天
+                    case 0:
+                        $('#date_beg').val(getTodayDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    // 昨天
+                    case 1:
+                        $('#date_beg').val(getYesterdayDate);
+                        $('#date_end').val(getTodayDate);
+                        break;
+                    // 本周
+                    case 2:
+                        $('#date_beg').val(getWeekStartDate);
+                        $('#date_end').val(getWeekEndDate);
+                        break;
+                    // 当月
+                    case 3:
+                        $('#date_beg').val(getMonthStartDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    // 上个月
+                    case 4:
+                        $('#date_beg').val(getPreMonthStartDate);
+                        $('#date_end').val(getMonthStartDate);
+                        break;
+                    // 最近三月
+                    case 5:
+                        $('#date_beg').val(getTreeMonthStartDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    // 最近一年
+                    case 6:
+                        $('#date_beg').val(getYearStartDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    default:
+                        $('#date_beg').val("");
+                        $('#date_end').val("");
+                        break;
+                }
+                table1.api().draw();
+            });
+            //#endregion
+
+            //#region Ajax optionAjax
+            var optionAjax = {
+                type: "post",
+                async: true,
+                url: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: {},
+                beforeSend: function () {
+                    $('#modal-default').modal('show');
+                },
+                success: function (result) {
+                },
+                complete: function () {
+                    $('#modal-default').modal('hide');
+                },
+            };
+            //#endregion
+
+            //#region Ajax GetCalendarData
+            function GetMonthData() {
+                optionAjax.url = "/Finance/FncMonthData/GetMonthData";
+                optionAjax.data = JSON.stringify({
+                    branchName: _fncBranch.branchName,
+                    branchId: _fncBranch.branchId,
+                    count:_fncBranch.count
+                });
+                optionAjax.success = function (result) {
+                    MonthBaseData = result.monthDataList;
+                    Render_MonthBaseChart(MonthBaseData,1);
+                    table1.api().rows.add(result.monthDataList).draw();
+                };
+                $.ajax(optionAjax);
+            };
+            //#endregion
+            GetMonthData();
+            setTimeout(function () {
+                window.onresize = function () {
+                    MonthBaseChart.resize();
+                }
+            }, 200);
+        });
+    </script>
+}

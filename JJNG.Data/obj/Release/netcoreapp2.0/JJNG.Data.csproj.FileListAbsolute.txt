@@ -10,6 +10,7 @@ D:\既见\JJNG\JJNG.Data\obj\Release\netcoreapp2.0\JJNG.Data.pdb
 D:\JiJian\JJNG.Data\bin\Release\netcoreapp2.0\JJNG.Data.deps.json
 D:\JiJian\JJNG.Data\bin\Release\netcoreapp2.0\JJNG.Data.dll
 D:\JiJian\JJNG.Data\bin\Release\netcoreapp2.0\JJNG.Data.pdb
+D:\JiJian\JJNG.Data\obj\Release\netcoreapp2.0\JJNG.Data.csprojAssemblyReference.cache
 D:\JiJian\JJNG.Data\obj\Release\netcoreapp2.0\JJNG.Data.csproj.CoreCompileInputs.cache
 D:\JiJian\JJNG.Data\obj\Release\netcoreapp2.0\JJNG.Data.AssemblyInfoInputs.cache
 D:\JiJian\JJNG.Data\obj\Release\netcoreapp2.0\JJNG.Data.AssemblyInfo.cs

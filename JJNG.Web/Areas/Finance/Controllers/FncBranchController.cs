@@ -25,7 +25,16 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.FncBranch.ToListAsync());
+            var fncBranch = await _context.FncBranch.ToListAsync();
+            foreach(var fb in fncBranch)
+            {
+                var typeCollet = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fb.BranchId).Select(x => x.HouseTypeId).ToArray();
+                var fncHouseNumberList = _context.FncHouseNumber.Where(x => typeCollet.Contains(x.HouseTypeId)).ToList();
+                fb.Count = fncHouseNumberList.Count;
+            }
+            _context.UpdateRange(fncBranch);
+            _context.SaveChanges();
+            return View(fncBranch);
         }
 
         public IActionResult Create()

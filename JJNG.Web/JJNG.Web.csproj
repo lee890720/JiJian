@@ -44,7 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Personnel\Models\" />
     <Folder Include="Connected Services\" />
     <Folder Include="Properties\PublishProfiles\" />

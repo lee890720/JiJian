@@ -111,6 +111,9 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncImprestAccount\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncImprestAccount\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncImprestRecord\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncMonthData\CreateEdit.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncMonthData\Delete.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncMonthData\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\Index.cshtml

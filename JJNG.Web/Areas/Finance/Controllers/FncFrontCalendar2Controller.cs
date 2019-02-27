@@ -60,6 +60,19 @@ namespace JJNG.Web.Areas.Finance.Controllers
             //var start = new DateTime(2018, 7, 1);
             //var end = new DateTime(2018, 11, 26);
             //var templist = _context.BrhFrontDeskAccounts.Where(x => x.Branch == "既见·南国" && DateTime.Compare(start, x.StartDate) <= 0 && DateTime.Compare(x.StartDate, end) < 0).ToList();
+            //var templist = _context.BrhFrontDeskAccounts.Where(x => x.State!=StateType.已删除&&x.State!=StateType.已退房).ToList();
+            //foreach (var t in templist)
+            //{
+            //    t.State = StateType.已退房;
+            //}
+            //_context.UpdateRange(templist);
+            //_context.SaveChanges();
+            #endregion
+
+            #region 增加收款明细
+            //var start = new DateTime(2018, 7, 1);
+            //var end = new DateTime(2018, 11, 26);
+            //var templist = _context.BrhFrontDeskAccounts.Where(x => x.Branch == "既见·南国" && DateTime.Compare(start, x.StartDate) <= 0 && DateTime.Compare(x.StartDate, end) < 0).ToList();
             //var templist = _context.BrhFrontDeskAccounts.Where(x => x.Branch == "既见·苍海").ToList();
             //foreach (var t in templist)
             //{
@@ -162,23 +175,13 @@ namespace JJNG.Web.Areas.Finance.Controllers
             #endregion
 
             #region 计算间夜和订单状态
-            //var templist = _context.BrhFrontDeskAccounts.Where(x=>DateTime.Compare(x.EndDate, Convert.ToDateTime("2018-11-26"))<=0&&x.Color=="yellow").ToList();
+            //var templist = _context.BrhFrontDeskAccounts.Where(x =>x.Count==0).ToList();
             //foreach (var t in templist)
             //{
-            //t.State = StateType.已退房;
-            //t.Count = (t.EndDate - t.StartDate).Days;
-            //x.Count != (x.EndDate - x.StartDate).Days && (x.EndDate - x.StartDate).Days != 0
-            //var count = (t.EndDate - t.StartDate).Days;
-            //    t.Count = count;
-            //    t.UnitPrice = t.TotalPrice / count;
-            //if (t.Color == "yellow")
-            //{
-            //t.Color = "gray";
+            //    t.Count = (t.EndDate - t.StartDate).Days; 
             //}
-            //_context.Update(t);
+            //_context.UpdateRange(templist);
             //_context.SaveChanges();
-            //}
-
             #endregion
 
             ViewData["BranchId"] = branchId;

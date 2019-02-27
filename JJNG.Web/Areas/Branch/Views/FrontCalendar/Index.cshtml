@@ -288,13 +288,11 @@
                                                     {
                                                         _resourcesData[0].children[i].children[j].title+=" 脏";
                                                         _resourcesData[0].children[i].children[j].isClean=false;
-                                                        //console.log(_resourcesData[0].children[i].children[j].title);
                                                     }
                                                     else
                                                     {
-                                                        _resourcesData[0].children[i].children[j].title=parseInt(_resourcesData[0].children[i].children[j].title);
+                                                        _resourcesData[0].children[i].children[j].title=_resourcesData[0].children[i].children[j].title.split(" 脏").join("");
                                                         _resourcesData[0].children[i].children[j].isClean=true;
-                                                        //console.log(_resourcesData[0].children[i].children[j].title);
                                                     }
                                                 }
                                             }
@@ -310,13 +308,11 @@
                                                     {
                                                         _resourcesData[0].children[i].title+=" 脏";
                                                         _resourcesData[0].children[i].isClean=false;
-                                                        console.log(_resourcesData[0].children[i].title);
                                                     }
                                                     else
                                                     {
-                                                        _resourcesData[0].children[i].title=parseInt(_resourcesData[0].children[i].title);
+                                                        _resourcesData[0].children[i].title=_resourcesData[0].children[i].title.split(" 脏").join("");
                                                         _resourcesData[0].children[i].isClean=true;
-                                                        console.log(_resourcesData[0].children[i].title);
                                                     }
                                                 }
                                             }

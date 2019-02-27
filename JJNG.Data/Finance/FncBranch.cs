@@ -10,6 +10,7 @@ namespace JJNG.Data.Finance
         public FncBranch()
         {
             FncHouseType = new HashSet<FncHouseType>();
+            FncMonthData = new HashSet<FncMonthData>();
         }
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -17,8 +18,10 @@ namespace JJNG.Data.Finance
 
         [Display(Name = "名称")]
         public string BranchName { get; set; }
+        public int Count { get; set; }
         public bool IsType { get; set; }
         public ICollection<FncHouseType> FncHouseType { get; set; }
+        public ICollection<FncMonthData> FncMonthData { get; set; }
 
     }
 }

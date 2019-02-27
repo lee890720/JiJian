@@ -462,6 +462,8 @@ namespace JJNG.Data.Migrations
 
                     b.Property<string>("BranchName");
 
+                    b.Property<int>("Count");
+
                     b.Property<bool>("IsType");
 
                     b.HasKey("BranchId");
@@ -547,6 +549,42 @@ namespace JJNG.Data.Migrations
                     b.HasIndex("BranchId");
 
                     b.ToTable("Fnc_HouseType");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncMonthData", b =>
+                {
+                    b.Property<int>("MonthDataId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("Average");
+
+                    b.Property<int>("BranchId");
+
+                    b.Property<decimal>("Earning");
+
+                    b.Property<decimal>("Expend");
+
+                    b.Property<decimal>("HouseAmount");
+
+                    b.Property<int>("HouseCount");
+
+                    b.Property<int>("HouseTotal");
+
+                    b.Property<DateTime>("Month");
+
+                    b.Property<double>("Rate");
+
+                    b.Property<decimal>("SaleAmount");
+
+                    b.Property<decimal>("SaleProfit");
+
+                    b.Property<decimal>("ValidAverage");
+
+                    b.HasKey("MonthDataId");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("Fnc_MonthData");
                 });
 
             modelBuilder.Entity("JJNG.Data.Finance.FncPaymentType", b =>
@@ -693,6 +731,14 @@ namespace JJNG.Data.Migrations
                 {
                     b.HasOne("JJNG.Data.Finance.FncBranch", "FncBranch")
                         .WithMany("FncHouseType")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("JJNG.Data.Finance.FncMonthData", b =>
+                {
+                    b.HasOne("JJNG.Data.Finance.FncBranch", "FncBranch")
+                        .WithMany("FncMonthData")
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

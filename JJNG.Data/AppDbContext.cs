@@ -12,6 +12,7 @@ namespace JJNG.Data
         public virtual DbSet<BrhYun> BrhYun { get; set; }
         public virtual DbSet<AppMenu> AppMenu { get; set; }
         public virtual DbSet<FncBranch> FncBranch { get; set; }
+        public virtual DbSet<FncMonthData> FncMonthData { get; set; }
         public virtual DbSet<FncHouseType> FncHouseType { get; set; }
         public virtual DbSet<FncHouseNumber> FncHouseNumber { get; set; }
         public virtual DbSet<FncPaymentType> FncPaymentType { get; set; }

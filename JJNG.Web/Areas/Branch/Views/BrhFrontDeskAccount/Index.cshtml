@@ -19,7 +19,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">前台账目<small  class="hidden-xs"  style="color:red">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
                         <div class="box-tools pull-right">
-                            <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-box-tool" asp-action="Create"> 新增</a>
+                            @*<a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-box-tool" asp-action="Create"> 新增</a>*@
                             @if (ViewData["Position"].ToString() == "组长")
                             {
                                 <button title="审核" type="submit" class="btn btn-box-tool"> 审核</button>
