@@ -46,47 +46,157 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            var frontId = Convert.ToInt64(_user.BranchId.ToString() + ConvertJson.DateTimeToStamp(DateTime.Now).ToString());
-            branchModel.FrontDeskAccountsId = frontId;
-            BrhFrontDeskAccounts brhFrontDeskAccounts = new BrhFrontDeskAccounts();
-            BrhFrontPaymentDetial bfp = new BrhFrontPaymentDetial();
-
-            if (branchModel.PayAmount != 0)
+            if (branchModel.StartDate.Month == branchModel.EndDate.AddDays(-1).Month)
             {
-                bfp.FrontDeskAccountsId = branchModel.FrontDeskAccountsId;
-                bfp.PayWay = branchModel.PayWay;
-                bfp.PayDate = branchModel.PayDate;
-                bfp.PayAmount = branchModel.PayAmount;
+                var frontId = Convert.ToInt64(_user.BranchId.ToString() + ConvertJson.DateTimeToStamp(DateTime.Now).ToString());
+                branchModel.FrontDeskAccountsId = frontId;
+                BrhFrontDeskAccounts brhFrontDeskAccounts = new BrhFrontDeskAccounts();
+                BrhFrontPaymentDetial bfp = new BrhFrontPaymentDetial();
+
+                if (branchModel.PayAmount != 0)
+                {
+                    bfp.FrontDeskAccountsId = branchModel.FrontDeskAccountsId;
+                    bfp.PayWay = branchModel.PayWay;
+                    bfp.PayDate = branchModel.PayDate;
+                    bfp.PayAmount = branchModel.PayAmount;
+                }
+                else
+                    bfp.PayAmount = 0;
+                branchModel.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
+                branchModel.Received = bfp.PayAmount;
+                if (branchModel.Receivable == branchModel.Received)
+                    branchModel.IsFinish = true;
+
+                var ParentType = typeof(BrhFrontDeskAccounts);
+                var Properties = ParentType.GetProperties();
+                foreach (var Propertie in Properties)
+                {
+                    if (Propertie.CanRead && Propertie.CanWrite)
+                    {
+                        Propertie.SetValue(brhFrontDeskAccounts, Propertie.GetValue(branchModel, null), null);
+                    }
+                }
+                if (branchModel.PayAmount != 0)
+                    brhFrontDeskAccounts.BrhFrontPaymentDetial.Add(bfp);
+                _context.Add(brhFrontDeskAccounts);
+                _context.SaveChanges();
+
+                return Json(new
+                {
+                    id = brhFrontDeskAccounts.FrontDeskAccountsId,
+                    enteringDate = brhFrontDeskAccounts.EnteringDate,
+                    state = branchModel.State,
+                    received = brhFrontDeskAccounts.Received,
+                    isFinish = brhFrontDeskAccounts.IsFinish
+                });
             }
             else
-                bfp.PayAmount = 0;
-            branchModel.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
-            branchModel.Received = bfp.PayAmount;
-            if (branchModel.Receivable == branchModel.Received)
-                branchModel.IsFinish = true;
-
-            var ParentType = typeof(BrhFrontDeskAccounts);
-            var Properties = ParentType.GetProperties();
-            foreach (var Propertie in Properties)
             {
-                if (Propertie.CanRead && Propertie.CanWrite)
+               // branchModel.StartDate.Month == branchModel.EndDate.AddDays(-1).Month;
+                var count1 = (branchModel.EndDate.AddDays(1-branchModel.EndDate.Day)-branchModel.StartDate).Days;
+                var count2 = (branchModel.EndDate- branchModel.EndDate.AddDays(1 - branchModel.EndDate.Day)).Days;
+                var total = (branchModel.EndDate-branchModel.StartDate).Days;
+                var frontId1 = Convert.ToInt64(_user.BranchId.ToString() + ConvertJson.DateTimeToStamp(DateTime.Now).ToString());
+                BrhFrontDeskAccounts brhFrontDeskAccounts1 = new BrhFrontDeskAccounts();
+                BrhFrontPaymentDetial bfp1 = new BrhFrontPaymentDetial();
+                var frontId2 = Convert.ToInt64(_user.BranchId.ToString() + ConvertJson.DateTimeToStamp(DateTime.Now).ToString())+1;
+                BrhFrontDeskAccounts brhFrontDeskAccounts2 = new BrhFrontDeskAccounts();
+                BrhFrontPaymentDetial bfp2 = new BrhFrontPaymentDetial();
+
+                if (branchModel.PayAmount != 0)
                 {
-                    Propertie.SetValue(brhFrontDeskAccounts, Propertie.GetValue(branchModel, null), null);
+                    bfp1.FrontDeskAccountsId = frontId1;
+                    bfp1.PayWay = branchModel.PayWay;
+                    bfp1.PayDate = branchModel.PayDate;
+                    bfp1.PayAmount = branchModel.PayAmount / total * count1;
+                    bfp2.FrontDeskAccountsId = frontId2;
+                    bfp2.PayWay = branchModel.PayWay;
+                    bfp2.PayDate = branchModel.PayDate;
+                    bfp2.PayAmount = branchModel.PayAmount / total * count2;
                 }
-            }
-            if (branchModel.PayAmount != 0)
-                brhFrontDeskAccounts.BrhFrontPaymentDetial.Add(bfp);
-            _context.Add(brhFrontDeskAccounts);
-            _context.SaveChanges();
+                else
+                {
+                    bfp1.PayAmount = 0;
+                    bfp2.PayAmount = 0;
+                }
+                branchModel.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
+                var totalPrice = branchModel.TotalPrice;
+                var receivable = branchModel.Receivable;
+                var received = branchModel.Received;
+                var startDate = branchModel.StartDate;
+                var endDate = branchModel.EndDate;
 
-            return Json(new
-            {
-                id = brhFrontDeskAccounts.FrontDeskAccountsId,
-                enteringDate = brhFrontDeskAccounts.EnteringDate,
-                state = branchModel.State,
-                received = brhFrontDeskAccounts.Received,
-                isFinish = brhFrontDeskAccounts.IsFinish
-            });
+                branchModel.FrontDeskAccountsId = frontId1;
+                branchModel.TotalPrice = totalPrice / total * count1;
+                branchModel.Receivable = receivable / total * count1;
+                branchModel.Received =bfp1.PayAmount;
+                if (branchModel.Receivable == branchModel.Received)
+                    branchModel.IsFinish = true;
+                else
+                    branchModel.IsFinish = false;
+                branchModel.Count = count1;
+                branchModel.StartDate = startDate;
+                branchModel.EndDate = endDate.AddDays(1 - endDate.Day);
+
+                var ParentType = typeof(BrhFrontDeskAccounts);
+                var Properties = ParentType.GetProperties();
+                foreach (var Propertie in Properties)
+                {
+                    if (Propertie.CanRead && Propertie.CanWrite)
+                    {
+                        Propertie.SetValue(brhFrontDeskAccounts1, Propertie.GetValue(branchModel, null), null);
+                    }
+                }
+                if (branchModel.PayAmount != 0)
+                {
+                    bfp1.FrontDeskAccountsId = frontId1;
+                    brhFrontDeskAccounts1.BrhFrontPaymentDetial.Add(bfp1);
+                }
+                _context.Add(brhFrontDeskAccounts1);
+                _context.SaveChanges();
+
+
+                branchModel.FrontDeskAccountsId = frontId2;
+                branchModel.TotalPrice = totalPrice / total * count2;
+                branchModel.Receivable = receivable / total * count2;
+                branchModel.Received = bfp2.PayAmount;
+                if (branchModel.Receivable == branchModel.Received)
+                    branchModel.IsFinish = true;
+                else
+                    branchModel.IsFinish = false;
+                branchModel.Count = count2;
+                branchModel.StartDate = endDate.AddDays(1 - endDate.Day);
+                branchModel.EndDate = endDate;
+
+                foreach (var Propertie in Properties)
+                {
+                    if (Propertie.CanRead && Propertie.CanWrite)
+                    {
+                        Propertie.SetValue(brhFrontDeskAccounts2, Propertie.GetValue(branchModel, null), null);
+                    }
+                }
+                if (branchModel.PayAmount != 0)
+                {
+                    bfp2.FrontDeskAccountsId = frontId2;
+                    brhFrontDeskAccounts2.BrhFrontPaymentDetial.Add(bfp2);
+                }
+                _context.Add(brhFrontDeskAccounts2);
+                _context.SaveChanges();
+
+                return Json(new
+                {
+                    id1 = brhFrontDeskAccounts1.FrontDeskAccountsId,
+                    enteringDate1 = brhFrontDeskAccounts1.EnteringDate,
+                    state1 = branchModel.State,
+                    received1 = brhFrontDeskAccounts1.Received,
+                    isFinish1 = brhFrontDeskAccounts1.IsFinish,
+                    id2 = brhFrontDeskAccounts2.FrontDeskAccountsId,
+                    enteringDate2 = brhFrontDeskAccounts2.EnteringDate,
+                    state2 = branchModel.State,
+                    received2 = brhFrontDeskAccounts2.Received,
+                    isFinish2 = brhFrontDeskAccounts2.IsFinish,
+                });
+            }
         }
 
 
@@ -393,7 +503,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 tempevent.TotalPrice = f.TotalPrice;
                 tempevent.UnitPrice = f.UnitPrice;
                 if (tempevent.IsFinance)
-                    tempevent.editable = false;
+                    tempevent.editable = true;  //临时
                 else
                     tempevent.editable = true;
 

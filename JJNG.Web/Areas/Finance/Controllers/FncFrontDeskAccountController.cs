@@ -27,7 +27,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             _userManager = usrMgr;
         }
 
-        public async Task<IActionResult> Index(string branch)
+        public async Task<IActionResult> Index(string branch="既见·南国")
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
@@ -41,7 +41,10 @@ namespace JJNG.Web.Areas.Finance.Controllers
             else
                 brhFrontDeskAccounts = await _context.BrhFrontDeskAccounts.Include(x => x.BrhFrontPaymentDetial).Where(x => DateTime.Compare(DateTime.Now.AddDays(-90), x.StartDate) <= 0 && x.Branch == branch).ToListAsync();
 
+            //var front2List = _context.BrhFrontDeskAccounts.Where(x => x.Branch == branch && x.State != StateType.已删除 && x.StartDate.Month != x.EndDate.AddDays(-1).Month).ToList();
+
             return View(Tuple.Create<List<BrhFrontDeskAccounts>, List<UserBranch>>(brhFrontDeskAccounts, list_branch));
+            //return View(Tuple.Create<List<BrhFrontDeskAccounts>, List<UserBranch>>(front2List, list_branch));
         }
 
         [HttpPost]

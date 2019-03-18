@@ -16,7 +16,7 @@
         <div class="col-md-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">月度分析报告</h3>
+                    <h3 class="box-title">月度分析</h3>
                     <div class="box-tools pull-right">
                         <button id="MonthProfitRateBtn" title="房费流水" type="button" class="btn btn-box-tool hidden-xs">房费流水</button>
                         <button id="MonthProfitBtn" title="出租率" type="button" class="btn btn-box-tool hidden-xs">出租率</button>
@@ -46,12 +46,46 @@
                 </div>
             </div>
         </div>
+        @*<div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">渠道占比</h3>
+                    <div class="box-tools pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                @foreach (var u in Model.Item2)
+                                {
+                                    <li><a asp-action="Index" asp-route-branchId="@u.BranchId" asp-route-branchName="@u.BranchName" asp-route-count="@u.Count"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body no-margin">
+                    <div class="col-lg-8 col-md-7 col-sm-12 col-xs-12">
+                        <div id="BuySellRateChart" class="clearfix" style="height: 300px;">
+                            <!--月Pie图表位置-->
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-5 col-sm-12 col-xs-12">
+                        <div id="MonthPieChart" class="clearfix" style="height: 300px">
+                            <!--月Pie图表位置-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
     </div>
     <div class="row">
         <div class="col-md-12">
             <div class="box  box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">月汇总</h3>
+                    <h3 class="box-title">月度分析数据</h3>
                     <div class="box-tools pull-right">
                         @*<a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-box-tool" asp-action="Create"> 新增</a>*@
                         <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -173,11 +207,10 @@
             $("#MonthPointBtn").click(function () {
                 Render_MonthBaseChart(MonthBaseData, 4);
             });
+
             MonthBaseChart.on('click', function (params) {
-                //Render_MonthPieChart(params.dataIndex);
-                //Render_BuySellRateChart(params.dataIndex);
-                //table_buysell.api().clear();
-                //table_buysell.api().rows.add(MonthBaseData[params.dataIndex].buySellData).draw();
+                //var tempdate=(params.name).replace(/年/,"-").replace(/月/,"-")+"01";
+                //GetOrderData(tempdate);
             });
 
             var optionMonthBase = {
@@ -498,6 +531,76 @@
             };
             //#endregion
 
+            //#region 月Pie图表
+            var optionMonthPie = {
+                title: {
+                    text: 'MonthPie',
+                    show: false
+                },
+                tooltip: {
+                    show:false,
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    show: false,
+                    type: 'plain',
+                    tooltip: {
+                        show: true
+                    },
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: []
+                },
+                series: [
+                    {
+                        name: 'SymbolCode',
+                        type: 'pie',
+                        radius: ['50%','80%'],
+                        center: ['50%', '50%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show:false,
+                                position:'center',
+                                formatter: '{b} : {c} ({d}%)',
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '12',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        data: [],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            function Render_MonthPieChart(index) {
+                var seriesData = [];
+                var data= MonthBaseData;
+                var idx = parseInt(index);
+                for (var i = 0; i < data[idx].buySellData.length; i++) {
+                    var _name = data[idx].buySellData[i].symbolCode;
+                    var _value = parseFloat(data[idx].buySellData[i].lots).toFixed(2);;
+                    seriesData.push({ name: _name, value: _value });
+                }
+                optionMonthPie.series[0].data = seriesData;
+                MonthPieChart.setOption(optionMonthPie);
+            };
+            //#endregion
+
             //#region table1初始化
             var table1 = $('#table-1').dataTable(
                 {
@@ -658,7 +761,7 @@
             };
             //#endregion
 
-            //#region Ajax GetCalendarData
+            //#region Ajax GetMonthData
             function GetMonthData() {
                 optionAjax.url = "/Finance/FncMonthData/GetMonthData";
                 optionAjax.data = JSON.stringify({
@@ -674,6 +777,22 @@
                 $.ajax(optionAjax);
             };
             //#endregion
+
+            //#region Ajax GetOrderData
+            function GetOrderData(startDate) {
+                optionAjax.url = "/Finance/FncMonthData/GetOrderData";
+                optionAjax.data = JSON.stringify({
+                    branchName: _fncBranch.branchName,
+                    branchId: _fncBranch.branchId,
+                    count:_fncBranch.count,
+                    startDate:startDate
+                });
+                optionAjax.success = function (result) {
+                };
+                $.ajax(optionAjax);
+            };
+            //#endregion
+
             GetMonthData();
             setTimeout(function () {
                 window.onresize = function () {

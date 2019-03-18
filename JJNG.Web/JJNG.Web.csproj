@@ -7,7 +7,6 @@
     <StartupObject />
     <UserSecretsId>5f4d2584-1243-4c24-9f7b-f82f9af89e85</UserSecretsId>
     <ApplicationInsightsResourceId>/subscriptions/8bce1bd5-2bac-4c43-b041-49cf3f1e5c09/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/JJNG.Web</ApplicationInsightsResourceId>
-    <ApplicationInsightsAnnotationResourceId>/subscriptions/8bce1bd5-2bac-4c43-b041-49cf3f1e5c09/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/JJNG.Web</ApplicationInsightsAnnotationResourceId>
     <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
