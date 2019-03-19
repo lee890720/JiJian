@@ -471,7 +471,8 @@
                                 button: [{
                                     value: '收款明细',
                                     callback: function () {
-                                        window.location.href="/Finance/FncFrontPaymentDetial/Index/?id="+event.id;
+                                        //window.location.href="/Finance/FncFrontPaymentDetial/Index/?id="+event.id;
+                                        window.open("/Finance/FncFrontPaymentDetial/Index/?id=" + event.id);
                                     }
                                 }],
                                 okValue: "确定",

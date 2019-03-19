@@ -1,4 +1,4 @@
-﻿@model Tuple<List<BrhFrontDeskAccounts>, List<UserBranch>>
+﻿@model Tuple<FncBranch, List<FncBranch>>
 
 @{
     var actionName = ViewContext.RouteData.Values["action"].ToString();
@@ -11,289 +11,218 @@
     string path = "/" + areaName + "/" + controllerName;
 }
 <section class="content">
-    @using (Html.BeginForm("Index", null, FormMethod.Post))
-    {
-        <div class="row">
-            <div class="col-md-12">
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">前台账目<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
-                        <div class="box-tools pull-right">
-                            <button title="审核" type="submit" class="btn btn-box-tool"> 审核</button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="改变显示行数" style="padding-bottom:6px"><i class="fa fa-sort-numeric-asc"></i></button>
-                                <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                                    <li><a id="page-10"><i class="fa fa-circle-o text-light-blue"></i>10</a></li>
-                                    <li><a id="page-15"><i class="fa fa-circle-o text-light-blue"></i>15</a></li>
-                                    <li><a id="page-20"><i class="fa fa-circle-o text-light-blue"></i>20</a></li>
-                                    <li><a id="page-30"><i class="fa fa-circle-o text-light-blue"></i>30</a></li>
-                                    <li><a id="page-all"><i class="fa fa-circle-o text-light-blue"></i>全部</a></li>
-                                </ul>
-                            </div>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
-                                <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                                    <li><a asp-action="Index"><i class="fa fa-circle-o text-light-blue"></i>全部</a></li>
-                                    @foreach (var u in Model.Item2)
-                                    {
-                                        <li><a asp-action="Index" asp-route-branch="@u.BranchName"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
-                                    }
-                                </ul>
-                            </div>
-                            <span id="excelButton"></span>
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                                <i class="fa fa-minus"></i>
-                            </button>
-                            <div class="btn-group  hidden-xs" style="padding-top:1px">
-                                <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="显示隐藏列">
-                                    <i class="fa fa-bars"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-left" role="menu" style="padding-left:10px">
-                                    <li><input type="checkbox" class="toggle-vis" data-column="3" />&nbsp;<small>入住人数</small></li>
-                                    <li><input type="checkbox" class="toggle-vis" data-column="15" />&nbsp;<small>对应管家</small></li>
-                                    <li><input type="checkbox" class="toggle-vis" data-column="16" />&nbsp;<small>前台组长</small></li>
-                                    <li><input type="checkbox" class="toggle-vis" data-column="17" />&nbsp;<small>管家组长</small></li>
-                                    <li><input type="checkbox" class="toggle-vis" data-column="18" />&nbsp;<small>对应关系</small></li>
-                                    <li><input type="checkbox" class="toggle-vis" data-column="19" />&nbsp;<small>收款明细</small></li>
-                                </ul>
-                            </div>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    @*<h3 class="box-title">前台账目<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>*@
+                    <div class="box-tools pull-right">
+                        <button title="审核" id="audit" class="btn btn-box-tool"> 审核</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="改变显示行数" style="padding-bottom:6px"><i class="fa fa-sort-numeric-asc"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                <li><a id="page-10"><i class="fa fa-circle-o text-light-blue"></i>10</a></li>
+                                <li><a id="page-15"><i class="fa fa-circle-o text-light-blue"></i>15</a></li>
+                                <li><a id="page-20"><i class="fa fa-circle-o text-light-blue"></i>20</a></li>
+                                <li><a id="page-30"><i class="fa fa-circle-o text-light-blue"></i>30</a></li>
+                                <li><a id="page-all"><i class="fa fa-circle-o text-light-blue"></i>全部</a></li>
+                            </ul>
                         </div>
-                    </div>
-                    <div class="box-body table-responsive">
-                        <div class="form-group">
-                            <div class="form-group">
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <select id="date_select" class="form-control select2" style="width: 100%;">
-                                        <option value="7">全部</option>
-                                        <option value="0">今天</option>
-                                        <option value="1">昨天</option>
-                                        <option value="2">最后一周</option>
-                                        <option value="3">本月</option>
-                                        <option value="4">上个月</option>
-                                        <option value="5">最后三个月</option>
-                                        <option value="6">最后一年</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="开始日期" id="date_beg" class="form-control">
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="结束日期" id="date_end" class="form-control">
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="搜索" id="search" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        录入时间
-                                    </th>
-                                    <th>
-                                        房号
-                                    </th>
-                                    <th>
-                                        入住人
-                                    </th>
-                                    <th class="col-visible">
-                                        入住人数
-                                    </th>
-                                    <th>
-                                        入住日期
-                                    </th>
-                                    <th>
-                                        离店日期
-                                    </th>
-                                    <th>
-                                        渠道
-                                    </th>
-                                    <th>
-                                        单价
-                                    </th>
-                                    <th>
-                                        总价
-                                    </th>
-                                    <th>
-                                        应收款
-                                    </th>
-                                    <th>
-                                        已收款
-                                    </th>
-                                    <th>
-                                        是否结帐
-                                    </th>
-                                    <th>
-                                        前台审核
-                                    </th>
-                                    <th>
-                                        财务审核
-                                    </th>
-                                    <th>
-                                        录单人
-                                    </th>
-                                    <th class="col-visible">
-                                        管家
-                                    </th>
-                                    <th class="col-visible">
-                                        前台组长
-                                    </th>
-                                    <th class="col-visible">
-                                        管家组长
-                                    </th>
-                                    <th class="col-visible">
-                                        对应关系
-                                    </th>
-                                    <th class="col-visible">
-                                        收款明细
-                                    </th>
-                                    <th>
-                                        分店
-                                    </th>
-                                    <th>
-                                        备注
-                                    </th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.Item1)
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                @foreach (var u in Model.Item2)
                                 {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EnteringDate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.HouseNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.CustomerName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.CustomerCount)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.StartDate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EndDate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Channel)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.UnitPrice)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.TotalPrice)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Receivable)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Received)
-                                    </td>
-                                    @{
-                                        if (item.IsFinish)
-                                        {
-                                            <td style="color:skyblue">
-                                                已结帐
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td style="color:red">
-                                                未结帐
-                                            </td>
-                                        }
-                                        if (item.IsFront)
-                                        {
-                                            <td style="color:skyblue;">
-                                                已审核
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td style="color:red;">
-                                                未审核
-                                            </td>
-                                        }
-                                        if (item.IsFinance)
-                                        {
-                                            <td style="color:skyblue;">
-                                                <span><input type="checkbox" class="flat-blue" name="ids" value="@item.FrontDeskAccountsId" checked="@item.IsFinance"></span>
-                                                已审核
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td style="color:red;">
-                                                <span><input type="checkbox" class="flat-blue" name="ids" value="@item.FrontDeskAccountsId" checked="@item.IsFinance"></span>
-                                                未审核
-                                            </td>
-                                        }
-                                    }
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EnteringStaff)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Steward)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FrontDeskLeader)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.StewardLeader)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.RelationStaff)
-                                    </td>
-                                    <td>
-                                        <table>
-                                            @foreach (var dd in item.BrhFrontPaymentDetial.ToList())
-                                            {
-
-                                                <tr><td>@dd.PayWay &emsp;</td><td>@dd.PayAmount</td></tr>
-                                            }
-                                        </table>
-                                    </td>
-                                    <td style="color:red">
-                                        @Html.DisplayFor(modelItem => item.Branch)
-                                    </td>
-                                    @{
-                                        string note = item.Note;
-                                        string note2 = note;
-                                        if (note != null && note.Count() > 7)
-                                        {
-                                            note2 = note.Substring(0, 7);
-                                        }
-                                    }
-                                    <td title="@note">
-                                        @note2
-                                    </td>
-                                    <td>
-                                        <a id="detialListModal" data-toggle="modal" asp-action="DetialList" asp-route-id="@item.FrontDeskAccountsId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="fa fa-list-ul"></i> 收款明细
-                                        </a>
-                                    </td>
-                                </tr>
+                                    <li><a asp-action="Index" asp-route-branchId="@u.BranchId" asp-route-branchName="@u.BranchName" asp-route-count="@u.Count"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
                                 }
-                            </tbody>
-                        </table>
+                            </ul>
+                        </div>
+                        <span id="excelButton"></span>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <div class="btn-group  hidden-xs" style="padding-top:1px">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="显示隐藏列">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu" style="padding-left:10px">
+                                <li><input type="checkbox" class="toggle-vis" data-column="15" />&nbsp;<small>对应管家</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="16" />&nbsp;<small>前台组长</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="17" />&nbsp;<small>管家组长</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="18" />&nbsp;<small>对应关系</small></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div>
+                </div>
+                <div class="box-body table-responsive">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <select id="date_select" class="form-control select2" style="width: 100%;">
+                                    <option value="7">最近30天</option>
+                                    <option value="0">今天</option>
+                                    <option value="1">昨天</option>
+                                    <option value="2">最后一周</option>
+                                    <option value="3">本月</option>
+                                    <option value="4">上个月</option>
+                                    <option value="5">最后三个月</option>
+                                    <option value="6">最后一年</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <input type="text" placeholder="开始日期" id="date_beg" class="form-control">
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <input type="text" placeholder="结束日期" id="date_end" class="form-control">
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <input type="text" placeholder="搜索" id="search" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    录入时间
+                                </th>
+                                <th>
+                                    房号
+                                </th>
+                                <th>
+                                    入住人
+                                </th>
+                                <th class="col-visible">
+                                    手机号
+                                </th>
+                                <th>
+                                    入住日期
+                                </th>
+                                <th>
+                                    离店日期
+                                </th>
+                                <th>
+                                    渠道
+                                </th>
+                                <th>
+                                    单价
+                                </th>
+                                <th>
+                                    总价
+                                </th>
+                                <th>
+                                    应收款
+                                </th>
+                                <th>
+                                    已收款
+                                </th>
+                                <th>
+                                    是否结帐
+                                </th>
+                                <th>
+                                    前台审核
+                                </th>
+                                <th>
+                                    财务审核
+                                </th>
+                                <th>
+                                    收款明细
+                                </th>
+                                <th>
+                                    录单人
+                                </th>
+                                <th class="col-visible">
+                                    管家
+                                </th>
+                                <th class="col-visible">
+                                    前台组长
+                                </th>
+                                <th class="col-visible">
+                                    管家组长
+                                </th>
+                                <th class="col-visible">
+                                    对应关系
+                                </th>
+                                <th>
+                                    分店
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>
-    }
+    </div>
+
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">提示</h4>
+                </div>
+                <div class="modal-body">
+                    <p>执行中，请稍后&hellip;</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 @section Scripts{
-    <script src="~/js/range_front.js"></script>
+    @*<script src="~/js/range_front.js"></script>*@
     <script src="~/js/dateRangeSelector.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
     <script>
         $(function () {
+            var _fncBranch =@Html.Raw(Json.Serialize(Model.Item1));
+            var _ids = [];
+            //#region Ajax optionAjax
+            var optionAjax = {
+                type: "post",
+                async: true,
+                url: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: {},
+                beforeSend: function () {
+                    $('#modal-default').modal('show');
+                },
+                success: function (result) {
+                },
+                complete: function () {
+                    $('#modal-default').modal('hide');
+                },
+            };
+            //#endregion
+
+            //#region Ajax GetFrontList
+            function GetFrontList() {
+                var start = moment().add('-1', "M").format("YYYY-MM-DD");
+                var end = moment().format("YYYY-MM-DD");
+                if ($("#date_beg").val() != '')
+                    start = moment($("#date_beg").val()).format("YYYY-MM-DD");
+                if ($("#date_end").val() != '')
+                    end = moment($("#date_end").val()).format("YYYY-MM-DD");
+                optionAjax.url = "/Finance/FncFrontDeskAccount/GetFrontList";
+                optionAjax.data = JSON.stringify({
+                    branchName: _fncBranch.branchName,
+                    branchId: _fncBranch.branchId,
+                    count: _fncBranch.count,
+                    startDate: start,
+                    endDate: end
+                });
+                optionAjax.success = function (result) {
+                    table1.api().clear();
+                    table1.api().rows.add(result.frontList).draw();
+                };
+                $.ajax(optionAjax);
+            };
+            //#endregion
+
+
             //#region table1初始化
             var table1 = $('#table-1').dataTable(
                 {
@@ -327,20 +256,121 @@
                             sortDescending: ": 以降序排列此列"
                         }
                     },
+                    data: [],
+                    columns: [
+                        { data: "enteringDate" },
+                        { data: "houseNumber" },
+                        { data: "customerName" },
+                        { data: "phone" },
+                        { data: "startDate" },
+                        { data: "endDate" },
+                        { data: "channel" },
+                        { data: "unitPrice" },
+                        { data: "totalPrice" },
+                        { data: "receivable" },
+                        { data: "received" },
+                        { data: "isFinish" },
+                        { data: "isFront" },
+                        { data: "isFinance" },
+                        { data:"brhFrontPaymentDetial"},
+                        { data: "enteringStaff" },
+                        { data: "steward" },
+                        { data: "frontDeskLeader" },
+                        { data: "stewardLeader" },
+                        { data: "relationStaff" },
+                        { data: "branch" },
+                    ],
                     columnDefs: [
                         {
                             targets: "col-visible",
                             visible: false,
                         },
                         {
-                            targets: [-1],
-                            orderable: false,
+                            targets: [0],
+                            render: function (data, type, row, meta) {
+                                var temp = new Date(data);
+                                return '<span title="' + row.note + '">' + temp.Format('YYYY-MM-DD')+ '</span>';
+                            }
                         },
-                    ],
-                });
-            //#endregion
+                        {
+                            targets: [4,5],
+                            render: function (data, type, row, meta) {
+                                var temp = new Date(data);
+                                return temp.Format('YYYY-MM-DD');
+                            }
+                        },
+                        {
+                            targets: [11],
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                if (cellData)
+                                    $(td).css('color', '#4cae05');
+                                else
+                                    $(td).css('color', '#ff5256');
+                            },
+                            render: function (data, type, row, meta) {
+                                if (data)
+                                    return "已结账";
+                                else
+                                    return "未结账";
+                            }
+                        },
+                        {
+                            targets: [12],
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                if (cellData)
+                                    $(td).css('color', '#4cae05');
+                                else
+                                    $(td).css('color', '#ff5256');
+                            },
+                            render: function (data, type, row, meta) {
+                                if (data)
+                                    return "前台已审";
+                                else
+                                    return "前台未审";
+                            }
+                        },
+                        {
+                            targets: [13],
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                if (cellData)
+                                    $(td).css('color', '#4cae05');
+                                else
+                                    $(td).css('color', '#ff5256');
+                            },
+                            render: function (data, type, row, meta) {
+                                if (data)
+                                    return '<span>' + '<input type="checkbox" class="icheckbox_flat-blue" checked style="margin:0px"  name="ids" data-id="' + row.frontDeskAccountsId + '">' + " 财务已审" +'</span>';
+                                else
+                                    return '<span>' + '<input type="checkbox" class="icheckbox_flat-blue" style="margin:0px"  name="ids" data-id="' + row.frontDeskAccountsId + '">' + " 财务未审" + '</span>';
+                                }
+                        },
+                        {
+                            targets: [14],
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                if (cellData.length > 0) {
+                                    $(td).css('margin', '0');
+                                    $(td).css('padding', '0');
+                                }
+                            },
+                            render: function (data, type, row, meta) {
+                                if (data.length > 0) {
+                                    var hl = '<table class="table  no-margin no-padding">';
+                                    for (var i = 0; i < data.length; i++) {
+                                        hl += '<tr><td>' + data[i].payWay + '</td>';
+                                        hl += '<td>' + data[i].payAmount + '</td></tr>';
+                                    }
+                                    hl += '</table>';
+                                    return hl;
+                                }
+                                else
+                                    return "无";
+                            }
+                        },
+                        ],
+                    });
+                //#endregion
 
-            //#region 显示隐藏列
+                //#region 显示隐藏列
             $('.toggle-vis').on('change', function (e) {
                 e.preventDefault();
                 console.log($(this).attr('data-column'));
@@ -363,17 +393,68 @@
                 ]
             });
 
+            //$("#table1 tbody").on("click", 'tr', function () {
+            //    //var $tr = $(this).parents('tr');
+            //    var row = table_pos.api().row($(this));
+            //    var data = row.data();
+            //});
+
+
             table1.api().buttons().container().appendTo($("#excelButton"));
             $(".excelButton").removeClass("btn-default");
             $(".excelButton").addClass("btn btn-box-tool hidden-xs");
             $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
-            $("#date_beg,#date_end").keyup(function () { table1.api().draw(); });
-            $("#date_beg,#date_end").change(function () { table1.api().draw(); });
+            $("#date_beg,#date_end").keyup(function () { GetFrontList(); });
+            $("#date_beg,#date_end").change(function () { GetFrontList(); });
             $("#page-10").click(function () { table1.api().page.len(10).draw(); });
             $("#page-15").click(function () { table1.api().page.len(15).draw(); });
             $("#page-20").click(function () { table1.api().page.len(20).draw(); });
             $("#page-30").click(function () { table1.api().page.len(30).draw(); });
             $("#page-all").click(function () { table1.api().page.len(-1).draw(); });
+
+            //#region 点击input[name="ids"]时触发的事件
+            $("#table-1 tbody").on("change", 'tr input[name="ids"]', function () {
+                var $tr = $(this).parents('tr');
+                var row = table1.api().row($tr);
+                var data = row.data();
+
+                if ($(this).is(':checked')) {
+                    _ids.push($(this).attr("data-id"));
+                    console.log(_ids);
+                }
+                else {
+                    var index = _ids.indexOf($(this).attr("data-id"));
+                    if (index > -1) {
+                        _ids.splice(index, 1);
+                    }
+                    console.log(_ids);
+
+                }
+            });
+        //#endregion
+
+            $("#audit").click(function () {
+                var start = moment().add('-1', "M").format("YYYY-MM-DD");
+                var end = moment().format("YYYY-MM-DD");
+                if ($("#date_beg").val() != '')
+                    start = moment($("#date_beg").val()).format("YYYY-MM-DD");
+                if ($("#date_end").val() != '')
+                    end = moment($("#date_end").val()).format("YYYY-MM-DD");
+                optionAjax.url = "/Finance/FncFrontDeskAccount/UpdateList";
+                optionAjax.data = JSON.stringify({
+                    branchName: _fncBranch.branchName,
+                    branchId: _fncBranch.branchId,
+                    count: _fncBranch.count,
+                    startDate: start,
+                    endDate: end,
+                    ids:_ids
+                });
+                optionAjax.success = function (result) {
+                    table1.api().clear();
+                    table1.api().rows.add(result.frontList).draw();
+                };
+                $.ajax(optionAjax);
+            });
             //#endregion
 
             //#region 设置一些细节
@@ -388,6 +469,10 @@
 
             //Select2
             $('.select2').select2();
+            $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
+                checkboxClass: 'icheckbox_flat-blue',
+                radioClass: 'iradio_flat-blue'
+            })
             //#endregion
 
             //#region 日期区间选择事件
@@ -434,9 +519,10 @@
                         $('#date_end').val("");
                         break;
                 }
-                table1.api().draw();
+                GetFrontList();
             });
             //#endregion
+            GetFrontList();
         });
     </script>
 }

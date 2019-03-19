@@ -138,15 +138,42 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 branchModel.StartDate = startDate;
                 branchModel.EndDate = endDate.AddDays(1 - endDate.Day);
 
-                var ParentType = typeof(BrhFrontDeskAccounts);
-                var Properties = ParentType.GetProperties();
-                foreach (var Propertie in Properties)
-                {
-                    if (Propertie.CanRead && Propertie.CanWrite)
-                    {
-                        Propertie.SetValue(brhFrontDeskAccounts1, Propertie.GetValue(branchModel, null), null);
-                    }
-                }
+                brhFrontDeskAccounts1.Branch = branchModel.Branch;
+                brhFrontDeskAccounts1.Channel = branchModel.Channel;
+                brhFrontDeskAccounts1.Color = branchModel.Color;
+                brhFrontDeskAccounts1.Count = branchModel.Count;
+                brhFrontDeskAccounts1.CustomerCount = branchModel.CustomerCount;
+                brhFrontDeskAccounts1.CustomerName = branchModel.CustomerName;
+                brhFrontDeskAccounts1.EndDate = branchModel.EndDate;
+                brhFrontDeskAccounts1.EnteringDate = branchModel.EnteringDate;
+                brhFrontDeskAccounts1.EnteringStaff = branchModel.EnteringStaff;
+                brhFrontDeskAccounts1.FrontDeskAccountsId = branchModel.FrontDeskAccountsId;
+                brhFrontDeskAccounts1.FrontDeskLeader = branchModel.FrontDeskLeader;
+                brhFrontDeskAccounts1.HouseNumber = branchModel.HouseNumber;
+                brhFrontDeskAccounts1.IsFinance = branchModel.IsFinance;
+                brhFrontDeskAccounts1.IsFinish = branchModel.IsFinish;
+                brhFrontDeskAccounts1.IsFront = branchModel.IsFront;
+                brhFrontDeskAccounts1.Note = branchModel.Note;
+                brhFrontDeskAccounts1.Phone = branchModel.Phone;
+                brhFrontDeskAccounts1.Receivable = branchModel.Receivable;
+                brhFrontDeskAccounts1.Received = branchModel.Received;
+                brhFrontDeskAccounts1.RelationStaff = branchModel.RelationStaff;
+                brhFrontDeskAccounts1.StartDate = branchModel.StartDate;
+                brhFrontDeskAccounts1.State = branchModel.State;
+                brhFrontDeskAccounts1.Steward = branchModel.Steward;
+                brhFrontDeskAccounts1.StewardLeader = branchModel.StewardLeader;
+                brhFrontDeskAccounts1.TotalPrice = branchModel.TotalPrice;
+                brhFrontDeskAccounts1.UnitPrice = branchModel.UnitPrice;
+
+                //var ParentType = typeof(BrhFrontDeskAccounts);
+                //var Properties = ParentType.GetProperties();
+                //foreach (var Propertie in Properties)
+                //{
+                //    if (Propertie.CanRead && Propertie.CanWrite)
+                //    {
+                //        Propertie.SetValue(brhFrontDeskAccounts1, Propertie.GetValue(branchModel, null), null);
+                //    }
+                //}
                 if (branchModel.PayAmount != 0)
                 {
                     bfp1.FrontDeskAccountsId = frontId1;
@@ -168,13 +195,40 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 branchModel.StartDate = endDate.AddDays(1 - endDate.Day);
                 branchModel.EndDate = endDate;
 
-                foreach (var Propertie in Properties)
-                {
-                    if (Propertie.CanRead && Propertie.CanWrite)
-                    {
-                        Propertie.SetValue(brhFrontDeskAccounts2, Propertie.GetValue(branchModel, null), null);
-                    }
-                }
+                brhFrontDeskAccounts2.Branch = branchModel.Branch;
+                brhFrontDeskAccounts2.Channel = branchModel.Channel;
+                brhFrontDeskAccounts2.Color = branchModel.Color;
+                brhFrontDeskAccounts2.Count = branchModel.Count;
+                brhFrontDeskAccounts2.CustomerCount = branchModel.CustomerCount;
+                brhFrontDeskAccounts2.CustomerName = branchModel.CustomerName;
+                brhFrontDeskAccounts2.EndDate = branchModel.EndDate;
+                brhFrontDeskAccounts2.EnteringDate = branchModel.EnteringDate;
+                brhFrontDeskAccounts2.EnteringStaff = branchModel.EnteringStaff;
+                brhFrontDeskAccounts2.FrontDeskAccountsId = branchModel.FrontDeskAccountsId;
+                brhFrontDeskAccounts2.FrontDeskLeader = branchModel.FrontDeskLeader;
+                brhFrontDeskAccounts2.HouseNumber = branchModel.HouseNumber;
+                brhFrontDeskAccounts2.IsFinance = branchModel.IsFinance;
+                brhFrontDeskAccounts2.IsFinish = branchModel.IsFinish;
+                brhFrontDeskAccounts2.IsFront = branchModel.IsFront;
+                brhFrontDeskAccounts2.Note = branchModel.Note;
+                brhFrontDeskAccounts2.Phone = branchModel.Phone;
+                brhFrontDeskAccounts2.Receivable = branchModel.Receivable;
+                brhFrontDeskAccounts2.Received = branchModel.Received;
+                brhFrontDeskAccounts2.RelationStaff = branchModel.RelationStaff;
+                brhFrontDeskAccounts2.StartDate = branchModel.StartDate;
+                brhFrontDeskAccounts2.State = branchModel.State;
+                brhFrontDeskAccounts2.Steward = branchModel.Steward;
+                brhFrontDeskAccounts2.StewardLeader = branchModel.StewardLeader;
+                brhFrontDeskAccounts2.TotalPrice = branchModel.TotalPrice;
+                brhFrontDeskAccounts2.UnitPrice = branchModel.UnitPrice;
+
+                //foreach (var Propertie in Properties)
+                //{
+                //    if (Propertie.CanRead && Propertie.CanWrite)
+                //    {
+                //        Propertie.SetValue(brhFrontDeskAccounts2, Propertie.GetValue(branchModel, null), null);
+                //    }
+                //}
                 if (branchModel.PayAmount != 0)
                 {
                     bfp2.FrontDeskAccountsId = frontId2;
@@ -187,12 +241,22 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 {
                     id1 = brhFrontDeskAccounts1.FrontDeskAccountsId,
                     enteringDate1 = brhFrontDeskAccounts1.EnteringDate,
-                    state1 = branchModel.State,
+                    state1 = brhFrontDeskAccounts1.State,
+                    count1=brhFrontDeskAccounts1.Count,
+                    startDate1=brhFrontDeskAccounts1.StartDate,
+                    endDate1=brhFrontDeskAccounts1.EndDate,
+                    totalPrice1 = brhFrontDeskAccounts1.TotalPrice,
+                    receivable1 = brhFrontDeskAccounts1.Receivable,
                     received1 = brhFrontDeskAccounts1.Received,
                     isFinish1 = brhFrontDeskAccounts1.IsFinish,
                     id2 = brhFrontDeskAccounts2.FrontDeskAccountsId,
                     enteringDate2 = brhFrontDeskAccounts2.EnteringDate,
-                    state2 = branchModel.State,
+                    state2 = brhFrontDeskAccounts2.State,
+                    count2 = brhFrontDeskAccounts2.Count,
+                    startDate2 = brhFrontDeskAccounts2.StartDate,
+                    endDate2 = brhFrontDeskAccounts2.EndDate,
+                    totalPrice2 = brhFrontDeskAccounts2.TotalPrice,
+                    receivable2 = brhFrontDeskAccounts2.Receivable,
                     received2 = brhFrontDeskAccounts2.Received,
                     isFinish2 = brhFrontDeskAccounts2.IsFinish,
                 });

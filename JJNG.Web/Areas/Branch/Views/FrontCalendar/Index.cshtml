@@ -531,27 +531,27 @@
                                         $('#modal-default').modal('show');
                                     },
                                     success: function (data) {
-                                        if(data.state!=3)
+                                        if (data.state != 3&&data.state!=null) {
                                             $("#calendar").fullCalendar("renderEvent", {
-                                                id:data.id,
-                                                resourceId:resource.id,
-                                                allDay:true,
-                                                editable:true,
-                                                start:moment(start).format("YYYY-MM-DD"),
-                                                end :moment(end).format("YYYY-MM-DD"),
-                                                frontDeskAccountsId:data.id,
+                                                id: data.id,
+                                                resourceId: resource.id,
+                                                allDay: true,
+                                                editable: true,
+                                                start: moment(start).format("YYYY-MM-DD"),
+                                                end: moment(end).format("YYYY-MM-DD"),
+                                                frontDeskAccountsId: data.id,
                                                 houseNumber: resource.id,
-                                                count:DateDiff(moment(start).format("YYYY-MM-DD"),moment(end).format("YYYY-MM-DD")),
+                                                count: DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD")),
                                                 startDate: moment(start).format("YYYY-MM-DD"),
                                                 endDate: moment(end).format("YYYY-MM-DD"),
-                                                enteringDate:data.enteringDate,
+                                                enteringDate: data.enteringDate,
                                                 enteringStaff: _user.userName,
                                                 branch: _user.branch,
-                                                title:name+" "+channel,
-                                                customerName:name,
+                                                title: name + " " + channel,
+                                                customerName: name,
                                                 customerCount: count,
                                                 channel: channel,
-                                                phone:phone,
+                                                phone: phone,
                                                 unitPrice: unitPrice,
                                                 totalPrice: totalPrice,
                                                 receivable: receivable,
@@ -561,11 +561,84 @@
                                                 stewardLeader: stewardLeader,
                                                 relationStaff: relationStaff,
                                                 note: note,
-                                                state:state,
+                                                state: state,
                                                 isFinish: data.isFinish,
                                                 isFront: isFront,
                                                 color: color,
-                                            }, true);
+                                            }, false);
+                                        }
+                                        if (data.state1 != 3 && data.state1 != null) {
+                                            $("#calendar").fullCalendar("renderEvent", {
+                                                id: data.id1,
+                                                resourceId: resource.id,
+                                                allDay: true,
+                                                editable: true,
+                                                start: data.startDate1,
+                                                end: data.endDate1,
+                                                frontDeskAccountsId: data.id1,
+                                                houseNumber: resource.id,
+                                                count: data.count1,
+                                                startDate: data.startDate1,
+                                                endDate: data.endDate1,
+                                                enteringDate: data.enteringDate1,
+                                                enteringStaff: _user.userName,
+                                                branch: _user.branch,
+                                                title: name + " " + channel,
+                                                customerName: name,
+                                                customerCount: count,
+                                                channel: channel,
+                                                phone: phone,
+                                                unitPrice: unitPrice,
+                                                totalPrice: data.totalPrice1,
+                                                receivable: data.receivable1,
+                                                received: data.received1,
+                                                steward: steward,
+                                                frontDeskLeader: frontDeskLeader,
+                                                stewardLeader: stewardLeader,
+                                                relationStaff: relationStaff,
+                                                note: note,
+                                                state: data.state1,
+                                                isFinish: data.isFinish1,
+                                                isFront: isFront,
+                                                color: color,
+                                            }, false);
+                                        }
+                                        if (data.state2 != 3 && data.state2 != null) {
+                                            $("#calendar").fullCalendar("renderEvent", {
+                                                id: data.id2,
+                                                resourceId: resource.id,
+                                                allDay: true,
+                                                editable: true,
+                                                start: data.startDate2,
+                                                end: data.endDate2,
+                                                frontDeskAccountsId: data.id2,
+                                                houseNumber: resource.id,
+                                                count: data.count2,
+                                                startDate: data.startDate2,
+                                                endDate: data.endDate2,
+                                                enteringDate: data.enteringDate2,
+                                                enteringStaff: _user.userName,
+                                                branch: _user.branch,
+                                                title: name + " " + channel,
+                                                customerName: name,
+                                                customerCount: count,
+                                                channel: channel,
+                                                phone: phone,
+                                                unitPrice: unitPrice,
+                                                totalPrice: data.totalPrice2,
+                                                receivable: data.receivable2,
+                                                received: data.received2,
+                                                steward: steward,
+                                                frontDeskLeader: frontDeskLeader,
+                                                stewardLeader: stewardLeader,
+                                                relationStaff: relationStaff,
+                                                note: note,
+                                                state: data.state2,
+                                                isFinish: data.isFinish2,
+                                                isFront: isFront,
+                                                color: color,
+                                            }, false);
+                                        }
                                     },
                                     complete: function () {
                                         $('#modal-default').modal('hide');
@@ -854,7 +927,8 @@
                                 button: [{
                                     value: '收款明细',
                                     callback: function () {
-                                        window.location.href="/Branch/BrhFrontPaymentDetial/Index/?id="+event.id;
+                                        //window.location.href="/Branch/BrhFrontPaymentDetial/Index/?id="+event.id;
+                                        window.open("/Branch/BrhFrontPaymentDetial/Index/?id=" + event.id);
                                     }
                                 }],
                                 okValue: "确定",
@@ -977,7 +1051,7 @@
                                                     isFront: isFront,
                                                     isFinance:isFinance,
                                                     color: color,
-                                                }, true);
+                                                }, false);
                                         },
                                         complete: function () {
                                             $('#modal-default').modal('hide');
@@ -1047,7 +1121,7 @@
                             },
                             success: function (data) {
                                 $("#calendar").fullCalendar("removeEvents", data.eve.id);
-                                $("#calendar").fullCalendar("renderEvent", data.eve, true);
+                                $("#calendar").fullCalendar("renderEvent", data.eve, false);
                             },
                             complete: function () {
                                 $('#modal-default').modal('hide');
@@ -1109,7 +1183,7 @@
                             },
                             success: function (data) {
                                 $("#calendar").fullCalendar("removeEvents", data.eve.id);
-                                $("#calendar").fullCalendar("renderEvent", data.eve, true);
+                                $("#calendar").fullCalendar("renderEvent", data.eve, false);
                             },
                             complete: function () {
                                 $('#modal-default').modal('hide');

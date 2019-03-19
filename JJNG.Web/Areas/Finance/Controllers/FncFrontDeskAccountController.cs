@@ -1,6 +1,7 @@
 ﻿using JJNG.Data;
 using JJNG.Data.AppIdentity;
 using JJNG.Data.Branch;
+using JJNG.Data.Finance;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
+using Newtonsoft.Json.Serialization;
 namespace JJNG.Web.Areas.Finance.Controllers
 {
     [Area("Finance")]
@@ -27,24 +31,15 @@ namespace JJNG.Web.Areas.Finance.Controllers
             _userManager = usrMgr;
         }
 
-        public async Task<IActionResult> Index(string branch="既见·南国")
+        public async Task<ActionResult> Index(string branchName = "既见·南国", int branchId = 2, int count = 15)
         {
-            AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
-            ViewData["UserName"] = _user.UserName;
-            ViewData["Branch"] = _user.Branch;
-
-            var list_branch = _identityContext.UserBranch.Where(x => x.BranchName != "运营中心"&& x.BranchName != "町隐学院").ToList();
-            List<BrhFrontDeskAccounts> brhFrontDeskAccounts = new List<BrhFrontDeskAccounts>();
-
-            if (string.IsNullOrEmpty(branch))
-                brhFrontDeskAccounts = await _context.BrhFrontDeskAccounts.Include(x=>x.BrhFrontPaymentDetial).Where(x=>DateTime.Compare(DateTime.Now.AddDays(-90), x.StartDate) <= 0).ToListAsync();
-            else
-                brhFrontDeskAccounts = await _context.BrhFrontDeskAccounts.Include(x => x.BrhFrontPaymentDetial).Where(x => DateTime.Compare(DateTime.Now.AddDays(-90), x.StartDate) <= 0 && x.Branch == branch).ToListAsync();
-
-            //var front2List = _context.BrhFrontDeskAccounts.Where(x => x.Branch == branch && x.State != StateType.已删除 && x.StartDate.Month != x.EndDate.AddDays(-1).Month).ToList();
-
-            return View(Tuple.Create<List<BrhFrontDeskAccounts>, List<UserBranch>>(brhFrontDeskAccounts, list_branch));
-            //return View(Tuple.Create<List<BrhFrontDeskAccounts>, List<UserBranch>>(front2List, list_branch));
+            ViewData["BranchId"] = branchId;
+            var fncBranch = new FncBranch();
+            fncBranch.BranchName = branchName;
+            fncBranch.BranchId = branchId;
+            fncBranch.Count = count;
+            var list_branch = await _context.FncBranch.Where(x => x.BranchName != "运营中心" && x.BranchName != "町隐学院").ToListAsync();
+            return View(Tuple.Create<FncBranch, List<FncBranch>>(fncBranch, list_branch));
         }
 
         [HttpPost]
@@ -52,7 +47,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
         public async Task<IActionResult> Index(List<long> ids)
         {
             if (ids.Count > 0)
-            {
+            {   
                 _context.BrhFrontDeskAccounts.Where(x => ids.Contains(x.FrontDeskAccountsId) && !x.IsFinance).ToList().ForEach(x =>
                   {
                       x.IsFinance = true;
@@ -63,6 +58,22 @@ namespace JJNG.Web.Areas.Finance.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+        public async Task<JsonResult> UpdateList([FromBody]FDAParams fdaParams)
+        {
+            if (fdaParams.Ids.Count > 0)
+            {
+                _context.BrhFrontDeskAccounts.Where(x => fdaParams.Ids.Contains(x.FrontDeskAccountsId) && !x.IsFinance).ToList().ForEach(x =>
+                {
+                    x.IsFinance = true;
+                    _context.Update(x);
+                });
+                await _context.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+            }
+            var frontList = await _context.BrhFrontDeskAccounts.Include(x=>x.BrhFrontPaymentDetial).Where(x => x.Branch == fdaParams.BranchName && x.State != StateType.已删除 && DateTime.Compare(fdaParams.StartDate, x.EndDate) <= 0 && DateTime.Compare(x.StartDate, fdaParams.EndDate) < 0).ToListAsync();
+            return Json(new { frontList });
+            //return RedirectToAction(nameof(Index));
+        }
 
         public IActionResult DetialList(long? id)
         {
@@ -70,5 +81,21 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
             return PartialView("~/Areas/Finance/Views/FncFrontDeskAccount/DetialList.cshtml", brhFrontPaymentDetials);
         }
+
+        public async Task<JsonResult> GetFrontList([FromBody]FDAParams fdaParams)
+        {
+            var frontList =await _context.BrhFrontDeskAccounts.Include(x=>x.BrhFrontPaymentDetial).Where(x => x.Branch == fdaParams.BranchName && x.State != StateType.已删除 && DateTime.Compare(fdaParams.StartDate, x.EndDate) <= 0 && DateTime.Compare(x.StartDate, fdaParams.EndDate) < 0).ToListAsync();
+            //JsonSerializerSettings settings = new JsonSerializerSettings();
+            //settings.MaxDepth = 2;
+            //settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; //设置不处理循环引用
+            return Json(new { frontList });
+        }
+    }
+
+    public class FDAParams:FncBranch
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public List<long> Ids { get; set; }
     }
 }

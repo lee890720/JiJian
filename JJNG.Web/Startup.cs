@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Security.Claims;
+﻿using JJNG.Data;
+using JJNG.Data.AppIdentity;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using JJNG.Data.AppIdentity;
-using JJNG.Data;
-using Microsoft.AspNetCore.Http;
-using JJNG.Web.Infrastructure;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 
 namespace JJNG.Web
 {
@@ -36,13 +30,13 @@ namespace JJNG.Web
             services.AddDbContext<AppIdentityDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<AppIdentityUser,IdentityRole>()
+            services.AddIdentity<AppIdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
                 .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
             {
-                 //Password settings
+                //Password settings
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequireNonAlphanumeric = false;
@@ -78,7 +72,23 @@ namespace JJNG.Web
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddMvc();
+            //services.AddMvc();
+
+            services.AddMvc()
+                //全局配置Json序列化处理
+                .AddJsonOptions(options =>
+                {
+                    //忽略循环引用
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    //EF Core中默认为驼峰样式序列化处理key
+                    //options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    //使用默认方式，不更改元数据的key的大小写
+                    //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    //设置时间格式
+                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
+                }
+                );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
