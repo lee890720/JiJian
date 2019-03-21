@@ -15,7 +15,7 @@
         <div class="col-md-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    @*<h3 class="box-title">前台账目<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>*@
+                    <h3 class="box-title">前台账目<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
                     <div class="box-tools pull-right">
                         <button title="审核" id="audit" class="btn btn-box-tool"> 审核</button>
                         <div class="btn-group">
@@ -46,10 +46,11 @@
                                 <i class="fa fa-bars"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-left" role="menu" style="padding-left:10px">
-                                <li><input type="checkbox" class="toggle-vis" data-column="15" />&nbsp;<small>对应管家</small></li>
-                                <li><input type="checkbox" class="toggle-vis" data-column="16" />&nbsp;<small>前台组长</small></li>
-                                <li><input type="checkbox" class="toggle-vis" data-column="17" />&nbsp;<small>管家组长</small></li>
-                                <li><input type="checkbox" class="toggle-vis" data-column="18" />&nbsp;<small>对应关系</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="3" />&nbsp;<small>手机号</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="16" />&nbsp;<small>对应管家</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="17" />&nbsp;<small>前台组长</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="18" />&nbsp;<small>管家组长</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="19" />&nbsp;<small>对应关系</small></li>
                             </ul>
                         </div>
                         <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -154,7 +155,130 @@
             </div>
         </div>
     </div>
-
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">渠道占比<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <div class="box-tools pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                @foreach (var u in Model.Item2)
+                                {
+                                    <li><a asp-action="Index" asp-route-branchId="@u.BranchId" asp-route-branchName="@u.BranchName" asp-route-count="@u.Count"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 hidden-xs">
+                        <div id="Pie1Chart" style="height:500px"></div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 hidden-xs">
+                        <div id="Pie2Chart" style="height:500px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">日分析<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <div class="box-tools pull-right">
+                        <button id="DailyProfitRateBtn" title="Room Revenue" type="button" class="btn btn-box-tool hidden-xs">RRe.</button>
+                        <button id="DailyProfitBtn" title="Occupancy" type="button" class="btn btn-box-tool hidden-xs">Occ.</button>
+                        <button id="DailyHandBtn" title="Average Daily Rate" type="button" class="btn btn-box-tool hidden-xs">ADR</button>
+                        <button id="DailyPointBtn" title="Revenue Per Available Room" type="button" class="btn btn-box-tool hidden-xs">RevPAR</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                @foreach (var u in Model.Item2)
+                                {
+                                    <li><a asp-action="Index" asp-route-branchId="@u.BranchId" asp-route-branchName="@u.BranchName" asp-route-count="@u.Count"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hidden-xs">
+                        <div id="DailyBaseChart" style="height: 300px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">日分析数据<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <div class="box-tools pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                @foreach (var u in Model.Item2)
+                                {
+                                    <li><a asp-action="Index" asp-route-branchId="@u.BranchId" asp-route-branchName="@u.BranchName" asp-route-count="@u.Count"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body table-responsive">
+                    <div class="form-group">
+                        <div class="col-md-3 col-sm-6 col-xs-12 pull-right">
+                            <input type="text" placeholder="搜索" id="search" class="form-control">
+                        </div>
+                    </div>
+                    <table id="table-2" class="table  table-bordered table-striped table-hover"  width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    日期
+                                </th>
+                                <th>
+                                    房费收入
+                                </th>
+                                <th>
+                                    实售间夜
+                                </th>
+                                <th>
+                                    总间夜
+                                </th>
+                                <th>
+                                    平均房价
+                                </th>
+                                <th>
+                                    单房收益
+                                </th>
+                                <th>
+                                    出租率
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -172,13 +296,436 @@
     </div>
 </section>
 @section Scripts{
-    @*<script src="~/js/range_front.js"></script>*@
     <script src="~/js/dateRangeSelector.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
     <script>
         $(function () {
             var _fncBranch =@Html.Raw(Json.Serialize(Model.Item1));
             var _ids = [];
+            var DailyBaseData = [];
+            var DailyBaseChart = echarts.init(document.getElementById('DailyBaseChart'));
+            var Pie1Chart = echarts.init(document.getElementById('Pie1Chart'));
+            var Pie2Chart = echarts.init(document.getElementById('Pie2Chart'));
+            var P1legendData = [];
+            var P1series1Data = [];
+            var P1series2Data = [];
+            var P2legendData = [];
+            var P2seriesData = [];
+
+            //#region 日分析报告
+            $("#DailyProfitRateBtn").click(function () {
+                Render_DailyBaseChart(DailyBaseData, 1);
+            });
+
+            $("#DailyProfitBtn").click(function () {
+                Render_DailyBaseChart(DailyBaseData, 2);
+            });
+
+            $("#DailyHandBtn").click(function () {
+                Render_DailyBaseChart(DailyBaseData, 3);
+            });
+
+            $("#DailyPointBtn").click(function () {
+                Render_DailyBaseChart(DailyBaseData, 4);
+            });
+
+            var optionDailyBase = {
+                //color: ['#3398DB','gray'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    data: [],
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                calculable: true,
+                grid: {
+                    left: '3%',
+                    right: '8%',
+                    top: '15%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                dataZoom: [
+                    {
+                        id: 'dataZoomX',
+                        type: 'inside',
+                        xAxisIndex: [0],
+                        filterMode: 'filter'
+                    }
+                ],
+                xAxis:
+                {
+                    type: 'category',
+                    data: []
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value}'
+                        },
+                    }
+
+                ],
+                series: [
+                    {
+                        name: '',
+                        type: 'bar',
+                        barWidth: '60%',
+                        data: [],
+                        markPoint: {
+                            data: [
+                                { type: 'max', name: '最大值' },
+                                { type: 'min', name: '最小值' }
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                { type: 'average', name: '平均值' }
+                            ]
+                        },
+                        label: {
+                            normal: {
+                                show: false,
+                                formatter: '{c}',
+                                position: 'top',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        }
+                    },
+                ]
+            };
+
+            function Render_DailyBaseChart(data, type) {
+
+                optionDailyBase.xAxis.data = [];
+                optionDailyBase.series[0].data = [];
+                var seriesName = "";
+
+                if (type == 1) {
+                    seriesName = "房费收入";
+                }
+                else if (type == 2) {
+                    seriesName = "出租率";
+                }
+                else if (type == 3) {
+                    seriesName = "平均房价";
+                }
+                else if (type == 4) {
+                    seriesName = "单房收益";
+                }
+
+                optionDailyBase.series[0].name = seriesName;
+                optionDailyBase.legend.data.push(seriesName);
+                if (data != null) {
+                    $.each(data, function () {
+                        optionDailyBase.xAxis.data.push(moment(this.month).format("YYYY-MM-DD"));
+                        //房费流水
+                        if (type == 1) {
+                            optionDailyBase.series[0].data.push((this.houseAmount).toFixed(0));
+                            optionDailyBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                            };
+                        }
+                        //出租率
+                        else if (type == 2) {
+                            optionDailyBase.series[0].data.push((this.rate * 100).toFixed(2));
+                            optionDailyBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? (p.value + " %") : '';
+                            };
+                        }
+                        //均价
+                        else if (type == 3) {
+                            optionDailyBase.series[0].data.push(this.average.toFixed(0));
+                            optionDailyBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('a.' + p.value) : '';
+                            };
+                        }
+                        //有效均价
+                        else if (type == 4) {
+                            optionDailyBase.series[0].data.push(this.validAverage.toFixed(0));
+                            optionDailyBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('v.' + p.value) : '';
+                            };
+                        }
+                    })
+
+                    if (type == 1) {
+                        optionDailyBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionDailyBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " 元";
+                            return res;
+                        }
+                    } else if (type == 2) {
+                        optionDailyBase.yAxis[0].axisLabel.formatter = '{value} %';
+                        optionDailyBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " %";
+                            return res;
+                        }
+                    } else if (type == 3) {
+                        optionDailyBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionDailyBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " 元";
+                            return res;
+                        }
+                    } else if (type == 4) {
+                        optionDailyBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionDailyBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " 元";
+                            return res;
+                        }
+                    }
+                    DailyBaseChart.setOption(optionDailyBase);
+                }
+            };
+            //#endregion
+
+            //#region 月Pie图表
+            var optionMonthPie = {
+                title: {
+                    text: 'MonthPie',
+                    show: false
+                },
+                tooltip: {
+                    show: false,
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    show: false,
+                    type: 'plain',
+                    tooltip: {
+                        show: true
+                    },
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: []
+                },
+                series: [
+                    {
+                        name: 'SymbolCode',
+                        type: 'pie',
+                        radius: ['50%', '80%'],
+                        center: ['50%', '50%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center',
+                                formatter: '{b} : {c} ({d}%)',
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '12',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        data: [],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            function Render_MonthPieChart(index) {
+                var seriesData = [];
+                var data = DailyBaseData;
+                var idx = parseInt(index);
+                for (var i = 0; i < data[idx].buySellData.length; i++) {
+                    var _name = data[idx].buySellData[i].symbolCode;
+                    var _value = parseFloat(data[idx].buySellData[i].lots).toFixed(2);;
+                    seriesData.push({ name: _name, value: _value });
+                }
+                optionMonthPie.series[0].data = seriesData;
+                MonthPieChart.setOption(optionMonthPie);
+            };
+            //#endregion
+
+            //#region Pie1Chart设置
+            Pie1Chart.setOption({
+                title: {
+                    text: '渠道占比',
+                    x:'center',
+                    show: true
+                },
+                tooltip: {
+                    show: true,
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    data: P1legendData,
+                },
+                series: [
+                    {
+                        name: '金额占比',
+                        type: 'pie',
+                        radius: ['30%', '45%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center',
+                                formatter: '{b} : {c} ({d}%)',
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '12',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        },
+                        data: []
+                    },
+                    {
+                        name: '渠道占比',
+                        type: 'pie',
+                        radius: ['50%', '65%'],
+                        label: {
+                            normal: {
+                                formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                                backgroundColor: '#eee',
+                                borderColor: '#aaa',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                rich: {
+                                    a: {
+                                        color: '#999',
+                                        lineHeight: 22,
+                                        align: 'center'
+                                    },
+                                    hr: {
+                                        borderColor: '#aaa',
+                                        width: '100%',
+                                        borderWidth: 0.5,
+                                        height: 0
+                                    },
+                                    b: {
+                                        fontSize: 16,
+                                        lineHeight: 33
+                                    },
+                                    per: {
+                                        color: '#eee',
+                                        backgroundColor: '#334455',
+                                        padding: [2, 4],
+                                        borderRadius: 2
+                                    }
+                                }
+                            }
+                        },
+                        data: []
+                    }
+                ]
+            });
+            Pie1Chart.showLoading();
+            //#endregion
+
+            //#region Pie2Chart设置
+            Pie2Chart.setOption({
+                title: {
+                    text: '收款占比',
+                    x:'center',
+                    show: true
+                },
+                tooltip: {
+                    show: false,
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    show: true,
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 10,
+                    bottom: 10,
+                    data: P2legendData
+                },
+                series: [
+                    {
+                        name: '收款占比',
+                        type: 'pie',
+                        radius: ['45%', '65%'],
+                        center: ['50%', '50%'],
+                        avoidLabelOverlap: false,
+                        data: P2seriesData,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center',
+                                formatter: '{b} : {c} ({d}%)',
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '12',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            });
+            Pie2Chart.showLoading();
+            //#endregion
+
             //#region Ajax optionAjax
             var optionAjax = {
                 type: "post",
@@ -201,7 +748,7 @@
             //#region Ajax GetFrontList
             function GetFrontList() {
                 var start = moment().add('-1', "M").format("YYYY-MM-DD");
-                var end = moment().format("YYYY-MM-DD");
+                var end = moment().add('1', "d").format("YYYY-MM-DD");
                 if ($("#date_beg").val() != '')
                     start = moment($("#date_beg").val()).format("YYYY-MM-DD");
                 if ($("#date_end").val() != '')
@@ -215,13 +762,138 @@
                     endDate: end
                 });
                 optionAjax.success = function (result) {
+                    DailyBaseData = result.dailyList;
+                    Render_DailyBaseChart(DailyBaseData, 1);
+                    P1legendData = [];
+                    P1series1Data = [];
+                    P1series2Data = [];
+                    P2legendData = [];
+                    P2seriesData = [];
+                    for (var i = 0; i < result.pie1List.length; i++) {
+                        P1legendData.push(result.pie1List[i].channel);
+                        P1series1Data.push({ name: result.pie1List[i].channel, value: result.pie1List[i].aTotal });
+                        P1series2Data.push({ name: result.pie1List[i].channel, value: result.pie1List[i].cTotal });
+                    }
+                    for (var i = 0; i < result.pie2List.length; i++) {
+                        P2legendData.push(result.pie2List[i].payWay);
+                        P2seriesData.push({ name: result.pie2List[i].payWay,value: result.pie2List[i].total });
+                    }
+                    var legendShow = false;
+                    var centerValue = ['50%', '50%'];
+                    if (document.body.clientWidth > 1200) {
+                        legendShow = true;
+                        centerValue = ['50%', '50%'];
+                    }
+                    Pie1Chart.hideLoading();
+                    Pie1Chart.setOption({
+                        legend: {
+                            show: legendShow,
+                            data: P1legendData
+                        },
+                        series: [
+                            {
+                                data: P1series1Data
+                            },
+                            {
+                                data: P1series2Data
+                            },
+                        ]
+                    });
+                    Pie2Chart.hideLoading();
+                    Pie2Chart.setOption({
+                        legend: {
+                            show: legendShow,
+                            data: P2legendData
+                        },
+                        series: [
+                            {
+                                data: P2seriesData
+                            },
+                        ]
+                    });
                     table1.api().clear();
                     table1.api().rows.add(result.frontList).draw();
+                    table2.api().clear();
+                    table2.api().rows.add(result.dailyList).draw();
                 };
                 $.ajax(optionAjax);
             };
-            //#endregion
 
+            $("#audit").click(function () {
+                var start = moment().add('-1', "M").format("YYYY-MM-DD");
+                var end = moment().add('1', "d").format("YYYY-MM-DD");
+                if ($("#date_beg").val() != '')
+                    start = moment($("#date_beg").val()).format("YYYY-MM-DD");
+                if ($("#date_end").val() != '')
+                    end = moment($("#date_end").val()).format("YYYY-MM-DD");
+                optionAjax.url = "/Finance/FncFrontDeskAccount/UpdateList";
+                optionAjax.data = JSON.stringify({
+                    branchName: _fncBranch.branchName,
+                    branchId: _fncBranch.branchId,
+                    count: _fncBranch.count,
+                    startDate: start,
+                    endDate: end,
+                    ids: _ids
+                });
+                optionAjax.success = function (result) {
+                    DailyBaseData = result.dailyList;
+                    Render_DailyBaseChart(DailyBaseData, 1);
+                    P1legendData = [];
+                    P1series1Data = [];
+                    P1series2Data = [];
+                    P2legendData = [];
+                    P2seriesData = [];
+                    for (var i = 0; i < result.pie1List.length; i++) {
+                        P1legendData.push(result.pie1List[i].channel);
+                        P1series1Data.push({ name: result.pie1List[i].channel, value: result.pie1List[i].aTotal });
+                        P1series2Data.push({ name: result.pie1List[i].channel, value: result.pie1List[i].cTotal });
+                    }
+                    for (var i = 0; i < result.pie2List.length; i++) {
+                        P2legendData.push(result.pie2List[i].payWay);
+                        P2seriesData.push({ name: result.pie2List[i].payWay, value: result.pie2List[i].total });
+                    }
+                    var legendShow = false;
+                    var centerValue = ['50%', '50%'];
+                    if (document.body.clientWidth > 1200) {
+                        legendShow = true;
+                        centerValue = ['50%', '50%'];
+                    }
+                    Pie1Chart.hideLoading();
+                    Pie1Chart.setOption({
+                        legend: {
+                            show: legendShow,
+                            data: P1legendData
+                        },
+                        series: [
+                            {
+                                data: P1series1Data
+                            },
+                            {
+                                data: P1series2Data
+                            },
+                        ]
+                    });
+                    Pie2Chart.hideLoading();
+                    Pie2Chart.setOption({
+                        legend: {
+                            show: legendShow,
+                            data: P2legendData
+                        },
+                        series: [
+                            {
+                                data: P2seriesData
+                            },
+                        ]
+                    });
+                    table1.api().clear();
+                    table1.api().rows.add(result.frontList).draw();
+                    table2.api().clear();
+                    table2.api().rows.add(result.dailyList).draw();
+                };
+                $.ajax(optionAjax);
+            });
+
+            //#endregion
 
             //#region table1初始化
             var table1 = $('#table-1').dataTable(
@@ -370,7 +1042,84 @@
                     });
                 //#endregion
 
-                //#region 显示隐藏列
+            //#region table2初始化
+            var table2 = $('#table-2').dataTable(
+                {
+                    responsive: true,
+                    order: [[0, "desc"]],
+                    dom:
+                        "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    language: {
+                        processing: "加载中...",
+                        lengthMenu: "每页显示 _MENU_ 条数据",
+                        zeroRecords: "没有匹配结果",
+                        info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                        infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                        infoFiltered: "(由 _MAX_ 项结果过滤)",
+                        infoPostFix: "",
+                        search: "搜索:",
+                        url: "",
+                        emptyTable: "没有匹配结果",
+                        loadingRecords: "载入中...",
+                        thousands: ",",
+                        paginate: {
+                            first: "首页",
+                            previous: "上一页",
+                            next: "下一页",
+                            last: "末页"
+                        },
+                        aria: {
+                            sortAscending: ": 以升序排列此列",
+                            sortDescending: ": 以降序排列此列"
+                        }
+                    },
+                    data: [],
+                    columns: [
+                        { data: "month" },
+                        { data: "houseAmount" },
+                        { data: "houseCount" },
+                        { data: "houseTotal" },
+                        { data: "average" },
+                        { data: "validAverage" },
+                        { data: "rate" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            render: function (data, type, row, meta) {
+                                var temp = new Date(data);
+                                return temp.Format('YYYY年MM月DD日');
+                            }
+                        },
+                        {
+                            targets: [1, 4, 5],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data);
+                                return Math.round(result);
+                            }
+                        },
+                        {
+                            targets: [],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data) * 100;
+                                return Math.round(result) + " 点";
+                            }
+                        },
+                        {
+                            targets: [6],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data) * 100;
+                                return result.toFixed(2) + " %";
+                            }
+                        },
+                    ],
+                });
+            $("#search").keyup(function () { table2.api().search($("#search").val()).draw(); });
+            //#endregion
+
+            //#region 显示隐藏列
             $('.toggle-vis').on('change', function (e) {
                 e.preventDefault();
                 console.log($(this).attr('data-column'));
@@ -431,30 +1180,7 @@
 
                 }
             });
-        //#endregion
-
-            $("#audit").click(function () {
-                var start = moment().add('-1', "M").format("YYYY-MM-DD");
-                var end = moment().format("YYYY-MM-DD");
-                if ($("#date_beg").val() != '')
-                    start = moment($("#date_beg").val()).format("YYYY-MM-DD");
-                if ($("#date_end").val() != '')
-                    end = moment($("#date_end").val()).format("YYYY-MM-DD");
-                optionAjax.url = "/Finance/FncFrontDeskAccount/UpdateList";
-                optionAjax.data = JSON.stringify({
-                    branchName: _fncBranch.branchName,
-                    branchId: _fncBranch.branchId,
-                    count: _fncBranch.count,
-                    startDate: start,
-                    endDate: end,
-                    ids:_ids
-                });
-                optionAjax.success = function (result) {
-                    table1.api().clear();
-                    table1.api().rows.add(result.frontList).draw();
-                };
-                $.ajax(optionAjax);
-            });
+            //#endregion
             //#endregion
 
             //#region 设置一些细节
@@ -522,7 +1248,15 @@
                 GetFrontList();
             });
             //#endregion
+
             GetFrontList();
+            setTimeout(function () {
+                window.onresize = function () {
+                    DailyBaseChart.resize();
+                    Pie1Chart.resize();
+                    Pie2Chart.resize();
+                }
+            }, 200);
         });
     </script>
 }

@@ -13,6 +13,8 @@ using JJNG.Data.AppIdentity;
 using Microsoft.AspNetCore.Identity;
 using JJNG.Web;
 using JJNG.Web.Areas.Branch.Models;
+using JJNG.Data.Finance;
+using JJNG.Web.Areas.Finance.Models;
 
 namespace JJNG.Web.Areas.Branch.Controllers
 {
@@ -35,8 +37,9 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
-            ViewData["Department"] = _user.Department;
             ViewData["Branch"] = _user.Branch;
+            ViewData["BranchId"] = _user.BranchId;
+            var fncBranch = _context.FncBranch.SingleOrDefault(x => x.BranchName == _user.Branch);
             var now = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
             var connectRecord = _context.BrhConnectRecord.Where(x => x.Branch == _user.Branch).OrderByDescending(x => x.EnteringDate).LastOrDefault();
             var brhMemoList = _context.BrhMemo.Where(x=>x.Branch==_user.Branch&&x.IsFinish==false).ToList();
@@ -120,13 +123,13 @@ namespace JJNG.Web.Areas.Branch.Controllers
             count = templist6d.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
 
-            var templist7 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.Branch &&  !x.IsFinish||x.UnitPrice==0).ToList();
+            var templist7 = _context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.Branch &&  !x.IsFinish).ToList();
             typename = "FrontIsFinish";
             amount = templist7.Sum(x => x.Receivable);
             count = templist7.Count;
             brhCollectModel.Add(new BrhCollectModel { Type = typename, Amount = amount, Count = count });
 
-            return View(Tuple.Create<BrhConnectRecord,List<BrhMemo>,BrhImprestAccounts,List<BrhFrontDeskAccounts>,List<BrhCollectModel>>(connectRecord,brhMemoList,brhImprestAccount,brhFrontDeskAccounts,brhCollectModel));
+            return View(Tuple.Create<BrhConnectRecord,List<BrhMemo>,BrhImprestAccounts,List<BrhFrontDeskAccounts>,List<BrhCollectModel>,FncBranch>(connectRecord,brhMemoList,brhImprestAccount,brhFrontDeskAccounts,brhCollectModel,fncBranch));
         }
 
         [HttpPost]
@@ -305,6 +308,240 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 }
             }
             return Json(new { brhGroup, brhGroup.Count});
+        }
+
+        public async Task<JsonResult> GetMonthData([FromBody]FncBranch fncBranch)
+        {
+            var frontList = _context.BrhFrontDeskAccounts.Where(x => x.Branch == fncBranch.BranchName && x.State != StateType.已删除 && DateTime.Compare(x.StartDate.Date, DateTime.Now.Date) <= 0).ToList();
+            var earningList = _context.BrhEarningRecord.Where(x => x.Branch == fncBranch.BranchName).ToList();
+            var expendList = _context.BrhExpendRecord.Where(x => x.Branch == fncBranch.BranchName).ToList();
+            var stewardList = _context.BrhStewardAccounts.Where(x => x.Branch == fncBranch.BranchName).ToList();
+            var start = frontList.Select(x => x.StartDate).Min().Date;
+            start = start.AddDays(1 - start.Day);
+            var end = frontList.Select(x => x.EndDate).Max().Date;
+            if (DateTime.Compare(end, DateTime.Now) < 0)
+                end = DateTime.Now.AddDays(1).Date;
+            end = end.AddDays(1 - end.Day);
+            var ms = (end.Year * 12 + end.Month) - (start.Year * 12 + start.Month);
+            if (ms == 0)
+                return Json(new { });
+            var monthDataList = new List<MonthData>();
+            var fncMonthDataList = _context.FncMonthData.Where(x => x.BranchId == fncBranch.BranchId).ToList();
+            var monthData_Month = fncMonthDataList.Select(x => x.Month.ToString("yyyy-MM")).ToList();
+            for (var i = 0; i <= ms; i++)
+            {
+                var fncMonthData = new FncMonthData();
+                var cFrontList = frontList.Where(x => DateTime.Compare(start.AddMonths(i), x.StartDate) <= 0 && DateTime.Compare(x.StartDate, start.AddMonths(i + 1)) < 0).ToList();
+                var cEarningList = earningList.Where(x => DateTime.Compare(start.AddMonths(i), x.EnteringDate) <= 0 && DateTime.Compare(x.EnteringDate, start.AddMonths(i + 1)) < 0).ToList();
+                var cExpendList = expendList.Where(x => DateTime.Compare(start.AddMonths(i), x.EnteringDate) <= 0 && DateTime.Compare(x.EnteringDate, start.AddMonths(i + 1)) < 0).ToList();
+                var cStewardList = stewardList.Where(x => DateTime.Compare(start.AddMonths(i), x.EnteringDate) <= 0 && DateTime.Compare(x.EnteringDate, start.AddMonths(i + 1)) < 0).ToList();
+                if (!monthData_Month.Contains(start.AddMonths(i).ToString("yyyy-MM")))
+                {
+                    fncMonthData.BranchId = fncBranch.BranchId;
+                    fncMonthData.Earning = cEarningList.Select(x => x.Amount).Sum();
+                    fncMonthData.Expend = cExpendList.Select(x => x.Amount).Sum();
+                    fncMonthData.HouseAmount = cFrontList.Select(x => x.TotalPrice).Sum();
+                    fncMonthData.HouseCount = cFrontList.Select(x => x.Count).Sum();
+                    if (i != ms)
+                    {
+                        fncMonthData.HouseTotal = DateTime.DaysInMonth(start.AddMonths(i).Year, start.AddMonths(i).Month) * fncBranch.Count;
+                    }
+                    else
+                    {
+                        fncMonthData.HouseTotal = DateTime.Now.Day * fncBranch.Count;
+                    }
+                    if (fncMonthData.HouseTotal != 0)
+                    {
+                        fncMonthData.Rate = (double)fncMonthData.HouseCount / (double)fncMonthData.HouseTotal;
+                        fncMonthData.ValidAverage = fncMonthData.HouseAmount / fncMonthData.HouseTotal;
+                    }
+                    else
+                    {
+                        fncMonthData.Rate = 0;
+                        fncMonthData.ValidAverage = 0;
+                    }
+                    if (fncMonthData.HouseCount != 0)
+                        fncMonthData.Average = fncMonthData.HouseAmount / fncMonthData.HouseCount;
+                    else
+                        fncMonthData.Average = 0;
+                    fncMonthData.Month = start.AddMonths(i);
+                    fncMonthData.SaleAmount = cStewardList.Select(x => x.Amount).Sum();
+                    fncMonthData.SaleProfit = cStewardList.Select(x => x.Profit).Sum();
+                    _context.Add(fncMonthData);
+                    fncMonthDataList.Add(fncMonthData);
+                }
+                else if (i == ms - 1)
+                {
+                    var tempMonthData = fncMonthDataList.SingleOrDefault(x => DateTime.Compare(x.Month, start.AddMonths(i)) == 0);
+                    tempMonthData.BranchId = fncBranch.BranchId;
+                    tempMonthData.Earning = cEarningList.Select(x => x.Amount).Sum();
+                    tempMonthData.Expend = cExpendList.Select(x => x.Amount).Sum();
+                    tempMonthData.HouseAmount = cFrontList.Select(x => x.TotalPrice).Sum();
+                    tempMonthData.HouseCount = cFrontList.Select(x => x.Count).Sum();
+                    tempMonthData.HouseTotal = DateTime.DaysInMonth(start.AddMonths(i).Year, start.AddMonths(i).Month) * fncBranch.Count;
+                    if (tempMonthData.HouseTotal != 0)
+                    {
+                        tempMonthData.Rate = (double)tempMonthData.HouseCount / (double)tempMonthData.HouseTotal;
+                        tempMonthData.ValidAverage = tempMonthData.HouseAmount / tempMonthData.HouseTotal;
+                    }
+                    else
+                    {
+                        tempMonthData.Rate = 0;
+                        tempMonthData.ValidAverage = 0;
+                    }
+                    if (tempMonthData.HouseCount != 0)
+                        tempMonthData.Average = tempMonthData.HouseAmount / tempMonthData.HouseCount;
+                    else
+                        tempMonthData.Average = 0;
+                    tempMonthData.Month = start.AddMonths(i);
+                    tempMonthData.SaleAmount = cStewardList.Select(x => x.Amount).Sum();
+                    tempMonthData.SaleProfit = cStewardList.Select(x => x.Profit).Sum();
+                    _context.Update(tempMonthData);
+                }
+                else if (i == ms)
+                {
+                    var tempMonthData = fncMonthDataList.SingleOrDefault(x => DateTime.Compare(x.Month, start.AddMonths(i)) == 0);
+                    tempMonthData.BranchId = fncBranch.BranchId;
+                    tempMonthData.Earning = cEarningList.Select(x => x.Amount).Sum();
+                    tempMonthData.Expend = cExpendList.Select(x => x.Amount).Sum();
+                    tempMonthData.HouseAmount = cFrontList.Select(x => x.TotalPrice).Sum();
+                    tempMonthData.HouseCount = cFrontList.Select(x => x.Count).Sum();
+                    tempMonthData.HouseTotal = DateTime.Now.Day * fncBranch.Count;
+                    if (tempMonthData.HouseTotal != 0)
+                    {
+                        tempMonthData.Rate = (double)tempMonthData.HouseCount / (double)tempMonthData.HouseTotal;
+                        tempMonthData.ValidAverage = tempMonthData.HouseAmount / tempMonthData.HouseTotal;
+                    }
+                    else
+                    {
+                        tempMonthData.Rate = 0;
+                        tempMonthData.ValidAverage = 0;
+                    }
+                    if (tempMonthData.HouseCount != 0)
+                        tempMonthData.Average = tempMonthData.HouseAmount / tempMonthData.HouseCount;
+                    else
+                        tempMonthData.Average = 0;
+                    tempMonthData.Month = start.AddMonths(i);
+                    tempMonthData.SaleAmount = cStewardList.Select(x => x.Amount).Sum();
+                    tempMonthData.SaleProfit = cStewardList.Select(x => x.Profit).Sum();
+                    _context.Update(tempMonthData);
+                }
+                await _context.SaveChangesAsync();
+            }
+
+            foreach (var fncMonthData1 in fncMonthDataList)
+            {
+                var monthData1 = new MonthData();
+                var ParentType = typeof(FncMonthData);
+                var Properties = ParentType.GetProperties();
+                foreach (var Propertie in Properties)
+                {
+                    if (Propertie.CanRead && Propertie.CanWrite)
+                    {
+                        Propertie.SetValue(monthData1, Propertie.GetValue(fncMonthData1, null), null);
+                    }
+                }
+                var fncMonthData2 = fncMonthDataList.SingleOrDefault(x => x.Month.ToString("yyyy-MM") == fncMonthData1.Month.AddMonths(-1).ToString("yyyy-MM"));
+                if (fncMonthData2 != null)
+                {
+                    monthData1.环比增长额 = fncMonthData1.HouseAmount - fncMonthData2.HouseAmount;
+                    monthData1.环比增长率 = (double)monthData1.环比增长额 / (double)fncMonthData1.HouseAmount;
+                    monthData1.出环比增长额 = (decimal)(fncMonthData1.Rate - fncMonthData2.Rate);
+                    monthData1.出环比增长率 = (double)monthData1.出环比增长额 / fncMonthData1.Rate;
+                    monthData1.均环比增长额 = fncMonthData1.Average - fncMonthData2.Average;
+                    monthData1.均环比增长率 = (double)monthData1.均环比增长额 / (double)fncMonthData1.Average;
+                    monthData1.有环比增长额 = fncMonthData1.ValidAverage - fncMonthData2.ValidAverage;
+                    monthData1.有环比增长率 = (double)monthData1.有环比增长额 / (double)fncMonthData1.ValidAverage;
+                }
+                else
+                {
+                    monthData1.环比增长额 = 0;
+                    monthData1.环比增长率 = 0;
+                    monthData1.出环比增长额 = 0;
+                    monthData1.出环比增长率 = 0;
+                    monthData1.均环比增长额 = 0;
+                    monthData1.均环比增长率 = 0;
+                    monthData1.有环比增长额 = 0;
+                    monthData1.有环比增长率 = 0;
+                }
+                var fncMonthData3 = fncMonthDataList.SingleOrDefault(x => x.Month.ToString("yyyy-MM") == fncMonthData1.Month.AddYears(-1).ToString("yyyy-MM"));
+                if (fncMonthData3 != null)
+                {
+                    monthData1.同比增长额 = fncMonthData1.HouseAmount - fncMonthData3.HouseAmount;
+                    monthData1.同比增长率 = (double)monthData1.同比增长额 / (double)fncMonthData1.HouseAmount;
+                    monthData1.出同比增长额 = (decimal)(fncMonthData1.Rate - fncMonthData3.Rate);
+                    monthData1.出同比增长率 = (double)monthData1.出同比增长额 / fncMonthData1.Rate;
+                    monthData1.均同比增长额 = fncMonthData1.Average - fncMonthData3.Average;
+                    monthData1.均同比增长率 = (double)monthData1.均同比增长额 / (double)fncMonthData1.Average;
+                    monthData1.有同比增长额 = fncMonthData1.ValidAverage - fncMonthData3.ValidAverage;
+                    monthData1.有同比增长率 = (double)monthData1.有同比增长额 / (double)fncMonthData1.ValidAverage;
+                }
+                else
+                {
+                    monthData1.同比增长额 = 0;
+                    monthData1.同比增长率 = 0;
+                    monthData1.出同比增长额 = 0;
+                    monthData1.出同比增长率 = 0;
+                    monthData1.均同比增长额 = 0;
+                    monthData1.均同比增长率 = 0;
+                    monthData1.有同比增长额 = 0;
+                    monthData1.有同比增长率 = 0;
+                }
+                monthDataList.Add(monthData1);
+            }
+            monthDataList = monthDataList.OrderBy(x => x.Month).ToList();
+
+            var front2List = _context.BrhFrontDeskAccounts.Where(x => x.Branch == fncBranch.BranchName && x.State != StateType.已删除 && x.StartDate.Month != x.EndDate.AddDays(-1).Month).ToList();
+            return Json(new { monthDataList, monthData_Month, front2List });
+        }
+
+        public async Task<JsonResult> GetFrontList([FromBody]FDAParams fdaParams)
+        {
+            var payList = new List<BrhFrontPaymentDetial>();
+            var frontList = await _context.BrhFrontDeskAccounts.Include(x => x.BrhFrontPaymentDetial).Where(x => x.Branch == fdaParams.BranchName && x.State != StateType.已删除 && DateTime.Compare(fdaParams.StartDate, x.StartDate) <= 0 && DateTime.Compare(x.StartDate, fdaParams.EndDate) < 0).ToListAsync();
+            foreach (var fr in frontList)
+            {
+                if (fr.BrhFrontPaymentDetial.Count > 0)
+                    payList.AddRange(fr.BrhFrontPaymentDetial);
+            }
+            var pie1List = frontList.GroupBy(x => new { x.Channel }).Select(x => new
+            {
+                Channel = x.Key.Channel,
+                CTotal = x.Sum(s => s.Count),
+                ATotal = x.Sum(s => s.BrhFrontPaymentDetial.Select(b => b.PayAmount).Sum())
+            }).ToList();
+            var pie2List = payList.GroupBy(x => new { x.PayWay }).Select(x => new
+            {
+                PayWay = x.Key.PayWay,
+                Total = x.Sum(s => s.PayAmount),
+            }).ToList();
+
+            var days = (fdaParams.EndDate - fdaParams.StartDate).Days;
+            List<FncMonthData> dailyList = new List<FncMonthData>();
+            for (var i = 0; i < days; i++)
+            {
+                var daily = new FncMonthData();
+                daily.Month = fdaParams.StartDate.AddDays(i).Date;
+                daily.HouseTotal = fdaParams.Count;
+                daily.HouseAmount = frontList.Where(x => DateTime.Compare(x.StartDate.Date, daily.Month) <= 0 && DateTime.Compare(daily.Month, x.EndDate.Date) < 0).Select(x => x.UnitPrice).Sum();
+                daily.HouseCount = frontList.Where(x => DateTime.Compare(x.StartDate.Date, daily.Month) <= 0 && DateTime.Compare(daily.Month, x.EndDate.Date) < 0).Select(x => x.Count).Count();
+                if (daily.HouseTotal != 0)
+                {
+                    daily.Rate = (double)daily.HouseCount / (double)daily.HouseTotal;
+                    daily.ValidAverage = daily.HouseAmount / daily.HouseTotal;
+                }
+                else
+                {
+                    daily.Rate = 0;
+                    daily.ValidAverage = 0;
+                }
+                if (daily.HouseCount != 0)
+                    daily.Average = daily.HouseAmount / daily.HouseCount;
+                else
+                    daily.Average = 0;
+                dailyList.Add(daily);
+            }
+            return Json(new { frontList, pie1List, pie2List, dailyList });
         }
 
         private bool BrhMemoExists(int id)

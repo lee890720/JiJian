@@ -1,4 +1,4 @@
-﻿@model Tuple<BrhConnectRecord, List<BrhMemo>, BrhImprestAccounts, List<BrhFrontDeskAccounts>, List<BrhCollectModel>>
+﻿@model Tuple<BrhConnectRecord, List<BrhMemo>, BrhImprestAccounts, List<BrhFrontDeskAccounts>, List<BrhCollectModel>, FncBranch>
 @{
     var actionName = ViewContext.RouteData.Values["action"].ToString();
     var controllerName = ViewContext.RouteData.Values["controller"].ToString();
@@ -42,7 +42,7 @@
                     </div>
                     <div class="box-body no-margin">
                         <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12 table-responsive">
-                            <table id="table-1" class="table table-hover" width="100%">
+                            <table id="table-3" class="table table-hover" width="100%">
                                 <thead>
                                     <tr>
                                         <th>
@@ -213,7 +213,7 @@
                     </div>
                 </div>
                 <div class="box-body no-margin">
-                    <table id="table-2" class="table  table-bordered table-striped table-hover" width="100%">
+                    <table id="table-4" class="table  table-bordered table-striped table-hover" width="100%">
                         <thead>
                             <tr>
                                 <th>
@@ -345,7 +345,7 @@
                     <div class="row">
                         <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
                             <div class="table-responsive">
-                                <table id="table-brhGroup" class="table table-hover" width="100%">
+                                <table id="table-5" class="table table-hover" width="100%">
                                     <thead>
                                         <tr>
                                             <th>付款方式</th>
@@ -375,92 +375,228 @@
             </div>
         </div>
     </div>
+    <div class="row hidden-xs">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">月度分析</h3>
+                    <div class="box-tools pull-right">
+                        <button id="MonthProfitRateBtn" title="Room Revenue" type="button" class="btn btn-box-tool hidden-xs">RRe.</button>
+                        <button id="MonthProfitBtn" title="Occupancy" type="button" class="btn btn-box-tool hidden-xs">Occ.</button>
+                        <button id="MonthHandBtn" title="Average Daily Rate" type="button" class="btn btn-box-tool hidden-xs">ADR</button>
+                        <button id="MonthPointBtn" title="Revenue Per Available Room" type="button" class="btn btn-box-tool hidden-xs">RevPAR</button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <div id="MonthBaseChart" style="height: 300px;">
+                            <!--月分析图表位置-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box  box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">月度分析数据</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body table-responsive">
+                    <div class="form-group">
+                        <div class="col-md-3 col-sm-6 col-xs-12 pull-right">
+                            <input type="text" placeholder="搜索" id="search" class="form-control">
+                        </div>
+                    </div>
+                    <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    月份
+                                </th>
+                                <th>
+                                    房费收入
+                                </th>
+                                <th>
+                                    实售间夜
+                                </th>
+                                <th>
+                                    总间夜
+                                </th>
+                                <th>
+                                    平均房价
+                                </th>
+                                <th>
+                                    单房收益
+                                </th>
+                                <th>
+                                    出租率
+                                </th>
+                                <th>
+                                    收入
+                                </th>
+                                <th>
+                                    支出
+                                </th>
+                                <th>
+                                    外销流水
+                                </th>
+                                <th>
+                                    外销利润
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">渠道占比<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 hidden-xs">
+                        <div id="Pie1Chart" style="height:500px"></div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 hidden-xs">
+                        <div id="Pie2Chart" style="height:500px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">日分析<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <div class="box-tools pull-right">
+                        <button id="DailyProfitRateBtn" title="Room Revenue" type="button" class="btn btn-box-tool hidden-xs">RRe.</button>
+                        <button id="DailyProfitBtn" title="Occupancy" type="button" class="btn btn-box-tool hidden-xs">Occ.</button>
+                        <button id="DailyHandBtn" title="Average Daily Rate" type="button" class="btn btn-box-tool hidden-xs">ADR</button>
+                        <button id="DailyPointBtn" title="Revenue Per Available Room" type="button" class="btn btn-box-tool hidden-xs">RevPAR</button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hidden-xs">
+                        <div id="DailyBaseChart" style="height: 300px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">日分析数据<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body table-responsive">
+                    <div class="form-group">
+                        <div class="col-md-3 col-sm-6 col-xs-12 pull-right">
+                            <input type="text" placeholder="搜索" id="search" class="form-control">
+                        </div>
+                    </div>
+                    <table id="table-2" class="table  table-bordered table-striped table-hover" width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    日期
+                                </th>
+                                <th>
+                                    房费收入
+                                </th>
+                                <th>
+                                    实售间夜
+                                </th>
+                                <th>
+                                    总间夜
+                                </th>
+                                <th>
+                                    平均房价
+                                </th>
+                                <th>
+                                    单房收益
+                                </th>
+                                <th>
+                                    出租率
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">提示</h4>
+                </div>
+                <div class="modal-body">
+                    <p>执行中，请稍后&hellip;</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 @section Scripts{
     <script>
-        //#region 初始化table1
-        var table1 = $('#table-1').dataTable(
-            {
-                responsive: true,
-                order: [[0, "desc"]],
-                info: false,
-                paging: false,
-                dom:
-                    "<'row'<'col-sm-6'><'col-sm-6'>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                language: {
-                    processing: "加载中...",
-                    lengthMenu: "每页显示 _MENU_ 条数据",
-                    zeroRecords: "没有匹配结果",
-                    info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
-                    infoEmpty: "显示第 0 至 0 项结果，共 0 项",
-                    infoFiltered: "(由 _MAX_ 项结果过滤)",
-                    infoPostFix: "",
-                    search: "搜索:",
-                    url: "",
-                    emptyTable: "没有匹配结果",
-                    loadingRecords: "载入中...",
-                    thousands: ",",
-                    paginate: {
-                        first: "首页",
-                        previous: "上一页",
-                        next: "下一页",
-                        last: "末页"
-                    },
-                    aria: {
-                        sortAscending: ": 以升序排列此列",
-                        sortDescending: ": 以降序排列此列"
-                    }
-                },
-            });
-        //#endregion
-        //#region table2初始化
-        var table1 = $('#table-2').dataTable(
-            {
-                responsive: true,
-                order: [[1, "asc"]],
-                pageLength: 30,
-                dom:
-                    "<'row'<'col-sm-6'><'col-sm-6'>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                language: {
-                    processing: "加载中...",
-                    lengthMenu: "每页显示 _MENU_ 条数据",
-                    zeroRecords: "没有匹配结果",
-                    info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
-                    infoEmpty: "显示第 0 至 0 项结果，共 0 项",
-                    infoFiltered: "(由 _MAX_ 项结果过滤)",
-                    infoPostFix: "",
-                    search: "搜索:",
-                    url: "",
-                    emptyTable: "没有匹配结果",
-                    loadingRecords: "载入中...",
-                    thousands: ",",
-                    paginate: {
-                        first: "首页",
-                        previous: "上一页",
-                        next: "下一页",
-                        last: "末页"
-                    },
-                    aria: {
-                        sortAscending: ": 以升序排列此列",
-                        sortDescending: ": 以降序排列此列"
-                    }
-                },
-            });
-        //#endregion
-
-    </script>
-
-    <script>
         $(function () {
             //初始化参数
+            var _fncBranch =@Html.Raw(Json.Serialize(Model.Item6));
             var brhGroupChart = echarts.init(document.getElementById('brhGroupChart'));
             var legendData = [];
             var seriesData = [];
             var _brhGroup = [];
+
+            var MonthBaseData = [];
+            var MonthBaseChart = echarts.init(document.getElementById('MonthBaseChart'));
+
+            var DailyBaseData = [];
+            var DailyBaseChart = echarts.init(document.getElementById('DailyBaseChart'));
+            var Pie1Chart = echarts.init(document.getElementById('Pie1Chart'));
+            var Pie2Chart = echarts.init(document.getElementById('Pie2Chart'));
+            var P1legendData = [];
+            var P1series1Data = [];
+            var P1series2Data = [];
+            var P2legendData = [];
+            var P2seriesData = [];
 
             //#region Ajax optionAjax
             var optionAjax = {
@@ -470,7 +606,13 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 data: {},
+                beforeSend: function () {
+                    $('#modal-default').modal('show');
+                },
                 success: function (result) {
+                },
+                complete: function () {
+                    $('#modal-default').modal('hide');
                 },
             };
             //#endregion
@@ -498,24 +640,122 @@
                     brhGroupChart.hideLoading();
                     brhGroupChart.setOption({
                         legend: {
-                            show:legendShow,
+                            show: legendShow,
                             data: legendData
                         },
                         series: [
                             {
                                 name: 'SymbolCode',
-                                center:centerValue,
+                                center: centerValue,
                                 data: seriesData
                             }
                         ]
                     });
                     //初始化表
-                    table_brhGroup.api().clear();
-                    table_brhGroup.api().rows.add(_brhGroup).draw();
+                    table5.api().clear();
+                    table5.api().rows.add(_brhGroup).draw();
                 };
                 $.ajax(optionAjax);
             };
             //#endregion
+
+            //#region Ajax GetMonthData
+            function GetMonthData() {
+                optionAjax.url = "/Branch/BrhCollect/GetMonthData";
+                optionAjax.data = JSON.stringify({
+                    branchName: _fncBranch.branchName,
+                    branchId: _fncBranch.branchId,
+                    count: _fncBranch.count
+                });
+                optionAjax.success = function (result) {
+                    MonthBaseData = result.monthDataList;
+                    Render_MonthBaseChart(MonthBaseData, 1);
+                    table1.api().rows.add(result.monthDataList).draw();
+                    var vStartDate = moment(moment().format("YYYY-MM") + '-01');
+                    var vEndM = moment(vStartDate).add('1', 'M').add('-1', 'd');
+                    var vEndDate = moment(vEndM).format("YYYY-MM-DD");
+                    GetFrontList(vStartDate);
+                };
+                $.ajax(optionAjax);
+            };
+            //#endregion
+
+            //#region Ajax GetFrontList
+            function GetFrontList(start) {
+                //var start = moment().add('-1', "M").format("YYYY-MM-DD");
+                var end = moment(start).add('1', "M").format("YYYY-MM-DD");
+                if (moment().add('1', 'd') < moment(end))
+                    end = moment().add('1', 'd');
+                //if ($("#date_beg").val() != '')
+                //    start = moment($("#date_beg").val()).format("YYYY-MM-DD");
+                //if ($("#date_end").val() != '')
+                //    end = moment($("#date_end").val()).format("YYYY-MM-DD");
+                optionAjax.url = "/Branch/BrhCollect/GetFrontList";
+                optionAjax.data = JSON.stringify({
+                    branchName: _fncBranch.branchName,
+                    branchId: _fncBranch.branchId,
+                    count: _fncBranch.count,
+                    startDate: start,
+                    endDate: end
+                });
+                optionAjax.beforeSend = function () { };
+                optionAjax.success = function (result) {
+                    DailyBaseData = result.dailyList;
+                    Render_DailyBaseChart(DailyBaseData, 1);
+                    P1legendData = [];
+                    P1series1Data = [];
+                    P1series2Data = [];
+                    P2legendData = [];
+                    P2seriesData = [];
+                    for (var i = 0; i < result.pie1List.length; i++) {
+                        P1legendData.push(result.pie1List[i].channel);
+                        P1series1Data.push({ name: result.pie1List[i].channel, value: result.pie1List[i].aTotal });
+                        P1series2Data.push({ name: result.pie1List[i].channel, value: result.pie1List[i].cTotal });
+                    }
+                    for (var i = 0; i < result.pie2List.length; i++) {
+                        P2legendData.push(result.pie2List[i].payWay);
+                        P2seriesData.push({ name: result.pie2List[i].payWay, value: result.pie2List[i].total });
+                    }
+                    var legendShow = false;
+                    var centerValue = ['50%', '50%'];
+                    if (document.body.clientWidth > 1200) {
+                        legendShow = true;
+                        centerValue = ['50%', '50%'];
+                    }
+                    Pie1Chart.hideLoading();
+                    Pie1Chart.setOption({
+                        legend: {
+                            show: legendShow,
+                            data: P1legendData
+                        },
+                        series: [
+                            {
+                                data: P1series1Data
+                            },
+                            {
+                                data: P1series2Data
+                            },
+                        ]
+                    });
+                    Pie2Chart.hideLoading();
+                    Pie2Chart.setOption({
+                        legend: {
+                            show: legendShow,
+                            data: P2legendData
+                        },
+                        series: [
+                            {
+                                data: P2seriesData
+                            },
+                        ]
+                    });
+                    table2.api().clear();
+                    table2.api().rows.add(result.dailyList).draw();
+                };
+                optionAjax.complete = function () { };
+                $.ajax(optionAjax);
+            };
+            //#endregion
 
             //#region brhGroupChart设置
             brhGroupChart.setOption({
@@ -524,12 +764,12 @@
                     show: false
                 },
                 tooltip: {
-                    show:false,
+                    show: false,
                     trigger: 'item',
                     formatter: "{a} <br/>{b} : {c} ({d}%)"
                 },
                 legend: {
-                    show:true,
+                    show: true,
                     type: 'scroll',
                     orient: 'vertical',
                     right: 10,
@@ -577,8 +817,986 @@
             brhGroupChart.showLoading();
             //#endregion
 
-            //#region 初始化table_brhGroup
-            var table_brhGroup = $('#table-brhGroup').dataTable(
+            //#region 月度分析报告
+            $("#MonthProfitRateBtn").click(function () {
+                Render_MonthBaseChart(MonthBaseData, 1);
+            });
+
+            $("#MonthProfitBtn").click(function () {
+                Render_MonthBaseChart(MonthBaseData, 2);
+            });
+
+            $("#MonthHandBtn").click(function () {
+                Render_MonthBaseChart(MonthBaseData, 3);
+            });
+
+            $("#MonthPointBtn").click(function () {
+                Render_MonthBaseChart(MonthBaseData, 4);
+            });
+
+            MonthBaseChart.on('click', function (params) {
+                var tempdate = (params.name).replace(/年/, "-").replace(/月/, "-") + "01";
+                GetFrontList(tempdate);
+            });
+
+            var optionMonthBase = {
+                //color: ['#3398DB','gray'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    data: [],
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                calculable: true,
+                grid: {
+                    left: '3%',
+                    right: '8%',
+                    top: '15%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                dataZoom: [
+                    {
+                        id: 'dataZoomX',
+                        type: 'inside',
+                        xAxisIndex: [0],
+                        filterMode: 'filter'
+                    }
+                ],
+                xAxis:
+                {
+                    type: 'category',
+                    data: []
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value}'
+                        },
+                    }
+
+                ],
+                series: [
+                    {
+                        name: '',
+                        type: 'bar',
+                        //barWidth: '60%',
+                        data: [],
+                        markPoint: {
+                            data: [
+                                { type: 'max', name: '最大值' },
+                                { type: 'min', name: '最小值' }
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                { type: 'average', name: '平均值' }
+                            ]
+                        },
+                        label: {
+                            normal: {
+                                show: false,
+                                formatter: '{c}',
+                                position: 'top',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        }
+                    },
+                    {
+                        name: '',
+                        type: 'bar',
+                        //barWidth: '60%',
+                        data: [],
+                        markPoint: {
+                            data: [
+                                { type: 'max', name: '最大值' },
+                                { type: 'min', name: '最小值' }
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                { type: 'average', name: '平均值' }
+                            ]
+                        },
+                        label: {
+                            normal: {
+                                show: false,
+                                formatter: '{c}',
+                                position: 'top',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        }
+                    },
+                ]
+            };
+
+            function Render_MonthBaseChart(data, type) {
+
+                optionMonthBase.xAxis.data = [];
+                optionMonthBase.series[0].data = [];
+                optionMonthBase.series[1].data = [];
+                var seriesName = "";
+
+                if (type == 1) {
+                    seriesName = "房费收入";
+                }
+                else if (type == 2) {
+                    seriesName = "出租率";
+                }
+                else if (type == 3) {
+                    seriesName = "平均房价";
+                }
+                else if (type == 4) {
+                    seriesName = "单房收益";
+                }
+
+                optionMonthBase.series[0].name = seriesName;
+                optionMonthBase.series[1].name = "去年同期";
+                optionMonthBase.legend.data.push(seriesName);
+                optionMonthBase.legend.data.push("去年同期");
+                if (data != null) {
+                    $.each(data, function () {
+                        optionMonthBase.xAxis.data.push(moment(this.month).format("YYYY年MM月"));
+                        //房费流水
+                        if (type == 1) {
+                            optionMonthBase.series[0].data.push((this.houseAmount).toFixed(0));
+                            optionMonthBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                            };
+                            var tempMonth = moment(this.month).add(-1, "years");
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == moment(tempMonth).format("YYYY年MM月") });
+                            if (item == undefined) {
+                                optionMonthBase.series[1].data.push(0);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                                };
+                            }
+                            else {
+                                optionMonthBase.series[1].data.push(item.houseAmount);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                                };
+                            }
+                        }
+                        //出租率
+                        else if (type == 2) {
+                            optionMonthBase.series[0].data.push((this.rate * 100).toFixed(2));
+                            optionMonthBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? (p.value + " %") : '';
+                            };
+                            var tempMonth = moment(this.month).add(-1, "years");
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == moment(tempMonth).format("YYYY年MM月") });
+                            if (item == undefined) {
+                                optionMonthBase.series[1].data.push(0);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? (p.value + " %") : '';
+                                };
+                            }
+                            else {
+                                optionMonthBase.series[1].data.push((item.rate * 100).toFixed(2));
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? (p.value + " %") : '';
+                                };
+                            }
+                        }
+                        //均价
+                        else if (type == 3) {
+                            optionMonthBase.series[0].data.push(this.average.toFixed(0));
+                            optionMonthBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('a.' + p.value) : '';
+                            };
+                            var tempMonth = moment(this.month).add(-1, "years");
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == moment(tempMonth).format("YYYY年MM月") });
+                            if (item == undefined) {
+                                optionMonthBase.series[1].data.push(0);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('a.' + p.value) : '';
+                                };
+                            }
+                            else {
+                                optionMonthBase.series[1].data.push(item.average);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('a.' + p.value) : '';
+                                };
+                            }
+                        }
+                        //有效均价
+                        else if (type == 4) {
+                            optionMonthBase.series[0].data.push(this.validAverage.toFixed(0));
+                            optionMonthBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('v.' + p.value) : '';
+                            };
+                            var tempMonth = moment(this.month).add(-1, "years");
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == moment(tempMonth).format("YYYY年MM月") });
+                            if (item == undefined) {
+                                optionMonthBase.series[1].data.push(0);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('v.' + p.value) : '';
+                                };
+                            }
+                            else {
+                                optionMonthBase.series[1].data.push(item.validAverage);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('v.' + p.value) : '';
+                                };
+                            }
+                        }
+                    })
+
+                    if (type == 1) {
+                        optionMonthBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionMonthBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " 元";
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == params[0].name });
+                            var item1 = data.find(item => { return moment(item.month).add('1', "y").format("YYYY年MM月") == params[0].name });
+                            var item2 = data.find(item => { return moment(item.month).add('1', "M").format("YYYY年MM月") == params[0].name });
+                            if (item1 != undefined) {
+                                res += '<br/>' + "去年同期：" + parseFloat(item1.houseAmount).toFixed(0) + " 元";
+                                res += "<br/>" + "同比增长额：" + parseFloat(item.同比增长额).toFixed(0) + " 元";
+                                res += "<br/>" + "同比增长率：" + parseFloat(item.同比增长率 * 100).toFixed(2) + " %";
+                            }
+                            if (item2 != undefined) {
+                                res += '<br/>' + "上月：" + parseFloat(item2.houseAmount).toFixed(0) + " 元";
+                                res += "<br/>" + "环比增长额：" + parseFloat(item.环比增长额).toFixed(0) + " 元";
+                                res += "<br/>" + "环比增长率：" + parseFloat(item.环比增长率 * 100).toFixed(2) + " %";
+                            }
+                            return res;
+                        }
+                    } else if (type == 2) {
+                        optionMonthBase.yAxis[0].axisLabel.formatter = '{value} %';
+                        optionMonthBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " %";
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == params[0].name });
+                            var item1 = data.find(item => { return moment(item.month).add('1', "y").format("YYYY年MM月") == params[0].name });
+                            var item2 = data.find(item => { return moment(item.month).add('1', "M").format("YYYY年MM月") == params[0].name });
+                            if (item1 != undefined) {
+                                res += '<br/>' + "去年同期：" + parseFloat(item1.rate * 100).toFixed(2) + " %";
+                                res += "<br/>" + "同比增长点：" + parseFloat(item.出同比增长额 * 100).toFixed(2) + " 点";
+                                res += "<br/>" + "同比增长率：" + parseFloat(item.出同比增长率 * 100).toFixed(2) + " %";
+                            }
+                            if (item2 != undefined) {
+                                res += '<br/>' + "上月：" + parseFloat(item2.rate * 100).toFixed(2) + " %";
+                                res += "<br/>" + "环比增长额：" + parseFloat(item.出环比增长额 * 100).toFixed(2) + " 点";
+                                res += "<br/>" + "环比增长率：" + parseFloat(item.出环比增长率 * 100).toFixed(2) + " %";
+                            }
+                            return res;
+                        }
+                    } else if (type == 3) {
+                        optionMonthBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionMonthBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " 元";
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == params[0].name });
+                            var item1 = data.find(item => { return moment(item.month).add('1', "y").format("YYYY年MM月") == params[0].name });
+                            var item2 = data.find(item => { return moment(item.month).add('1', "M").format("YYYY年MM月") == params[0].name });
+                            if (item1 != undefined) {
+                                res += '<br/>' + "去年同期：" + parseFloat(item1.average).toFixed(0) + " 元";
+                                res += "<br/>" + "同比增长额：" + parseFloat(item.均同比增长额).toFixed(0) + " 元";
+                                res += "<br/>" + "同比增长率：" + parseFloat(item.均同比增长率 * 100).toFixed(2) + " %";
+                            }
+                            if (item2 != undefined) {
+                                res += '<br/>' + "上月：" + parseFloat(item2.average).toFixed(0) + " 元";
+                                res += "<br/>" + "环比增长额：" + parseFloat(item.均环比增长额).toFixed(0) + " 元";
+                                res += "<br/>" + "环比增长率：" + parseFloat(item.均环比增长率 * 100).toFixed(2) + " %";
+                            }
+                            return res;
+                        }
+                    } else if (type == 4) {
+                        optionMonthBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionMonthBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " 元";
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == params[0].name });
+                            var item1 = data.find(item => { return moment(item.month).add('1', "y").format("YYYY年MM月") == params[0].name });
+                            var item2 = data.find(item => { return moment(item.month).add('1', "M").format("YYYY年MM月") == params[0].name });
+                            if (item1 != undefined) {
+                                res += '<br/>' + "去年同期：" + parseFloat(item1.validAverage).toFixed(0) + " 元";
+                                res += "<br/>" + "同比增长额：" + parseFloat(item.有同比增长额).toFixed(0) + " 元";
+                                res += "<br/>" + "同比增长率：" + parseFloat(item.有同比增长率 * 100).toFixed(2) + " %";
+                            }
+                            if (item2 != undefined) {
+                                res += '<br/>' + "上月：" + parseFloat(item2.validAverage).toFixed(0) + " 元";
+                                res += "<br/>" + "环比增长额：" + parseFloat(item.有环比增长额).toFixed(0) + " 元";
+                                res += "<br/>" + "环比增长率：" + parseFloat(item.有环比增长率 * 100).toFixed(2) + " %";
+                            }
+                            return res;
+                        }
+                    }
+                    MonthBaseChart.setOption(optionMonthBase);
+                }
+            };
+            //#endregion
+
+            //#region 日分析报告
+            $("#DailyProfitRateBtn").click(function () {
+                Render_DailyBaseChart(DailyBaseData, 1);
+            });
+
+            $("#DailyProfitBtn").click(function () {
+                Render_DailyBaseChart(DailyBaseData, 2);
+            });
+
+            $("#DailyHandBtn").click(function () {
+                Render_DailyBaseChart(DailyBaseData, 3);
+            });
+
+            $("#DailyPointBtn").click(function () {
+                Render_DailyBaseChart(DailyBaseData, 4);
+            });
+
+            var optionDailyBase = {
+                //color: ['#3398DB','gray'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    data: [],
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                calculable: true,
+                grid: {
+                    left: '3%',
+                    right: '8%',
+                    top: '15%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                dataZoom: [
+                    {
+                        id: 'dataZoomX',
+                        type: 'inside',
+                        xAxisIndex: [0],
+                        filterMode: 'filter'
+                    }
+                ],
+                xAxis:
+                {
+                    type: 'category',
+                    data: []
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value}'
+                        },
+                    }
+
+                ],
+                series: [
+                    {
+                        name: '',
+                        type: 'bar',
+                        barWidth: '60%',
+                        data: [],
+                        markPoint: {
+                            data: [
+                                { type: 'max', name: '最大值' },
+                                { type: 'min', name: '最小值' }
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                { type: 'average', name: '平均值' }
+                            ]
+                        },
+                        label: {
+                            normal: {
+                                show: false,
+                                formatter: '{c}',
+                                position: 'top',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        }
+                    },
+                ]
+            };
+
+            function Render_DailyBaseChart(data, type) {
+
+                optionDailyBase.xAxis.data = [];
+                optionDailyBase.series[0].data = [];
+                var seriesName = "";
+
+                if (type == 1) {
+                    seriesName = "房费收入";
+                }
+                else if (type == 2) {
+                    seriesName = "出租率";
+                }
+                else if (type == 3) {
+                    seriesName = "平均房价";
+                }
+                else if (type == 4) {
+                    seriesName = "单房收益";
+                }
+
+                optionDailyBase.series[0].name = seriesName;
+                optionDailyBase.legend.data.push(seriesName);
+                if (data != null) {
+                    $.each(data, function () {
+                        optionDailyBase.xAxis.data.push(moment(this.month).format("YYYY-MM-DD"));
+                        //房费流水
+                        if (type == 1) {
+                            optionDailyBase.series[0].data.push((this.houseAmount).toFixed(0));
+                            optionDailyBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                            };
+                        }
+                        //出租率
+                        else if (type == 2) {
+                            optionDailyBase.series[0].data.push((this.rate * 100).toFixed(2));
+                            optionDailyBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? (p.value + " %") : '';
+                            };
+                        }
+                        //均价
+                        else if (type == 3) {
+                            optionDailyBase.series[0].data.push(this.average.toFixed(0));
+                            optionDailyBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('a.' + p.value) : '';
+                            };
+                        }
+                        //有效均价
+                        else if (type == 4) {
+                            optionDailyBase.series[0].data.push(this.validAverage.toFixed(0));
+                            optionDailyBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('v.' + p.value) : '';
+                            };
+                        }
+                    })
+
+                    if (type == 1) {
+                        optionDailyBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionDailyBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " 元";
+                            return res;
+                        }
+                    } else if (type == 2) {
+                        optionDailyBase.yAxis[0].axisLabel.formatter = '{value} %';
+                        optionDailyBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " %";
+                            return res;
+                        }
+                    } else if (type == 3) {
+                        optionDailyBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionDailyBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " 元";
+                            return res;
+                        }
+                    } else if (type == 4) {
+                        optionDailyBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionDailyBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " 元";
+                            return res;
+                        }
+                    }
+                    DailyBaseChart.setOption(optionDailyBase);
+                }
+            };
+            //#endregion
+
+            //#region 月Pie图表
+            var optionMonthPie = {
+                title: {
+                    text: 'MonthPie',
+                    show: false
+                },
+                tooltip: {
+                    show: false,
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    show: false,
+                    type: 'plain',
+                    tooltip: {
+                        show: true
+                    },
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: []
+                },
+                series: [
+                    {
+                        name: 'SymbolCode',
+                        type: 'pie',
+                        radius: ['50%', '80%'],
+                        center: ['50%', '50%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center',
+                                formatter: '{b} : {c} ({d}%)',
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '12',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        data: [],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            function Render_MonthPieChart(index) {
+                var seriesData = [];
+                var data = DailyBaseData;
+                var idx = parseInt(index);
+                for (var i = 0; i < data[idx].buySellData.length; i++) {
+                    var _name = data[idx].buySellData[i].symbolCode;
+                    var _value = parseFloat(data[idx].buySellData[i].lots).toFixed(2);;
+                    seriesData.push({ name: _name, value: _value });
+                }
+                optionMonthPie.series[0].data = seriesData;
+                MonthPieChart.setOption(optionMonthPie);
+            };
+            //#endregion
+
+            //#region Pie1Chart设置
+            Pie1Chart.setOption({
+                title: {
+                    text: '渠道占比',
+                    x: 'center',
+                    show: true
+                },
+                tooltip: {
+                    show: true,
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    data: P1legendData,
+                },
+                series: [
+                    {
+                        name: '金额占比',
+                        type: 'pie',
+                        radius: ['30%', '45%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center',
+                                formatter: '{b} : {c} ({d}%)',
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '12',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        },
+                        data: []
+                    },
+                    {
+                        name: '渠道占比',
+                        type: 'pie',
+                        radius: ['50%', '65%'],
+                        label: {
+                            normal: {
+                                formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                                backgroundColor: '#eee',
+                                borderColor: '#aaa',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                rich: {
+                                    a: {
+                                        color: '#999',
+                                        lineHeight: 22,
+                                        align: 'center'
+                                    },
+                                    hr: {
+                                        borderColor: '#aaa',
+                                        width: '100%',
+                                        borderWidth: 0.5,
+                                        height: 0
+                                    },
+                                    b: {
+                                        fontSize: 16,
+                                        lineHeight: 33
+                                    },
+                                    per: {
+                                        color: '#eee',
+                                        backgroundColor: '#334455',
+                                        padding: [2, 4],
+                                        borderRadius: 2
+                                    }
+                                }
+                            }
+                        },
+                        data: []
+                    }
+                ]
+            });
+            Pie1Chart.showLoading();
+            //#endregion
+
+            //#region Pie2Chart设置
+            Pie2Chart.setOption({
+                title: {
+                    text: '收款占比',
+                    x: 'center',
+                    show: true
+                },
+                tooltip: {
+                    show: false,
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    show: true,
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 10,
+                    bottom: 10,
+                    data: P2legendData
+                },
+                series: [
+                    {
+                        name: '收款占比',
+                        type: 'pie',
+                        radius: ['45%', '65%'],
+                        center: ['50%', '50%'],
+                        avoidLabelOverlap: false,
+                        data: P2seriesData,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center',
+                                formatter: '{b} : {c} ({d}%)',
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '12',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            });
+            Pie2Chart.showLoading();
+            //#endregion
+
+            //#region table1初始化
+            var table1 = $('#table-1').dataTable(
+                {
+                    responsive: true,
+                    order: [[0, "desc"]],
+                    dom:
+                        "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    language: {
+                        processing: "加载中...",
+                        lengthMenu: "每页显示 _MENU_ 条数据",
+                        zeroRecords: "没有匹配结果",
+                        info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                        infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                        infoFiltered: "(由 _MAX_ 项结果过滤)",
+                        infoPostFix: "",
+                        search: "搜索:",
+                        url: "",
+                        emptyTable: "没有匹配结果",
+                        loadingRecords: "载入中...",
+                        thousands: ",",
+                        paginate: {
+                            first: "首页",
+                            previous: "上一页",
+                            next: "下一页",
+                            last: "末页"
+                        },
+                        aria: {
+                            sortAscending: ": 以升序排列此列",
+                            sortDescending: ": 以降序排列此列"
+                        }
+                    },
+                    data: [],
+                    columns: [
+                        { data: "month" },
+                        { data: "houseAmount" },
+                        { data: "houseCount" },
+                        { data: "houseTotal" },
+                        { data: "average" },
+                        { data: "validAverage" },
+                        { data: "rate" },
+                        { data: "earning" },
+                        { data: "expend" },
+                        { data: "saleAmount" },
+                        { data: "saleProfit" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            render: function (data, type, row, meta) {
+                                var temp = new Date(data);
+                                return temp.Format('YYYY年MM月');
+                            }
+                        },
+                        {
+                            targets: [1, 4, 5],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data);
+                                return Math.round(result);
+                            }
+                        },
+                        {
+                            targets: [],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data) * 100;
+                                return Math.round(result) + " 点";
+                            }
+                        },
+                        {
+                            targets: [6],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data) * 100;
+                                return result.toFixed(2) + " %";
+                            }
+                        },
+                    ],
+                });
+            $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
+            //#endregion
+
+            //#region table2初始化
+            var table2 = $('#table-2').dataTable(
+                {
+                    responsive: true,
+                    order: [[0, "desc"]],
+                    dom:
+                        "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    language: {
+                        processing: "加载中...",
+                        lengthMenu: "每页显示 _MENU_ 条数据",
+                        zeroRecords: "没有匹配结果",
+                        info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                        infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                        infoFiltered: "(由 _MAX_ 项结果过滤)",
+                        infoPostFix: "",
+                        search: "搜索:",
+                        url: "",
+                        emptyTable: "没有匹配结果",
+                        loadingRecords: "载入中...",
+                        thousands: ",",
+                        paginate: {
+                            first: "首页",
+                            previous: "上一页",
+                            next: "下一页",
+                            last: "末页"
+                        },
+                        aria: {
+                            sortAscending: ": 以升序排列此列",
+                            sortDescending: ": 以降序排列此列"
+                        }
+                    },
+                    data: [],
+                    columns: [
+                        { data: "month" },
+                        { data: "houseAmount" },
+                        { data: "houseCount" },
+                        { data: "houseTotal" },
+                        { data: "average" },
+                        { data: "validAverage" },
+                        { data: "rate" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            render: function (data, type, row, meta) {
+                                var temp = new Date(data);
+                                return temp.Format('YYYY年MM月DD日');
+                            }
+                        },
+                        {
+                            targets: [1, 4, 5],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data);
+                                return Math.round(result);
+                            }
+                        },
+                        {
+                            targets: [],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data) * 100;
+                                return Math.round(result) + " 点";
+                            }
+                        },
+                        {
+                            targets: [6],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data) * 100;
+                                return result.toFixed(2) + " %";
+                            }
+                        },
+                    ],
+                });
+            $("#search").keyup(function () { table2.api().search($("#search").val()).draw(); });
+            //#endregion
+            //#region 初始化table3
+            var table3 = $('#table-3').dataTable(
+                {
+                    responsive: true,
+                    order: [[0, "desc"]],
+                    info: false,
+                    paging: false,
+                    dom:
+                        "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    language: {
+                        processing: "加载中...",
+                        lengthMenu: "每页显示 _MENU_ 条数据",
+                        zeroRecords: "没有匹配结果",
+                        info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                        infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                        infoFiltered: "(由 _MAX_ 项结果过滤)",
+                        infoPostFix: "",
+                        search: "搜索:",
+                        url: "",
+                        emptyTable: "没有匹配结果",
+                        loadingRecords: "载入中...",
+                        thousands: ",",
+                        paginate: {
+                            first: "首页",
+                            previous: "上一页",
+                            next: "下一页",
+                            last: "末页"
+                        },
+                        aria: {
+                            sortAscending: ": 以升序排列此列",
+                            sortDescending: ": 以降序排列此列"
+                        }
+                    },
+                });
+            //#endregion
+
+            //#region table4初始化
+            var table4 = $('#table-4').dataTable(
+                {
+                    responsive: true,
+                    order: [[1, "asc"]],
+                    pageLength: 30,
+                    dom:
+                        "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    language: {
+                        processing: "加载中...",
+                        lengthMenu: "每页显示 _MENU_ 条数据",
+                        zeroRecords: "没有匹配结果",
+                        info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                        infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                        infoFiltered: "(由 _MAX_ 项结果过滤)",
+                        infoPostFix: "",
+                        search: "搜索:",
+                        url: "",
+                        emptyTable: "没有匹配结果",
+                        loadingRecords: "载入中...",
+                        thousands: ",",
+                        paginate: {
+                            first: "首页",
+                            previous: "上一页",
+                            next: "下一页",
+                            last: "末页"
+                        },
+                        aria: {
+                            sortAscending: ": 以升序排列此列",
+                            sortDescending: ": 以降序排列此列"
+                        }
+                    },
+                });
+        //#endregion
+
+            //#region 初始化table5
+            var table5 = $('#table-5').dataTable(
                 {
                     order: [[0, "asc"]],
                     info: false,
@@ -618,7 +1836,7 @@
                         { data: "frontAmount" },
                         { data: "stewardAmount" },
                         { data: "earningAmount" },
-                                { data: "total" },
+                        { data: "total" },
                     ],
                     footerCallback: function (tfoot, data, start, end, display) {
                         var api = this.api(), data;
@@ -654,10 +1872,66 @@
                 });
             //#endregion
 
+            //Select2
+            $('.select2').select2();
+            //#endregion
+
+            //#region 日期区间选择事件
+            $("#date_select").change(function () {
+                var flag = parseInt($("#date_select").val());
+                switch (flag) {
+                    // 当天
+                    case 0:
+                        $('#date_beg').val(getTodayDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    // 昨天
+                    case 1:
+                        $('#date_beg').val(getYesterdayDate);
+                        $('#date_end').val(getTodayDate);
+                        break;
+                    // 本周
+                    case 2:
+                        $('#date_beg').val(getWeekStartDate);
+                        $('#date_end').val(getWeekEndDate);
+                        break;
+                    // 当月
+                    case 3:
+                        $('#date_beg').val(getMonthStartDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    // 上个月
+                    case 4:
+                        $('#date_beg').val(getPreMonthStartDate);
+                        $('#date_end').val(getMonthStartDate);
+                        break;
+                    // 最近三月
+                    case 5:
+                        $('#date_beg').val(getTreeMonthStartDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    // 最近一年
+                    case 6:
+                        $('#date_beg').val(getYearStartDate);
+                        $('#date_end').val(getCurrentDate);
+                        break;
+                    default:
+                        $('#date_beg').val("");
+                        $('#date_end').val("");
+                        break;
+                }
+                table1.api().draw();
+            });
+            //#endregion
             //#region 页面加载时执行的方法
             GetGroup();
+            GetMonthData();
             setTimeout(function () {
                 window.onresize = function () {
+                    MonthBaseChart.resize();
+                    DailyBaseChart.resize();
+                    Pie1Chart.resize();
+                    Pie2Chart.resize();
                     brhGroupChart.resize();
                 }
             }, 200);

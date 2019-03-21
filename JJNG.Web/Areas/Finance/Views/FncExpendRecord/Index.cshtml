@@ -1,4 +1,4 @@
-﻿@model Tuple<List<BrhExpendRecord>, List<UserBranch>>
+﻿@model Tuple<List<BrhExpendRecord>, List<FncBranch>>
 
 @{
     var actionName = ViewContext.RouteData.Values["action"].ToString();
@@ -23,10 +23,9 @@
                             <div class="btn-group">
                                 <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
                                 <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                                    <li><a asp-action="Index"><i class="fa fa-circle-o text-light-blue"></i>全部</a></li>
                                     @foreach (var u in Model.Item2)
                                     {
-                                        <li><a asp-action="Index" asp-route-branch="@u.BranchName"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
+                                        <li><a asp-action="Index" asp-route-branchId="@u.BranchId" asp-route-branchName="@u.BranchName" asp-route-count="@u.Count"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
                                     }
                                 </ul>
                             </div>

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -66,6 +67,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
         public async Task<IActionResult> Move(int? id)
         {
+            var now = "-("+ TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time")).ToString("yyyy-MM-dd HH:mm") +")-";
             _context.BrhImprestRecord.Include(b => b.BrhImprestAccounts).Where(x => x.ImprestAccountsId == id && x.IsFinance && !x.IsMove).ToList().ForEach(x=>
             {
                 x.IsMove = true;
@@ -80,7 +82,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 expendRecord.Branch = x.Branch;
                 expendRecord.EnteringStaff = x.EnteringStaff;
                 expendRecord.IsFinance = x.IsFinance;
-                expendRecord.Note = "备用金转入-" + x.Note;
+                expendRecord.Note = "备用金转入"+now + x.Note;
                 _context.Add(expendRecord);
             });
             _context.SaveChanges();

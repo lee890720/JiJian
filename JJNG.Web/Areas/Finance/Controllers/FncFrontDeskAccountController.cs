@@ -10,10 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
-using Newtonsoft.Json.Serialization;
 namespace JJNG.Web.Areas.Finance.Controllers
 {
     [Area("Finance")]
@@ -33,6 +29,9 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
         public async Task<ActionResult> Index(string branchName = "既见·南国", int branchId = 2, int count = 15)
         {
+            AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+            ViewData["UserName"] = _user.UserName;
+            ViewData["Branch"] = _user.Branch;
             ViewData["BranchId"] = branchId;
             var fncBranch = new FncBranch();
             fncBranch.BranchName = branchName;
@@ -42,22 +41,55 @@ namespace JJNG.Web.Areas.Finance.Controllers
             return View(Tuple.Create<FncBranch, List<FncBranch>>(fncBranch, list_branch));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(List<long> ids)
+        public async Task<JsonResult> GetFrontList([FromBody]FDAParams fdaParams)
         {
-            if (ids.Count > 0)
-            {   
-                _context.BrhFrontDeskAccounts.Where(x => ids.Contains(x.FrontDeskAccountsId) && !x.IsFinance).ToList().ForEach(x =>
-                  {
-                      x.IsFinance = true;
-                      _context.Update(x);
-                  });
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            var payList = new List<BrhFrontPaymentDetial>();
+            var frontList = await _context.BrhFrontDeskAccounts.Include(x => x.BrhFrontPaymentDetial).Where(x => x.Branch == fdaParams.BranchName && x.State != StateType.已删除 && DateTime.Compare(fdaParams.StartDate, x.StartDate) <= 0 && DateTime.Compare(x.StartDate, fdaParams.EndDate) < 0).ToListAsync();
+            foreach (var fr in frontList)
+            {
+                if (fr.BrhFrontPaymentDetial.Count > 0)
+                    payList.AddRange(fr.BrhFrontPaymentDetial);
             }
-            return RedirectToAction(nameof(Index));
+            var pie1List = frontList.GroupBy(x => new { x.Channel }).Select(x => new
+            {
+                Channel = x.Key.Channel,
+                CTotal = x.Sum(s => s.Count),
+                ATotal = x.Sum(s => s.BrhFrontPaymentDetial.Select(b => b.PayAmount).Sum())
+            }).ToList();
+            var pie2List = payList.GroupBy(x => new { x.PayWay }).Select(x => new
+            {
+                PayWay = x.Key.PayWay,
+                Total = x.Sum(s => s.PayAmount),
+            }).ToList();
+
+            var days = (fdaParams.EndDate - fdaParams.StartDate).Days;
+            List<FncMonthData> dailyList = new List<FncMonthData>();
+            for (var i = 0; i < days; i++)
+            {
+                var daily = new FncMonthData();
+                daily.Month = fdaParams.StartDate.AddDays(i).Date;
+                daily.HouseTotal = fdaParams.Count;
+                daily.HouseAmount = frontList.Where(x => DateTime.Compare(x.StartDate.Date, daily.Month) <= 0 && DateTime.Compare(daily.Month, x.EndDate.Date) < 0).Select(x => x.UnitPrice).Sum();
+                daily.HouseCount = frontList.Where(x => DateTime.Compare(x.StartDate.Date, daily.Month) <= 0 && DateTime.Compare(daily.Month, x.EndDate.Date) < 0).Select(x => x.Count).Count();
+                if (daily.HouseTotal != 0)
+                {
+                    daily.Rate = (double)daily.HouseCount / (double)daily.HouseTotal;
+                    daily.ValidAverage = daily.HouseAmount / daily.HouseTotal;
+                }
+                else
+                {
+                    daily.Rate = 0;
+                    daily.ValidAverage = 0;
+                }
+                if (daily.HouseCount != 0)
+                    daily.Average = daily.HouseAmount / daily.HouseCount;
+                else
+                    daily.Average = 0;
+                dailyList.Add(daily);
+            }
+            return Json(new { frontList, pie1List, pie2List, dailyList });
         }
+
         public async Task<JsonResult> UpdateList([FromBody]FDAParams fdaParams)
         {
             if (fdaParams.Ids.Count > 0)
@@ -68,31 +100,57 @@ namespace JJNG.Web.Areas.Finance.Controllers
                     _context.Update(x);
                 });
                 await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));
             }
-            var frontList = await _context.BrhFrontDeskAccounts.Include(x=>x.BrhFrontPaymentDetial).Where(x => x.Branch == fdaParams.BranchName && x.State != StateType.已删除 && DateTime.Compare(fdaParams.StartDate, x.EndDate) <= 0 && DateTime.Compare(x.StartDate, fdaParams.EndDate) < 0).ToListAsync();
-            return Json(new { frontList });
-            //return RedirectToAction(nameof(Index));
-        }
 
-        public IActionResult DetialList(long? id)
-        {
-            var brhFrontPaymentDetials = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == id).ToList();
+            var payList = new List<BrhFrontPaymentDetial>();
+            var frontList = await _context.BrhFrontDeskAccounts.Include(x => x.BrhFrontPaymentDetial).Where(x => x.Branch == fdaParams.BranchName && x.State != StateType.已删除 && DateTime.Compare(fdaParams.StartDate, x.StartDate) <= 0 && DateTime.Compare(x.StartDate, fdaParams.EndDate) < 0).ToListAsync();
+            foreach (var fr in frontList)
+            {
+                if (fr.BrhFrontPaymentDetial.Count > 0)
+                    payList.AddRange(fr.BrhFrontPaymentDetial);
+            }
+            var pie1List = frontList.GroupBy(x => new { x.Channel }).Select(x => new
+            {
+                Channel = x.Key.Channel,
+                CTotal = x.Sum(s => s.Count),
+                ATotal = x.Sum(s => s.BrhFrontPaymentDetial.Select(b => b.PayAmount).Sum())
+            }).ToList();
+            var pie2List = payList.GroupBy(x => new { x.PayWay }).Select(x => new
+            {
+                PayWay = x.Key.PayWay,
+                Total = x.Sum(s => s.PayAmount),
+            }).ToList();
 
-            return PartialView("~/Areas/Finance/Views/FncFrontDeskAccount/DetialList.cshtml", brhFrontPaymentDetials);
-        }
-
-        public async Task<JsonResult> GetFrontList([FromBody]FDAParams fdaParams)
-        {
-            var frontList =await _context.BrhFrontDeskAccounts.Include(x=>x.BrhFrontPaymentDetial).Where(x => x.Branch == fdaParams.BranchName && x.State != StateType.已删除 && DateTime.Compare(fdaParams.StartDate, x.EndDate) <= 0 && DateTime.Compare(x.StartDate, fdaParams.EndDate) < 0).ToListAsync();
-            //JsonSerializerSettings settings = new JsonSerializerSettings();
-            //settings.MaxDepth = 2;
-            //settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; //设置不处理循环引用
-            return Json(new { frontList });
+            var days = (fdaParams.EndDate - fdaParams.StartDate).Days;
+            List<FncMonthData> dailyList = new List<FncMonthData>();
+            for (var i = 0; i < days; i++)
+            {
+                var daily = new FncMonthData();
+                daily.Month = fdaParams.StartDate.AddDays(i).Date;
+                daily.HouseTotal = fdaParams.Count;
+                daily.HouseAmount = frontList.Where(x => DateTime.Compare(x.StartDate.Date, daily.Month) <= 0 && DateTime.Compare(daily.Month, x.EndDate.Date) < 0).Select(x => x.UnitPrice).Sum();
+                daily.HouseCount = frontList.Where(x => DateTime.Compare(x.StartDate.Date, daily.Month) <= 0 && DateTime.Compare(daily.Month, x.EndDate.Date) < 0).Select(x => x.Count).Count();
+                if (daily.HouseTotal != 0)
+                {
+                    daily.Rate = (double)daily.HouseCount / (double)daily.HouseTotal;
+                    daily.ValidAverage = daily.HouseAmount / daily.HouseTotal;
+                }
+                else
+                {
+                    daily.Rate = 0;
+                    daily.ValidAverage = 0;
+                }
+                if (daily.HouseCount != 0)
+                    daily.Average = daily.HouseAmount / daily.HouseCount;
+                else
+                    daily.Average = 0;
+                dailyList.Add(daily);
+            }
+            return Json(new { frontList, pie1List, pie2List, dailyList });
         }
     }
 
-    public class FDAParams:FncBranch
+    public class FDAParams : FncBranch
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

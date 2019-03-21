@@ -1,6 +1,7 @@
 ﻿using JJNG.Data;
 using JJNG.Data.AppIdentity;
 using JJNG.Data.Branch;
+using JJNG.Data.Finance;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,21 +28,22 @@ namespace JJNG.Web.Areas.Finance.Controllers
             _userManager = usrMgr;
         }
 
-        public async Task<IActionResult> Index(string branch)
+        public async Task<ActionResult> Index(string branchName = "既见·南国", int branchId = 2, int count = 15)
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
             ViewData["Branch"] = _user.Branch;
+            ViewData["BranchId"] = branchId;
+            var fncBranch = new FncBranch();
+            fncBranch.BranchName = branchName;
+            fncBranch.BranchId = branchId;
+            fncBranch.Count = count;
+            var list_branch = await _context.FncBranch.Where(x => x.BranchName != "运营中心" && x.BranchName != "町隐学院").ToListAsync();
 
-            var list_branch = _identityContext.UserBranch.Where(x => x.BranchName != "运营中心"&& x.BranchName != "町隐学院").ToList();
             List<BrhExpendRecord> brhExpendRecord = new List<BrhExpendRecord>();
+            brhExpendRecord = await _context.BrhExpendRecord.Where(x => x.Branch == branchName).ToListAsync();
 
-            if (string.IsNullOrEmpty(branch))
-                brhExpendRecord = await _context.BrhExpendRecord.ToListAsync();
-            else
-                brhExpendRecord = await _context.BrhExpendRecord.Where(x => x.Branch == branch).ToListAsync();
-
-            return View(Tuple.Create<List<BrhExpendRecord>, List<UserBranch>>(brhExpendRecord, list_branch));
+            return View(Tuple.Create<List<BrhExpendRecord>, List<FncBranch>>(brhExpendRecord, list_branch));
         }
 
         [HttpPost]

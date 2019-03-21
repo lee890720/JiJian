@@ -576,7 +576,7 @@
                                 }
                             });
                             d.width(600).showModal();
-                    },
+                    }
                 });
             }
             $('#isType').on('click',function(){
@@ -712,7 +712,16 @@
                 }
             }
             //#endregion
-
+            function getClientHeight() {
+                var clientHeight = 0;
+                if (document.body.clientHeight && document.documentElement.clientHeight) {
+                    var clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+                }
+                else {
+                    var clientHeight = (document.body.clientHeight > document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+                }
+                return clientHeight;
+            }
             //#region 加载页面初始化数据
             GetCalendarData();
             //#endregion
