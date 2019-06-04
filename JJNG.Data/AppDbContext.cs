@@ -30,6 +30,7 @@ namespace JJNG.Data
         public virtual DbSet<BrhImprestRecord> BrhImprestRecord { get; set; }
         public virtual DbSet<BrhMemo> BrhMemo { get; set; }
         public virtual DbSet<BrhClient> BrhClient { get; set; }
+        public virtual DbSet<BrhScalp> BrhScalp { get; set; }
         public virtual DbSet<PsnNote> PsnNote { get; set; }
         public virtual DbSet<PsnAddress> PsnAddress { get; set; }
         public virtual DbSet<PsnNoteAccount> PsnNoteAccount { get; set; }

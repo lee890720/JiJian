@@ -120,12 +120,12 @@
                                                 <td class="brl">0</td>
                                             }
                                         </tr>
-                                        <tr>
+                                        @*<tr>
                                             <td class="brr">客房异常数量： </td>
                                             <td class="brl"><strong style="color:coral">@Model.Item5[11].Count</strong></td>
                                             <td class="brr">客房异常金额： </td>
                                             <td class="brl"><strong style="color:coral">@Model.Item5[11].Amount</strong></td>
-                                        </tr>
+                                        </tr>*@
                                         <tr>
                                             <td class="brr">录入人： </td>
                                             <td class="brl">@Model.Item1.EnteringStaff</td>
@@ -137,7 +137,7 @@
                             }
                         </div>
                     </div>
-                    <div class="box-footer">
+                    @*<div class="box-footer">
                         <div class="row">
                             <div class="col-md-2">
                                 <div class="description-block border-right">
@@ -189,14 +189,13 @@
                             <div class="col-md-2">
                                 <div class="description-block">
                                     <h5 class="description-header">@Model.Item5[9].Amount-@Model.Item5[9].Count/@Model.Item5[10].Amount-@Model.Item5[10].Count</h5>
-                                    @*<h5 class="description-header">@Model.Item5[11].Amount-@Model.Item5[11].Count</h5>*@
                                     <a asp-action="Index" asp-controller="BrhFrontDeskAccount">
                                         <span class="description-text">月/日客房流水</span>
                                     </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>*@
                 </div>
             </div>
         </div>
@@ -385,6 +384,9 @@
                         <button id="MonthProfitBtn" title="Occupancy" type="button" class="btn btn-box-tool hidden-xs">Occ.</button>
                         <button id="MonthHandBtn" title="Average Daily Rate" type="button" class="btn btn-box-tool hidden-xs">ADR</button>
                         <button id="MonthPointBtn" title="Revenue Per Available Room" type="button" class="btn btn-box-tool hidden-xs">RevPAR</button>
+			<button id="MonthExpendBtn" title="Expend" type="button" class="btn btn-box-tool hidden-xs">Exp.</button>
+                        <button id="MonthSaleAmountBtn" title="Sale Amount" type="button" class="btn btn-box-tool hidden-xs">SAm.</button>
+                        <button id="MonthSaleProfitBtn" title="Sale Profit" type="button" class="btn btn-box-tool hidden-xs">SPr.</button>                    
                         <button type="button" class="btn btn-box-tool" data-widget="collapse">
                             <i class="fa fa-minus"></i>
                         </button>
@@ -755,7 +757,8 @@
                 optionAjax.complete = function () { };
                 $.ajax(optionAjax);
             };
-            //#endregion
+            //#endregion
+
 
             //#region brhGroupChart设置
             brhGroupChart.setOption({
@@ -832,6 +835,18 @@
 
             $("#MonthPointBtn").click(function () {
                 Render_MonthBaseChart(MonthBaseData, 4);
+            });
+
+            $("#MonthExpendBtn").click(function () {
+                Render_MonthBaseChart(MonthBaseData, 5);
+            });
+
+            $("#MonthSaleAmountBtn").click(function () {
+                Render_MonthBaseChart(MonthBaseData, 6);
+            });
+
+            $("#MonthSaleProfitBtn").click(function () {
+                Render_MonthBaseChart(MonthBaseData, 7);
             });
 
             MonthBaseChart.on('click', function (params) {
@@ -969,6 +984,15 @@
                 else if (type == 4) {
                     seriesName = "单房收益";
                 }
+                else if (type == 5) {
+                    seriesName = "支出";
+                }
+                else if (type == 6) {
+                    seriesName = "外销收入";
+                }
+                else if (type == 7) {
+                    seriesName = "外销利润";
+                }
 
                 optionMonthBase.series[0].name = seriesName;
                 optionMonthBase.series[1].name = "去年同期";
@@ -1061,6 +1085,69 @@
                                 };
                             }
                         }
+                        //支出
+                        else if (type == 5) {
+                            optionMonthBase.series[0].data.push((this.expend).toFixed(0));
+                            optionMonthBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                            };
+                            var tempMonth = moment(this.month).add(-1, "years");
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == moment(tempMonth).format("YYYY年MM月") });
+                            if (item == undefined) {
+                                optionMonthBase.series[1].data.push(0);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                                };
+                            }
+                            else {
+                                optionMonthBase.series[1].data.push(item.expend);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                                };
+                            }
+                        }
+                        //外销收入
+                        else if (type == 6) {
+                            optionMonthBase.series[0].data.push((this.saleAmount).toFixed(0));
+                            optionMonthBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                            };
+                            var tempMonth = moment(this.month).add(-1, "years");
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == moment(tempMonth).format("YYYY年MM月") });
+                            if (item == undefined) {
+                                optionMonthBase.series[1].data.push(0);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                                };
+                            }
+                            else {
+                                optionMonthBase.series[1].data.push(item.saleAmount);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                                };
+                            }
+                        }
+                        //外销利润
+                        else if (type == 7) {
+                            optionMonthBase.series[0].data.push((this.saleProfit).toFixed(0));
+                            optionMonthBase.series[0].label.normal.formatter = function (p) {
+                                return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                            };
+                            var tempMonth = moment(this.month).add(-1, "years");
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == moment(tempMonth).format("YYYY年MM月") });
+                            if (item == undefined) {
+                                optionMonthBase.series[1].data.push(0);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                                };
+                            }
+                            else {
+                                optionMonthBase.series[1].data.push(item.saleProfit);
+                                optionMonthBase.series[1].label.normal.formatter = function (p) {
+                                    return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                                };
+                            }
+                        }
                     })
 
                     if (type == 1) {
@@ -1143,9 +1230,69 @@
                             }
                             return res;
                         }
+                    } else if (type == 5) {
+                            optionMonthBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                            optionMonthBase.tooltip.formatter = function (params) {
+                                var res = params[0].seriesName + '<br/>' +
+                                    params[0].name + "：" + params[0].value + " 元";
+                                var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == params[0].name });
+                                var item1 = data.find(item => { return moment(item.month).add('1', "y").format("YYYY年MM月") == params[0].name });
+                                var item2 = data.find(item => { return moment(item.month).add('1', "M").format("YYYY年MM月") == params[0].name });
+                                if (item1 != undefined) {
+                                    res += '<br/>' + "去年同期：" + parseFloat(item1.expend).toFixed(0) + " 元";
+                                    res += "<br/>" + "同比增长额：" + parseFloat(item.支同比增长额).toFixed(0) + " 元";
+                                    res += "<br/>" + "同比增长率：" + parseFloat(item.支同比增长率 * 100).toFixed(2) + " %";
+                                }
+                                if (item2 != undefined) {
+                                    res += '<br/>' + "上月：" + parseFloat(item2.expend).toFixed(0) + " 元";
+                                    res += "<br/>" + "环比增长额：" + parseFloat(item.支环比增长额).toFixed(0) + " 元";
+                                    res += "<br/>" + "环比增长率：" + parseFloat(item.支环比增长率 * 100).toFixed(2) + " %";
+                                }
+                                return res;
+                            }
+                    } else if (type == 6) {
+                        optionMonthBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionMonthBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " 元";
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == params[0].name });
+                            var item1 = data.find(item => { return moment(item.month).add('1', "y").format("YYYY年MM月") == params[0].name });
+                            var item2 = data.find(item => { return moment(item.month).add('1', "M").format("YYYY年MM月") == params[0].name });
+                            if (item1 != undefined) {
+                                res += '<br/>' + "去年同期：" + parseFloat(item1.saleAmount).toFixed(0) + " 元";
+                                res += "<br/>" + "同比增长额：" + parseFloat(item.外同比增长额).toFixed(0) + " 元";
+                                res += "<br/>" + "同比增长率：" + parseFloat(item.外同比增长率 * 100).toFixed(2) + " %";
+                            }
+                            if (item2 != undefined) {
+                                res += '<br/>' + "上月：" + parseFloat(item2.saleAmount).toFixed(0) + " 元";
+                                res += "<br/>" + "环比增长额：" + parseFloat(item.外环比增长额).toFixed(0) + " 元";
+                                res += "<br/>" + "环比增长率：" + parseFloat(item.外环比增长率 * 100).toFixed(2) + " %";
+                            }
+                            return res;
+                        }
+                    } else if (type == 7) {
+                        optionMonthBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                        optionMonthBase.tooltip.formatter = function (params) {
+                            var res = params[0].seriesName + '<br/>' +
+                                params[0].name + "：" + params[0].value + " 元";
+                            var item = data.find(item => { return moment(item.month).format("YYYY年MM月") == params[0].name });
+                            var item1 = data.find(item => { return moment(item.month).add('1', "y").format("YYYY年MM月") == params[0].name });
+                            var item2 = data.find(item => { return moment(item.month).add('1', "M").format("YYYY年MM月") == params[0].name });
+                            if (item1 != undefined) {
+                                res += '<br/>' + "去年同期：" + parseFloat(item1.saleProfit).toFixed(0) + " 元";
+                                res += "<br/>" + "同比增长额：" + parseFloat(item.外利同比增长额).toFixed(0) + " 元";
+                                res += "<br/>" + "同比增长率：" + parseFloat(item.外利同比增长率 * 100).toFixed(2) + " %";
+                            }
+                            if (item2 != undefined) {
+                                res += '<br/>' + "上月：" + parseFloat(item2.saleProfit).toFixed(0) + " 元";
+                                res += "<br/>" + "环比增长额：" + parseFloat(item.外利环比增长额).toFixed(0) + " 元";
+                                res += "<br/>" + "环比增长率：" + parseFloat(item.外利环比增长率 * 100).toFixed(2) + " %";
+                            }
+                            return res;
+                        }
+                    }
                     }
                     MonthBaseChart.setOption(optionMonthBase);
-                }
             };
             //#endregion
 
@@ -1719,7 +1866,8 @@
                     ],
                 });
             $("#search").keyup(function () { table2.api().search($("#search").val()).draw(); });
-            //#endregion
+            //#endregion
+
             //#region 初始化table3
             var table3 = $('#table-3').dataTable(
                 {
@@ -1922,7 +2070,8 @@
                 }
                 table1.api().draw();
             });
-            //#endregion
+            //#endregion
+
             //#region 页面加载时执行的方法
             GetGroup();
             GetMonthData();

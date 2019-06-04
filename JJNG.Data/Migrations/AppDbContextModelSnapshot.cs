@@ -283,6 +283,8 @@ namespace JJNG.Data.Migrations
 
                     b.Property<decimal>("MoveAmount");
 
+                    b.Property<int>("Purpose");
+
                     b.HasKey("ImprestAccountsId");
 
                     b.ToTable("Brh_ImprestAccounts");
@@ -349,6 +351,53 @@ namespace JJNG.Data.Migrations
                     b.HasKey("MemoId");
 
                     b.ToTable("Brh_Memo");
+                });
+
+            modelBuilder.Entity("JJNG.Data.Branch.BrhScalp", b =>
+                {
+                    b.Property<long>("ScalpId");
+
+                    b.Property<string>("Branch")
+                        .IsRequired();
+
+                    b.Property<string>("Channel")
+                        .IsRequired();
+
+                    b.Property<string>("Color");
+
+                    b.Property<decimal>("Commission");
+
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<DateTime>("EnteringDate");
+
+                    b.Property<string>("EnteringStaff")
+                        .IsRequired();
+
+                    b.Property<string>("HouseNumber")
+                        .IsRequired();
+
+                    b.Property<int>("ImprestAccountsId");
+
+                    b.Property<bool>("IsFinance");
+
+                    b.Property<bool>("IsFront");
+
+                    b.Property<bool>("IsMove");
+
+                    b.Property<string>("Note");
+
+                    b.Property<decimal>("Settlement");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<decimal>("TotalPrice");
+
+                    b.Property<decimal>("UnitPrice");
+
+                    b.HasKey("ScalpId");
+
+                    b.ToTable("Brh_Scalp");
                 });
 
             modelBuilder.Entity("JJNG.Data.Branch.BrhStewardAccounts", b =>

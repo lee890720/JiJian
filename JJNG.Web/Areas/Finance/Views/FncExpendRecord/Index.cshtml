@@ -1,4 +1,4 @@
-﻿@model Tuple<List<BrhExpendRecord>, List<FncBranch>>
+﻿@model Tuple<FncBranch, List<FncBranch>>
 
 @{
     var actionName = ViewContext.RouteData.Values["action"].ToString();
@@ -11,170 +11,583 @@
     string path = "/" + areaName + "/" + controllerName;
 }
 <section class="content">
-    @using (Html.BeginForm("Index", null, FormMethod.Post))
-    {
-        <div class="row">
-            <div class="col-md-12">
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">支出明细<small  class="hidden-xs"  style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
-                        <div class="box-tools pull-right">
-                            <button title="审核" type="submit" class="btn btn-box-tool"> 审核</button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
-                                <ul class="dropdown-menu dropdown-menu-left" role="menu">
-                                    @foreach (var u in Model.Item2)
-                                    {
-                                        <li><a asp-action="Index" asp-route-branchId="@u.BranchId" asp-route-branchName="@u.BranchName" asp-route-count="@u.Count"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
-                                    }
-                                </ul>
-                            </div>
-                            <span id="excelButton"></span>
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                                <i class="fa fa-minus"></i>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">支出明细<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <div class="box-tools pull-right">
+                        <button title="审核" id="audit" class="btn btn-box-tool"> 审核</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="改变显示行数" style="padding-bottom:6px"><i class="fa fa-sort-numeric-asc"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                <li><a id="page-10"><i class="fa fa-circle-o text-light-blue"></i>10</a></li>
+                                <li><a id="page-15"><i class="fa fa-circle-o text-light-blue"></i>15</a></li>
+                                <li><a id="page-20"><i class="fa fa-circle-o text-light-blue"></i>20</a></li>
+                                <li><a id="page-30"><i class="fa fa-circle-o text-light-blue"></i>30</a></li>
+                                <li><a id="page-all"><i class="fa fa-circle-o text-light-blue"></i>全部</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                @foreach (var u in Model.Item2)
+                                {
+                                    <li><a asp-action="Index" asp-route-branchId="@u.BranchId" asp-route-branchName="@u.BranchName" asp-route-count="@u.Count"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <span id="excelButton"></span>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <div class="btn-group  hidden-xs" style="padding-top:1px">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="显示隐藏列">
+                                <i class="fa fa-bars"></i>
                             </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu" style="padding-left:10px">
+                                <li><input type="checkbox" class="toggle-vis" data-column="9" />&nbsp;<small>备注</small></li>
+                            </ul>
+                        </div>
+
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body table-responsive">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <select id="date_select" class="form-control select2" style="width: 100%;">
+                                    <option value="7">最近30天</option>
+                                    <option value="0">今天</option>
+                                    <option value="1">昨天</option>
+                                    <option value="2">最后一周</option>
+                                    <option value="3">本月</option>
+                                    <option value="4">上个月</option>
+                                    <option value="5">最后三个月</option>
+                                    <option value="6">最后一年</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepicker">
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <input type="text" placeholder="结束日期" id="date_end" class="form-control datepicker">
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <input type="text" placeholder="搜索" id="search" class="form-control">
+                            </div>
                         </div>
                     </div>
-                    <div class="box-body table-responsive">
-                        <div class="form-group">
-                            <div class="form-group">
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <select id="date_select" class="form-control select2" style="width: 100%;">
-                                        <option value="7">全部</option>
-                                        <option value="0">今天</option>
-                                        <option value="1">昨天</option>
-                                        <option value="2">最后一周</option>
-                                        <option value="3">本月</option>
-                                        <option value="4">上个月</option>
-                                        <option value="5">最后三个月</option>
-                                        <option value="6">最后一年</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="开始日期" id="date_beg" class="form-control datepicker">
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="结束日期" id="date_end" class="form-control datepicker">
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-12">
-                                    <input type="text" placeholder="搜索" id="search" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        录入日期
-                                    </th>
-                                    <th>
-                                        支出分类
-                                    </th>
-                                    <th>
-                                        用途
-                                    </th>
-                                    <th>
-                                        金额
-                                    </th>
-                                    <th>
-                                        付款方式
-                                    </th>
-                                    <th>
-                                        审批单号
-                                    </th>
-                                    <th>
-                                        录单人
-                                    </th>
-                                    <th>
-                                        财务审核
-                                    </th>
-                                    <th>
-                                        分店
-                                    </th>
-                                    <th>
-                                        备注
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.Item1)
-                                {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EnteringDate)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ExpendType)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Purpose)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Amount)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PaymentType)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ConnectNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.EnteringStaff)
-                                    </td>
-                                    @{
-                                        if (item.IsFinance)
-                                        {
-                                            <td style="color:skyblue;">
-                                                <span><input type="checkbox" class="flat-blue" name="ids" value="@item.ExpendRecordId" checked="@item.IsFinance"></span>
-                                                已审核
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td style="color:red;">
-                                                <span><input type="checkbox" class="flat-blue" name="ids" value="@item.ExpendRecordId" checked="@item.IsFinance"></span>
-                                                未审核
-                                            </td>
-                                        }
-                                    }
-                                    <td style="color:red">
-                                        @Html.DisplayFor(modelItem => item.Branch)
-                                    </td>
-                                    @{
-                                        string note = item.Note;
-                                        string note2 = note;
-                                        if (note != null && note.Count() > 7)
-                                        {
-                                            note2 = note.Substring(0, 7);
-                                        }
-                                    }
-                                    <td title="@note">
-                                        @note2
-                                    </td>
-                                </tr>
-                                }
-                            </tbody>
-                        <tfoot>
+                    <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
+                        <thead>
                             <tr>
-                                <th colspan="3" style="text-align:right !important">合计:</th>
-                                <th></th>
-                                <th colspan="6"></th>
+                                <th>
+                                    录入日期
+                                </th>
+                                <th>
+                                    支出分类
+                                </th>
+                                <th>
+                                    用途
+                                </th>
+                                <th>
+                                    金额
+                                </th>
+                                <th>
+                                    付款方式
+                                </th>
+                                <th>
+                                    审批单号
+                                </th>
+                                <th>
+                                    录单人
+                                </th>
+                                <th>
+                                    财务审核
+                                </th>
+                                <th>
+                                    分店
+                                </th>
+                                <th class="col-visible">
+                                    备注
+                                </th>
                             </tr>
-                        </tfoot>
-                        </table>
+                        </thead>
+                        @*<tfoot>
+                                <tr>
+                                    <th colspan="3" style="text-align:right !important">合计:</th>
+                                    <th></th>
+                                    <th colspan="6"></th>
+                                </tr>
+                            </tfoot>*@
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">支出占比<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <div class="box-tools pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                @foreach (var u in Model.Item2)
+                                {
+                                    <li><a asp-action="Index" asp-route-branchId="@u.BranchId" asp-route-branchName="@u.BranchName" asp-route-count="@u.Count"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hidden-xs">
+                        <div id="Pie1Chart" style="height:500px"></div>
                     </div>
                 </div>
             </div>
         </div>
-    }
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">日分析<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
+                    <div class="box-tools pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="切换分店" style="padding-bottom:6px"><i class="fa fa-exchange"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                                @foreach (var u in Model.Item2)
+                                {
+                                    <li><a asp-action="Index" asp-route-branchId="@u.BranchId" asp-route-branchName="@u.BranchName" asp-route-count="@u.Count"><i class="fa fa-circle-o text-light-blue"></i>@u.BranchName</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hidden-xs">
+                        <div id="DailyBaseChart" style="height: 300px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">提示</h4>
+                </div>
+                <div class="modal-body">
+                    <p>执行中，请稍后&hellip;</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 @section Scripts{
-    <script src="~/js/range_dates.js"></script>
     <script src="~/js/dateRangeSelector.js"></script>
     <script type="text/javascript" src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="UTF-8"></script>
     <script>
         $(function () {
+            var _fncBranch =@Html.Raw(Json.Serialize(Model.Item1));
+            var _ids = [];
+            var DailyBaseData = [];
+            var DailyBaseChart = echarts.init(document.getElementById('DailyBaseChart'));
+            var Pie1Chart = echarts.init(document.getElementById('Pie1Chart'));
+            var P1legendData = [];
+            var P1series1Data = [];
+            var P1series2Data = [];
+
+            //#region 日分析报告
+            var optionDailyBase = {
+                color: ['#3398DB','gray'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    data: [],
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                calculable: true,
+                grid: {
+                    left: '3%',
+                    right: '8%',
+                    top: '15%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                dataZoom: [
+                    {
+                        id: 'dataZoomX',
+                        type: 'inside',
+                        xAxisIndex: [0],
+                        filterMode: 'filter'
+                    }
+                ],
+                xAxis:
+                {
+                    type: 'category',
+                    data: []
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value}'
+                        },
+                    }
+
+                ],
+                series: [
+                    {
+                        name: '',
+                        type: 'bar',
+                        barWidth: '60%',
+                        data: [],
+                        markPoint: {
+                            data: [
+                                { type: 'max', name: '最大值' },
+                                { type: 'min', name: '最小值' }
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                { type: 'average', name: '平均值' }
+                            ]
+                        },
+                        label: {
+                            normal: {
+                                show: false,
+                                formatter: '{c}',
+                                position: 'top',
+                                textStyle: {
+                                    color: '#000'
+                                }
+                            }
+                        }
+                    },
+                ]
+            };
+
+            function Render_DailyBaseChart(data) {
+
+                optionDailyBase.xAxis.data = [];
+                optionDailyBase.series[0].data = [];
+                var seriesName = "";
+                seriesName = "支出";
+
+                optionDailyBase.series[0].name = seriesName;
+                optionDailyBase.legend.data.push(seriesName);
+                if (data != null) {
+                    $.each(data, function () {
+                        optionDailyBase.xAxis.data.push(moment(this.month).format("YYYY-MM-DD"));
+                        optionDailyBase.series[0].data.push((this.houseAmount).toFixed(0));
+                        optionDailyBase.series[0].label.normal.formatter = function (p) {
+                            return (p.value > 0 || p.value < 0) ? ('￥' + p.value) : '';
+                        };
+                    });
+
+                    optionDailyBase.yAxis[0].axisLabel.formatter = '{value} 元';
+                    optionDailyBase.tooltip.formatter = function (params) {
+                        var res = params[0].seriesName + '<br/>' +
+                            params[0].name + "：" + params[0].value + " 元";
+                        return res;
+                    };
+                    DailyBaseChart.setOption(optionDailyBase);
+                }
+            };
+            //#endregion
+
+            //#region 月Pie图表
+            var optionMonthPie = {
+                title: {
+                    text: 'MonthPie',
+                    show: false
+                },
+                tooltip: {
+                    show: false,
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    show: false,
+                    type: 'plain',
+                    tooltip: {
+                        show: true
+                    },
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: []
+                },
+                series: [
+                    {
+                        name: 'SymbolCode',
+                        type: 'pie',
+                        radius: ['50%', '80%'],
+                        center: ['50%', '50%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center',
+                                formatter: '{b} : {c} ({d}%)',
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '12',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        data: [],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            function Render_MonthPieChart(index) {
+                var seriesData = [];
+                var data = DailyBaseData;
+                var idx = parseInt(index);
+                for (var i = 0; i < data[idx].buySellData.length; i++) {
+                    var _name = data[idx].buySellData[i].symbolCode;
+                    var _value = parseFloat(data[idx].buySellData[i].lots).toFixed(2);;
+                    seriesData.push({ name: _name, value: _value });
+                }
+                optionMonthPie.series[0].data = seriesData;
+                MonthPieChart.setOption(optionMonthPie);
+            };
+            //#endregion
+
+            //#region Pie1Chart设置
+            Pie1Chart.setOption({
+                title: {
+                    text: '支出占比',
+                    x:'center',
+                    show: true
+                },
+                tooltip: {
+                    show: true,
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    data: P1legendData,
+                },
+                series: [
+                    {
+                        name: '支出占比',
+                        type: 'pie',
+                        radius: ['0%', '50%'],
+                        label: {
+                            normal: {
+                                formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                                backgroundColor: '#eee',
+                                borderColor: '#aaa',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                rich: {
+                                    a: {
+                                        color: '#999',
+                                        lineHeight: 22,
+                                        align: 'center'
+                                    },
+                                    hr: {
+                                        borderColor: '#aaa',
+                                        width: '100%',
+                                        borderWidth: 0.5,
+                                        height: 0
+                                    },
+                                    b: {
+                                        fontSize: 16,
+                                        lineHeight: 33
+                                    },
+                                    per: {
+                                        color: '#eee',
+                                        backgroundColor: '#334455',
+                                        padding: [2, 4],
+                                        borderRadius: 2
+                                    }
+                                }
+                            }
+                        },
+                        data: []
+                    }
+                ]
+            });
+            Pie1Chart.showLoading();
+            //#endregion
+
+            //#region Ajax optionAjax
+            var optionAjax = {
+                type: "post",
+                async: true,
+                url: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: {},
+                beforeSend: function () {
+                    $('#modal-default').modal('show');
+                },
+                success: function (result) {
+                },
+                complete: function () {
+                    $('#modal-default').modal('hide');
+                },
+            };
+            //#endregion
+
+            //#region Ajax GetExpendList
+            function GetExpendList() {
+                var start = moment().add('-1', "M").format("YYYY-MM-DD");
+                var end = moment().add('1', "d").format("YYYY-MM-DD");
+                if ($("#date_beg").val() != '')
+                    start = moment($("#date_beg").val()).format("YYYY-MM-DD");
+                if ($("#date_end").val() != '')
+                    end = moment($("#date_end").val()).format("YYYY-MM-DD");
+                optionAjax.url = "/Finance/FncExpendRecord/GetExpendList";
+                optionAjax.data = JSON.stringify({
+                    branchName: _fncBranch.branchName,
+                    branchId: _fncBranch.branchId,
+                    count: _fncBranch.count,
+                    startDate: start,
+                    endDate: end
+                });
+                optionAjax.success = function (result) {
+                    DailyBaseData = result.dailyList;
+                    Render_DailyBaseChart(DailyBaseData);
+                    P1legendData = [];
+                    P1series1Data = [];
+                    for (var i = 0; i < result.pie1List.length; i++) {
+                        P1legendData.push(result.pie1List[i].expendType);
+                        P1series1Data.push({ name: result.pie1List[i].expendType, value: result.pie1List[i].total });
+                    }
+                    var legendShow = false;
+                    var centerValue = ['50%', '50%'];
+                    if (document.body.clientWidth > 1200) {
+                        legendShow = true;
+                        centerValue = ['50%', '50%'];
+                    }
+                    Pie1Chart.hideLoading();
+                    Pie1Chart.setOption({
+                        legend: {
+                            show: legendShow,
+                            data: P1legendData
+                        },
+                        series: [
+                            {
+                                data: P1series1Data
+                            },
+                        ]
+                    });
+                    table1.api().clear();
+                    table1.api().rows.add(result.expendList).draw();
+                };
+                $.ajax(optionAjax);
+            };
+
+            $("#audit").click(function () {
+                var start = moment().add('-1', "M").format("YYYY-MM-DD");
+                var end = moment().add('1', "d").format("YYYY-MM-DD");
+                if ($("#date_beg").val() != '')
+                    start = moment($("#date_beg").val()).format("YYYY-MM-DD");
+                if ($("#date_end").val() != '')
+                    end = moment($("#date_end").val()).format("YYYY-MM-DD");
+                optionAjax.url = "/Finance/FncExpendRecord/UpdateList";
+                optionAjax.data = JSON.stringify({
+                    branchName: _fncBranch.branchName,
+                    branchId: _fncBranch.branchId,
+                    count: _fncBranch.count,
+                    startDate: start,
+                    endDate: end,
+                    ids: _ids
+                });
+                optionAjax.success = function (result) {
+                    DailyBaseData = result.dailyList;
+                    Render_DailyBaseChart(DailyBaseData, 1);
+                    P1legendData = [];
+                    P1series1Data = [];
+                    P1series2Data = [];
+                    for (var i = 0; i < result.pie1List.length; i++) {
+                        P1legendData.push(result.pie1List[i].channel);
+                        P1series1Data.push({ name: result.pie1List[i].channel, value: result.pie1List[i].aTotal });
+                        P1series2Data.push({ name: result.pie1List[i].channel, value: result.pie1List[i].cTotal });
+                    }
+                    for (var i = 0; i < result.pie2List.length; i++) {
+                        P2legendData.push(result.pie2List[i].payWay);
+                        P2seriesData.push({ name: result.pie2List[i].payWay, value: result.pie2List[i].total });
+                    }
+                    var legendShow = false;
+                    var centerValue = ['50%', '50%'];
+                    if (document.body.clientWidth > 1200) {
+                        legendShow = true;
+                        centerValue = ['50%', '50%'];
+                    }
+                    Pie1Chart.hideLoading();
+                    Pie1Chart.setOption({
+                        legend: {
+                            show: legendShow,
+                            data: P1legendData
+                        },
+                        series: [
+                            {
+                                data: P1series1Data
+                            },
+                            {
+                                data: P1series2Data
+                            },
+                        ]
+                    });
+                    table1.api().clear();
+                    table1.api().rows.add(result.frontList).draw();
+                };
+                $.ajax(optionAjax);
+            });
+
+            //#endregion
+
             //#region table1初始化
             var table1 = $('#table-1').dataTable(
                 {
@@ -208,36 +621,76 @@
                             sortDescending: ": 以降序排列此列"
                         }
                     },
+                    data: [],
+                    columns: [
+                        { data: "enteringDate" },
+                        { data: "expendType" },
+                        { data: "purpose" },
+                        { data: "amount" },
+                        { data: "paymentType" },
+                        { data: "connectNumber" },
+                        { data: "enteringStaff" },
+                        { data: "isFinance" },
+                        { data: "branch" },
+                        {data:"note"}
+                    ],
                     columnDefs: [
                         {
                             targets: "col-visible",
                             visible: false,
                         },
                         {
-                            targets: [-1, -2],
-                            orderable: false,
+                            targets: [0],
+                            render: function (data, type, row, meta) {
+                                var temp = new Date(data);
+                                return '<span title="' + row.note + '">' + temp.Format('YYYY-MM-DD')+ '</span>';
+                            }
+                        },
+                        {
+                            targets: [7],
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                if (cellData)
+                                    $(td).css('color', '#4cae05');
+                                else
+                                    $(td).css('color', '#ff5256');
+                            },
+                            render: function (data, type, row, meta) {
+                                if (data)
+                                    return '<span>' + '<input type="checkbox" class="icheckbox_flat-blue" checked style="margin:0px"  name="ids" data-id="' + row.expendRecordId + '">' + " 财务已审" +'</span>';
+                                else
+                                    return '<span>' + '<input type="checkbox" class="icheckbox_flat-blue" style="margin:0px"  name="ids" data-id="' + row.expendRecordId + '">' + " 财务未审" + '</span>';
+                                }
                         },
                     ],
-                    footerCallback: function (tfoot, data, start, end, display) {
-                        var api = this.api(), data;
+                    //footerCallback: function (tfoot, data, start, end, display) {
+                    //    var api = this.api(), data;
 
-                        // Remove the formatting to get integer data for summation
-                        var intVal = function (i) { return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0; };
+                    //    // Remove the formatting to get integer data for summation
+                    //    var intVal = function (i) { return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0; };
 
-                        // Total over all pages
-                        total = api.column(3).data().reduce(function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                    //    // Total over all pages
+                    //    total = api.column(3).data().reduce(function (a, b) {
+                    //        return intVal(a) + intVal(b);
+                    //    }, 0);
 
-                        // Total over this page
-                        pageTotal = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                    //    // Total over this page
+                    //    pageTotal = api.column(3, { page: 'current' }).data().reduce(function (a, b) {
+                    //        return intVal(a) + intVal(b);
+                    //    }, 0);
 
-                        // Update footer
-                        $(api.column(3).footer()).html('￥' + pageTotal.toFixed(2) + "/" + '￥' + total.toFixed(2));
-                    }
+                    //    // Update footer
+                    //    $(api.column(3).footer()).html('￥' + pageTotal.toFixed(2) + "/" + '￥' + total.toFixed(2));
+                    //}
                 });
+            //#endregion
+
+            //#region 显示隐藏列
+            $('.toggle-vis').on('change', function (e) {
+                e.preventDefault();
+                console.log($(this).attr('data-column'));
+                var column = table1.api().column($(this).attr('data-column'));
+                column.visible(!column.visible());
+            });
             //#endregion
 
             //#region table1点击事件
@@ -258,12 +711,38 @@
             $(".excelButton").removeClass("btn-default");
             $(".excelButton").addClass("btn btn-box-tool hidden-xs");
             $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
-            $("#date_beg,#date_end").keyup(function () { table1.api().draw(); });
-            $("#date_beg,#date_end").change(function () { table1.api().draw(); });
+            $("#date_beg,#date_end").keyup(function () { GetExpendList(); });
+            $("#date_beg,#date_end").change(function () { GetExpendList(); });
+            $("#page-10").click(function () { table1.api().page.len(10).draw(); });
+            $("#page-15").click(function () { table1.api().page.len(15).draw(); });
+            $("#page-20").click(function () { table1.api().page.len(20).draw(); });
+            $("#page-30").click(function () { table1.api().page.len(30).draw(); });
+            $("#page-all").click(function () { table1.api().page.len(-1).draw(); });
+
+            //#region 点击input[name="ids"]时触发的事件
+            $("#table-1 tbody").on("change", 'tr input[name="ids"]', function () {
+                var $tr = $(this).parents('tr');
+                var row = table1.api().row($tr);
+                var data = row.data();
+
+                if ($(this).is(':checked')) {
+                    _ids.push($(this).attr("data-id"));
+                    console.log(_ids);
+                }
+                else {
+                    var index = _ids.indexOf($(this).attr("data-id"));
+                    if (index > -1) {
+                        _ids.splice(index, 1);
+                    }
+                    console.log(_ids);
+
+                }
+            });
+            //#endregion
             //#endregion
 
             //#region 设置一些细节
-            $(".datepicker").datepicker({
+            $("#date_beg,#date_end").datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
                 language: "zh-CN",
@@ -274,6 +753,10 @@
 
             //Select2
             $('.select2').select2();
+            $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
+                checkboxClass: 'icheckbox_flat-blue',
+                radioClass: 'iradio_flat-blue'
+            })
             //#endregion
 
             //#region 日期区间选择事件
@@ -320,9 +803,18 @@
                         $('#date_end').val("");
                         break;
                 }
-                table1.api().draw();
+                GetExpendList();
             });
             //#endregion
+
+            GetExpendList();
+            setTimeout(function () {
+                window.onresize = function () {
+                    DailyBaseChart.resize();
+                    Pie1Chart.resize();
+                    Pie2Chart.resize();
+                }
+            }, 200);
         });
     </script>
 }

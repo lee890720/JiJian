@@ -29,5 +29,17 @@ namespace JJNG.Web.Areas.Finance.Models
         public decimal 有环比增长额 { get; set; }
         public double 有同比增长率 { get; set; }
         public double 有环比增长率 { get; set; }
+        public decimal 支同比增长额 { get; set; }
+        public decimal 支环比增长额 { get; set; }
+        public double 支同比增长率 { get; set; }
+        public double 支环比增长率 { get; set; }
+        public decimal 外同比增长额 { get; set; }
+        public decimal 外环比增长额 { get; set; }
+        public double 外同比增长率 { get; set; }
+        public double 外环比增长率 { get; set; }
+        public decimal 外利同比增长额 { get; set; }
+        public decimal 外利环比增长额 { get; set; }
+        public double 外利同比增长率 { get; set; }
+        public double 外利环比增长率 { get; set; }
     }
 }

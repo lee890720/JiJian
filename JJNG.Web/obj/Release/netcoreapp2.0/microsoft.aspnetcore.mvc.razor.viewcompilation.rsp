@@ -72,6 +72,7 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhNote\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhNote\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhNote\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhScalp\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\AddDetial.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\Create.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Branch\Views\BrhStewardAccount\Delete.cshtml
@@ -117,6 +118,7 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncScalp\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncStewardAccount\DetialList.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncStewardAccount\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncTypeCollect\Index.cshtml
@@ -137,6 +139,7 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Personnel\_ViewImports.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Personnel\_ViewStart.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Home\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Views\Shared\Components\Branch2\Default.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\Components\Branch\Default.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\Components\Menu\Default.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\Error.cshtml
@@ -146,6 +149,7 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Views\Shared\_Layout.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_Layout2.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_Layout3.cshtml
+--file=D:\JiJian\JJNG.Web\Views\Shared\_Layout4.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_Modal.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_ModalFooter.cshtml
 --file=D:\JiJian\JJNG.Web\Views\Shared\_ModalHeader.cshtml

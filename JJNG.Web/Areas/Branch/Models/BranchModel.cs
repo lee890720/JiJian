@@ -17,7 +17,9 @@ namespace JJNG.Web.Areas.Branch.Models
         [Required]
         [Display(Name = "付款金额")]
         public decimal PayAmount { get; set; }
+        public List<string> SelectVal { get; set; }
     }
+
     public class Branch1
     {
         public string id { get; set; }
@@ -49,8 +51,22 @@ namespace JJNG.Web.Areas.Branch.Models
         public string state { get; set; }
         public bool isClean { get; set; }
         public int typeId { get; set; }
+        public string houseType { get; set; }
     }
     public class Event : BrhFrontDeskAccounts
+    {
+        public string id { get; set; }
+        public string resourceId { get; set; }
+        public string title { get; set; }
+        public bool allDay { get; set; }
+        public string start { get; set; }
+        public string end { get; set; }
+        public string className { get; set; }
+        public bool editable { get; set; }
+        public bool isTitle { get; set; }
+        public string houseType { get; set; }
+    }
+    public class Event2 : BrhScalp
     {
         public string id { get; set; }
         public string resourceId { get; set; }

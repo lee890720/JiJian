@@ -42,82 +42,138 @@ namespace JJNG.Web.Areas.Branch.Controllers
             return View(_user);
         }
 
+        private Event AddFront(BranchModel bm)
+        {
+            var brhFrontDeskAccounts = new BrhFrontDeskAccounts();
+            Event eve = new Event();
+            brhFrontDeskAccounts.Branch = bm.Branch;
+            brhFrontDeskAccounts.Channel = bm.Channel;
+            brhFrontDeskAccounts.Color = bm.Color;
+            brhFrontDeskAccounts.Count = bm.Count;
+            brhFrontDeskAccounts.CustomerCount = bm.CustomerCount;
+            brhFrontDeskAccounts.CustomerName = bm.CustomerName;
+            brhFrontDeskAccounts.EndDate = bm.EndDate;
+            brhFrontDeskAccounts.EnteringDate = bm.EnteringDate;
+            brhFrontDeskAccounts.EnteringStaff = bm.EnteringStaff;
+            brhFrontDeskAccounts.FrontDeskAccountsId = bm.FrontDeskAccountsId;
+            brhFrontDeskAccounts.FrontDeskLeader = bm.FrontDeskLeader;
+            brhFrontDeskAccounts.HouseNumber = bm.HouseNumber;
+            brhFrontDeskAccounts.IsFinance = bm.IsFinance;
+            brhFrontDeskAccounts.IsFinish = bm.IsFinish;
+            brhFrontDeskAccounts.IsFront = bm.IsFront;
+            brhFrontDeskAccounts.Note = bm.Note;
+            brhFrontDeskAccounts.Phone = bm.Phone;
+            brhFrontDeskAccounts.Receivable = bm.Receivable;
+            brhFrontDeskAccounts.Received = bm.Received;
+            brhFrontDeskAccounts.RelationStaff = bm.RelationStaff;
+            brhFrontDeskAccounts.StartDate = bm.StartDate;
+            brhFrontDeskAccounts.State = bm.State;
+            brhFrontDeskAccounts.Steward = bm.Steward;
+            brhFrontDeskAccounts.StewardLeader = bm.StewardLeader;
+            brhFrontDeskAccounts.TotalPrice = bm.TotalPrice;
+            brhFrontDeskAccounts.UnitPrice = bm.UnitPrice;
+            eve.Branch = bm.Branch;
+            eve.Channel = bm.Channel;
+            eve.Color = bm.Color;
+            eve.Count = bm.Count;
+            eve.CustomerCount = bm.CustomerCount;
+            eve.CustomerName = bm.CustomerName;
+            eve.EndDate = bm.EndDate;
+            eve.EnteringDate = bm.EnteringDate;
+            eve.EnteringStaff = bm.EnteringStaff;
+            eve.FrontDeskAccountsId = bm.FrontDeskAccountsId;
+            eve.FrontDeskLeader = bm.FrontDeskLeader;
+            eve.HouseNumber = bm.HouseNumber;
+            eve.IsFinance = bm.IsFinance;
+            eve.IsFinish = bm.IsFinish;
+            eve.IsFront = bm.IsFront;
+            eve.Note = bm.Note;
+            eve.Phone = bm.Phone;
+            eve.Receivable = bm.Receivable;
+            eve.Received = bm.Received;
+            eve.RelationStaff = bm.RelationStaff;
+            eve.StartDate = bm.StartDate;
+            eve.State = bm.State;
+            eve.Steward = bm.Steward;
+            eve.StewardLeader = bm.StewardLeader;
+            eve.TotalPrice = bm.TotalPrice;
+            eve.UnitPrice = bm.UnitPrice;
+            eve.id = bm.FrontDeskAccountsId.ToString();
+            eve.resourceId = bm.HouseNumber;
+            eve.title = bm.title;
+            eve.allDay = bm.allDay;
+            eve.start = bm.StartDate.ToShortDateString();
+            eve.end = bm.EndDate.ToShortDateString();
+            eve.className = bm.className;
+            eve.editable = bm.editable;
+            eve.isTitle = bm.isTitle;
+            eve.houseType = bm.houseType;
+            if (bm.PayAmount != 0)
+            {
+                var bfp = new BrhFrontPaymentDetial();
+                bfp.FrontDeskAccountsId = brhFrontDeskAccounts.FrontDeskAccountsId;
+                bfp.PayWay = bm.PayWay;
+                bfp.PayDate = bm.PayDate;
+                bfp.PayAmount = bm.PayAmount;
+                brhFrontDeskAccounts.BrhFrontPaymentDetial.Add(bfp);
+            }
+            _context.Add(brhFrontDeskAccounts);
+            _context.SaveChanges();
+            return eve;
+        }
+
         public async Task<JsonResult> Create([FromBody]BranchModel branchModel)
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+            List<Event> eves = new List<Event>();
 
             if (branchModel.StartDate.Month == branchModel.EndDate.AddDays(-1).Month)
             {
                 var frontId = Convert.ToInt64(_user.BranchId.ToString() + ConvertJson.DateTimeToStamp(DateTime.Now).ToString());
+                branchModel.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                 branchModel.FrontDeskAccountsId = frontId;
-                BrhFrontDeskAccounts brhFrontDeskAccounts = new BrhFrontDeskAccounts();
-                BrhFrontPaymentDetial bfp = new BrhFrontPaymentDetial();
-
                 if (branchModel.PayAmount != 0)
                 {
-                    bfp.FrontDeskAccountsId = branchModel.FrontDeskAccountsId;
-                    bfp.PayWay = branchModel.PayWay;
-                    bfp.PayDate = branchModel.PayDate;
-                    bfp.PayAmount = branchModel.PayAmount;
+                    branchModel.Received = branchModel.PayAmount;
                 }
                 else
-                    bfp.PayAmount = 0;
-                branchModel.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
-                branchModel.Received = bfp.PayAmount;
+                    branchModel.Received = 0;
                 if (branchModel.Receivable == branchModel.Received)
                     branchModel.IsFinish = true;
 
-                var ParentType = typeof(BrhFrontDeskAccounts);
-                var Properties = ParentType.GetProperties();
-                foreach (var Propertie in Properties)
+                eves.Add(AddFront(branchModel));
+
+                if (branchModel.SelectVal.Count > 0)
                 {
-                    if (Propertie.CanRead && Propertie.CanWrite)
+                    foreach (var sel in branchModel.SelectVal)
                     {
-                        Propertie.SetValue(brhFrontDeskAccounts, Propertie.GetValue(branchModel, null), null);
+                        branchModel.FrontDeskAccountsId += 1;
+                        branchModel.HouseNumber = sel;
+                        eves.Add(AddFront(branchModel));
                     }
                 }
-                if (branchModel.PayAmount != 0)
-                    brhFrontDeskAccounts.BrhFrontPaymentDetial.Add(bfp);
-                _context.Add(brhFrontDeskAccounts);
-                _context.SaveChanges();
-
-                return Json(new
-                {
-                    id = brhFrontDeskAccounts.FrontDeskAccountsId,
-                    enteringDate = brhFrontDeskAccounts.EnteringDate,
-                    state = branchModel.State,
-                    received = brhFrontDeskAccounts.Received,
-                    isFinish = brhFrontDeskAccounts.IsFinish
-                });
+                return Json(eves);
             }
             else
             {
-               // branchModel.StartDate.Month == branchModel.EndDate.AddDays(-1).Month;
-                var count1 = (branchModel.EndDate.AddDays(1-branchModel.EndDate.Day)-branchModel.StartDate).Days;
-                var count2 = (branchModel.EndDate- branchModel.EndDate.AddDays(1 - branchModel.EndDate.Day)).Days;
-                var total = (branchModel.EndDate-branchModel.StartDate).Days;
+                var count1 = (branchModel.EndDate.AddDays(1 - branchModel.EndDate.Day) - branchModel.StartDate).Days;
+                var count2 = (branchModel.EndDate - branchModel.EndDate.AddDays(1 - branchModel.EndDate.Day)).Days;
+                var total = (branchModel.EndDate - branchModel.StartDate).Days;
                 var frontId1 = Convert.ToInt64(_user.BranchId.ToString() + ConvertJson.DateTimeToStamp(DateTime.Now).ToString());
                 BrhFrontDeskAccounts brhFrontDeskAccounts1 = new BrhFrontDeskAccounts();
-                BrhFrontPaymentDetial bfp1 = new BrhFrontPaymentDetial();
-                var frontId2 = Convert.ToInt64(_user.BranchId.ToString() + ConvertJson.DateTimeToStamp(DateTime.Now).ToString())+1;
                 BrhFrontDeskAccounts brhFrontDeskAccounts2 = new BrhFrontDeskAccounts();
-                BrhFrontPaymentDetial bfp2 = new BrhFrontPaymentDetial();
+                decimal payAmount1 = 0;
+                decimal payAmount2 = 0;
 
                 if (branchModel.PayAmount != 0)
                 {
-                    bfp1.FrontDeskAccountsId = frontId1;
-                    bfp1.PayWay = branchModel.PayWay;
-                    bfp1.PayDate = branchModel.PayDate;
-                    bfp1.PayAmount = branchModel.PayAmount / total * count1;
-                    bfp2.FrontDeskAccountsId = frontId2;
-                    bfp2.PayWay = branchModel.PayWay;
-                    bfp2.PayDate = branchModel.PayDate;
-                    bfp2.PayAmount = branchModel.PayAmount / total * count2;
+                    payAmount1 = branchModel.PayAmount / total * count1;
+                    payAmount2 = branchModel.PayAmount / total * count2;
                 }
                 else
                 {
-                    bfp1.PayAmount = 0;
-                    bfp2.PayAmount = 0;
+                    payAmount1 = 0;
+                    payAmount2 = 0;
                 }
                 branchModel.EnteringDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
                 var totalPrice = branchModel.TotalPrice;
@@ -129,7 +185,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 branchModel.FrontDeskAccountsId = frontId1;
                 branchModel.TotalPrice = totalPrice / total * count1;
                 branchModel.Receivable = receivable / total * count1;
-                branchModel.Received =bfp1.PayAmount;
+                branchModel.Received = payAmount1;
                 if (branchModel.Receivable == branchModel.Received)
                     branchModel.IsFinish = true;
                 else
@@ -137,56 +193,25 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 branchModel.Count = count1;
                 branchModel.StartDate = startDate;
                 branchModel.EndDate = endDate.AddDays(1 - endDate.Day);
-
-                brhFrontDeskAccounts1.Branch = branchModel.Branch;
-                brhFrontDeskAccounts1.Channel = branchModel.Channel;
-                brhFrontDeskAccounts1.Color = branchModel.Color;
-                brhFrontDeskAccounts1.Count = branchModel.Count;
-                brhFrontDeskAccounts1.CustomerCount = branchModel.CustomerCount;
-                brhFrontDeskAccounts1.CustomerName = branchModel.CustomerName;
-                brhFrontDeskAccounts1.EndDate = branchModel.EndDate;
-                brhFrontDeskAccounts1.EnteringDate = branchModel.EnteringDate;
-                brhFrontDeskAccounts1.EnteringStaff = branchModel.EnteringStaff;
-                brhFrontDeskAccounts1.FrontDeskAccountsId = branchModel.FrontDeskAccountsId;
-                brhFrontDeskAccounts1.FrontDeskLeader = branchModel.FrontDeskLeader;
-                brhFrontDeskAccounts1.HouseNumber = branchModel.HouseNumber;
-                brhFrontDeskAccounts1.IsFinance = branchModel.IsFinance;
-                brhFrontDeskAccounts1.IsFinish = branchModel.IsFinish;
-                brhFrontDeskAccounts1.IsFront = branchModel.IsFront;
-                brhFrontDeskAccounts1.Note = branchModel.Note;
-                brhFrontDeskAccounts1.Phone = branchModel.Phone;
-                brhFrontDeskAccounts1.Receivable = branchModel.Receivable;
-                brhFrontDeskAccounts1.Received = branchModel.Received;
-                brhFrontDeskAccounts1.RelationStaff = branchModel.RelationStaff;
-                brhFrontDeskAccounts1.StartDate = branchModel.StartDate;
-                brhFrontDeskAccounts1.State = branchModel.State;
-                brhFrontDeskAccounts1.Steward = branchModel.Steward;
-                brhFrontDeskAccounts1.StewardLeader = branchModel.StewardLeader;
-                brhFrontDeskAccounts1.TotalPrice = branchModel.TotalPrice;
-                brhFrontDeskAccounts1.UnitPrice = branchModel.UnitPrice;
-
-                //var ParentType = typeof(BrhFrontDeskAccounts);
-                //var Properties = ParentType.GetProperties();
-                //foreach (var Propertie in Properties)
-                //{
-                //    if (Propertie.CanRead && Propertie.CanWrite)
-                //    {
-                //        Propertie.SetValue(brhFrontDeskAccounts1, Propertie.GetValue(branchModel, null), null);
-                //    }
-                //}
-                if (branchModel.PayAmount != 0)
+                branchModel.PayAmount = payAmount1;
+                eves.Add(AddFront(branchModel));
+                var tempNumber = branchModel.HouseNumber;
+                if (branchModel.SelectVal.Count > 0)
                 {
-                    bfp1.FrontDeskAccountsId = frontId1;
-                    brhFrontDeskAccounts1.BrhFrontPaymentDetial.Add(bfp1);
+                    branchModel.FrontDeskAccountsId += 10000;
+                    foreach (var sel in branchModel.SelectVal)
+                    {
+                        branchModel.FrontDeskAccountsId += 1;
+                        branchModel.HouseNumber = sel;
+                        eves.Add(AddFront(branchModel));
+                    }
                 }
-                _context.Add(brhFrontDeskAccounts1);
-                _context.SaveChanges();
 
-
-                branchModel.FrontDeskAccountsId = frontId2;
+                branchModel.FrontDeskAccountsId = frontId1+1;
+                branchModel.HouseNumber = tempNumber;
                 branchModel.TotalPrice = totalPrice / total * count2;
                 branchModel.Receivable = receivable / total * count2;
-                branchModel.Received = bfp2.PayAmount;
+                branchModel.Received = payAmount2;
                 if (branchModel.Receivable == branchModel.Received)
                     branchModel.IsFinish = true;
                 else
@@ -194,75 +219,21 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 branchModel.Count = count2;
                 branchModel.StartDate = endDate.AddDays(1 - endDate.Day);
                 branchModel.EndDate = endDate;
-
-                brhFrontDeskAccounts2.Branch = branchModel.Branch;
-                brhFrontDeskAccounts2.Channel = branchModel.Channel;
-                brhFrontDeskAccounts2.Color = branchModel.Color;
-                brhFrontDeskAccounts2.Count = branchModel.Count;
-                brhFrontDeskAccounts2.CustomerCount = branchModel.CustomerCount;
-                brhFrontDeskAccounts2.CustomerName = branchModel.CustomerName;
-                brhFrontDeskAccounts2.EndDate = branchModel.EndDate;
-                brhFrontDeskAccounts2.EnteringDate = branchModel.EnteringDate;
-                brhFrontDeskAccounts2.EnteringStaff = branchModel.EnteringStaff;
-                brhFrontDeskAccounts2.FrontDeskAccountsId = branchModel.FrontDeskAccountsId;
-                brhFrontDeskAccounts2.FrontDeskLeader = branchModel.FrontDeskLeader;
-                brhFrontDeskAccounts2.HouseNumber = branchModel.HouseNumber;
-                brhFrontDeskAccounts2.IsFinance = branchModel.IsFinance;
-                brhFrontDeskAccounts2.IsFinish = branchModel.IsFinish;
-                brhFrontDeskAccounts2.IsFront = branchModel.IsFront;
-                brhFrontDeskAccounts2.Note = branchModel.Note;
-                brhFrontDeskAccounts2.Phone = branchModel.Phone;
-                brhFrontDeskAccounts2.Receivable = branchModel.Receivable;
-                brhFrontDeskAccounts2.Received = branchModel.Received;
-                brhFrontDeskAccounts2.RelationStaff = branchModel.RelationStaff;
-                brhFrontDeskAccounts2.StartDate = branchModel.StartDate;
-                brhFrontDeskAccounts2.State = branchModel.State;
-                brhFrontDeskAccounts2.Steward = branchModel.Steward;
-                brhFrontDeskAccounts2.StewardLeader = branchModel.StewardLeader;
-                brhFrontDeskAccounts2.TotalPrice = branchModel.TotalPrice;
-                brhFrontDeskAccounts2.UnitPrice = branchModel.UnitPrice;
-
-                //foreach (var Propertie in Properties)
-                //{
-                //    if (Propertie.CanRead && Propertie.CanWrite)
-                //    {
-                //        Propertie.SetValue(brhFrontDeskAccounts2, Propertie.GetValue(branchModel, null), null);
-                //    }
-                //}
-                if (branchModel.PayAmount != 0)
+                branchModel.PayAmount = payAmount2;
+                eves.Add(AddFront(branchModel));
+                if (branchModel.SelectVal.Count > 0)
                 {
-                    bfp2.FrontDeskAccountsId = frontId2;
-                    brhFrontDeskAccounts2.BrhFrontPaymentDetial.Add(bfp2);
+                    foreach (var sel in branchModel.SelectVal)
+                    {
+                        branchModel.FrontDeskAccountsId += 1;
+                        branchModel.HouseNumber = sel;
+                        eves.Add(AddFront(branchModel));
+                    }
                 }
-                _context.Add(brhFrontDeskAccounts2);
-                _context.SaveChanges();
 
-                return Json(new
-                {
-                    id1 = brhFrontDeskAccounts1.FrontDeskAccountsId,
-                    enteringDate1 = brhFrontDeskAccounts1.EnteringDate,
-                    state1 = brhFrontDeskAccounts1.State,
-                    count1=brhFrontDeskAccounts1.Count,
-                    startDate1=brhFrontDeskAccounts1.StartDate,
-                    endDate1=brhFrontDeskAccounts1.EndDate,
-                    totalPrice1 = brhFrontDeskAccounts1.TotalPrice,
-                    receivable1 = brhFrontDeskAccounts1.Receivable,
-                    received1 = brhFrontDeskAccounts1.Received,
-                    isFinish1 = brhFrontDeskAccounts1.IsFinish,
-                    id2 = brhFrontDeskAccounts2.FrontDeskAccountsId,
-                    enteringDate2 = brhFrontDeskAccounts2.EnteringDate,
-                    state2 = brhFrontDeskAccounts2.State,
-                    count2 = brhFrontDeskAccounts2.Count,
-                    startDate2 = brhFrontDeskAccounts2.StartDate,
-                    endDate2 = brhFrontDeskAccounts2.EndDate,
-                    totalPrice2 = brhFrontDeskAccounts2.TotalPrice,
-                    receivable2 = brhFrontDeskAccounts2.Receivable,
-                    received2 = brhFrontDeskAccounts2.Received,
-                    isFinish2 = brhFrontDeskAccounts2.IsFinish,
-                });
+                return Json(eves);
             }
         }
-
 
         public async Task<JsonResult> Edit([FromBody]BranchModel branchModel)
         {
@@ -301,12 +272,8 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 brhFrontDeskAccounts.BrhFrontPaymentDetial.Add(bfp);
             _context.Update(brhFrontDeskAccounts);
             _context.SaveChanges();
-            return Json(new
-            {
-                state = branchModel.State,
-                received = brhFrontDeskAccounts.Received,
-                isFinish = brhFrontDeskAccounts.IsFinish
-            });
+            Event eve = branchModel;
+            return Json(eve);
         }
 
         public async Task<JsonResult> EditBranch([FromBody]FncBranch fncBranch)
@@ -340,7 +307,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
         {
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             var list = _context.BrhFrontPaymentDetials.Where(x => x.FrontDeskAccountsId == branchModel.FrontDeskAccountsId).ToList();
-            return Json(new { list});
+            return Json(new { list });
         }
 
         public async Task<JsonResult> Drop([FromBody]Event eve)
@@ -398,6 +365,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var fncHouseTypeList = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fncBranch.BranchId).ToList();
             var typeCollet = fncHouseTypeList.Select(x => x.HouseTypeId).ToArray();
             var fncHouseNumberList = _context.FncHouseNumber.Where(x => typeCollet.Contains(x.HouseTypeId)).ToList();
+            var numberCollet = fncHouseNumberList.Select(x => new { x.HouseNumberId, x.HouseNumber }).ToList();
             List<Room> roomNumberList = new List<Room>();
             foreach (var fncHouseNumber in fncHouseNumberList)
             {
@@ -419,6 +387,14 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 }
                 if (string.IsNullOrEmpty(room.state))
                     room.state = "空";
+                foreach (var aaa in fncHouseTypeList)
+                {
+                    if (aaa.FncHouseNumber.Select(x => x.HouseNumber).Contains(room.title))
+                    {
+                        room.houseType = aaa.HouseType;
+                        break;
+                    }
+                }
                 roomNumberList.Add(room);
             }
             foreach (var fncHouseType in fncHouseTypeList)
@@ -443,6 +419,14 @@ namespace JJNG.Web.Areas.Branch.Controllers
                         room.isClean = rrr.isClean;
                         if (room.state != "空")
                             count2++;
+                        foreach (var aaa in fncHouseTypeList)
+                        {
+                            if (aaa.FncHouseNumber.Select(x => x.HouseNumber).Contains(room.title))
+                            {
+                                room.houseType = aaa.HouseType;
+                                break;
+                            }
+                        }
                         roomList.Add(room);
                     }
                 }
@@ -567,15 +551,22 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 tempevent.TotalPrice = f.TotalPrice;
                 tempevent.UnitPrice = f.UnitPrice;
                 if (tempevent.IsFinance)
-                    tempevent.editable = true;  //临时
+                    tempevent.editable = false;  //临时
                 else
                     tempevent.editable = true;
-
+                foreach (var aaa in fncHouseTypeList)
+                {
+                    if (aaa.FncHouseNumber.Select(x => x.HouseNumber).Contains(tempevent.HouseNumber))
+                    {
+                        tempevent.houseType = aaa.HouseType;
+                        break;
+                    }
+                }
                 events.Add(tempevent);
             }
             #endregion
 
-            return Json(new { events, resources1, resources2, channel });
+            return Json(new { events, resources1, resources2, channel, numberCollet });
         }
 
         public async Task<JsonResult> GetResources([FromBody]BranchModel branchModel)
@@ -593,6 +584,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var fncHouseTypeList = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fncBranch.BranchId).ToList();
             var typeCollet = fncHouseTypeList.Select(x => x.HouseTypeId).ToArray();
             var fncHouseNumberList = _context.FncHouseNumber.Where(x => typeCollet.Contains(x.HouseTypeId)).ToList();
+            var numberCollet = fncHouseNumberList.Select(x => new { x.HouseNumberId, x.HouseNumber }).ToList();
             List<Room> roomNumberList = new List<Room>();
             foreach (var fncHouseNumber in fncHouseNumberList)
             {
@@ -614,6 +606,14 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 }
                 if (string.IsNullOrEmpty(room.state))
                     room.state = "空";
+                foreach (var aaa in fncHouseTypeList)
+                {
+                    if (aaa.FncHouseNumber.Select(x => x.HouseNumber).Contains(room.title))
+                    {
+                        room.houseType = aaa.HouseType;
+                        break;
+                    }
+                }
                 roomNumberList.Add(room);
             }
             foreach (var fncHouseType in fncHouseTypeList)
@@ -638,6 +638,14 @@ namespace JJNG.Web.Areas.Branch.Controllers
                         room.isClean = rrr.isClean;
                         if (room.state != "空")
                             count2++;
+                        foreach (var aaa in fncHouseTypeList)
+                        {
+                            if (aaa.FncHouseNumber.Select(x => x.HouseNumber).Contains(room.title))
+                            {
+                                room.houseType = aaa.HouseType;
+                                break;
+                            }
+                        }
                         roomList.Add(room);
                     }
                 }
@@ -669,7 +677,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             }
             #endregion
 
-            return Json(new { resources1, resources2, channel });
+            return Json(new { resources1, resources2, channel, numberCollet });
         }
 
         public static TChild AutoCopy<TParent, TChild>(TParent parent) where TChild : TParent, new()

@@ -5,71 +5,119 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JJNG.Data.Branch
 {
-    [Table("Brh_StewardAccounts")]
-    public partial class BrhStewardAccounts
+    [Table("Brh_FrontDeskAccounts")]
+    public partial class BrhFrontDeskAccounts
     {
-        public BrhStewardAccounts()
+        public BrhFrontDeskAccounts()
         {
-            BrhStewardPaymentDetial = new HashSet<BrhStewardPaymentDetial>();
+            BrhFrontPaymentDetial = new HashSet<BrhFrontPaymentDetial>();
         }
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
-        public long StewardAccountsId { get; set; }
+        public long FrontDeskAccountsId { get; set; }
+
         [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         [Display(Name = "录入日期")]
         public DateTime EnteringDate { get; set; }
+
+        [Required]
         [Display(Name = "房号")]
         public string HouseNumber { get; set; }
+
         [Required]
-        [Display(Name = "客户名称")]
+        [Display(Name = "入住人")]
         public string CustomerName { get; set; }
+
+        [Display(Name ="手机号")]
+        public string Phone { get; set; }
+
         [Required]
-        [Display(Name = "外销分类")]
-        public string ProductType { get; set; }
+        [Display(Name = "入住人数")]
+        public int CustomerCount { get; set; }
+
         [Required]
-        [Display(Name = "外销名称")]
-        public string Product { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        [Display(Name = "入住日期")]
+        public DateTime StartDate { get; set; }
+
         [Required]
-        [Display(Name = "成本")]
-        public decimal Cost { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+        [Display(Name = "离店日期")]
+        public DateTime EndDate { get; set; }
+
+        [Display(Name = "间夜")]
+        public int Count { get; set; }
+
         [Required]
-        [Display(Name = "销售金额")]
-        public decimal Amount { get; set; }
+        [Display(Name = "订房渠道")]
+        public string Channel { get; set; }
+
+        [Display(Name = "颜色")]
+        public string Color { get; set; }
+
         [Required]
-        [Display(Name = "利润")]
-        public decimal Profit { get; set; }
+        [Display(Name = "单价")]
+        public decimal UnitPrice { get; set; }
+
+        [Required]
+        [Display(Name = "总价")]
+        public decimal TotalPrice { get; set; }
+
         [Required]
         [Display(Name = "应收款")]
         public decimal Receivable { get; set; }
+
         [Required]
         [Display(Name = "已收款")]
         public decimal Received { get; set; }
+
         [Required]
         [Display(Name = "是否结账")]
         public bool IsFinish { get; set; }
+
         [Required]
         [Display(Name = "录单人")]
         public string EnteringStaff { get; set; }
-        [Display(Name = "前台")]
-        public string FrontDesk { get; set; }
-        [Display(Name = "前台小组长")]
+
+        [Display(Name = "管家")]
+        public string Steward { get; set; }
+
+        [Display(Name = "前台组长")]
         public string FrontDeskLeader { get; set; }
-        [Display(Name = "管家小组长")]
+
+        [Display(Name = "管家组长")]
         public string StewardLeader { get; set; }
+
         [Display(Name = "对应关系")]
         public string RelationStaff { get; set; }
+
         [Required]
-        [Display(Name = "管家审核")]
-        public bool IsSteward { get; set; }
+        [Display(Name = "前台审核")]
+        public bool IsFront { get; set; }
+
         [Required]
         [Display(Name = "财务审核")]
         public bool IsFinance { get; set; }
+
         [Required]
         [Display(Name = "分店")]
         public string Branch { get; set; }
+
         [Display(Name = "备注")]
         public string Note { get; set; }
-        public ICollection<BrhStewardPaymentDetial> BrhStewardPaymentDetial { get; set; }
+
+        [Display(Name = "订单状态")]
+        public StateType State { get; set; }
+
+        public ICollection<BrhFrontPaymentDetial> BrhFrontPaymentDetial { get; set; }
+    }
+
+    public enum StateType
+    {
+        已预订=0,
+        已入住=1,
+        已退房=2,
+        已删除
     }
 }

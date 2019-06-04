@@ -29,8 +29,14 @@ namespace JJNG.Data.Branch
         public string Department { get; set; }
         [Display(Name = "隶属")]
         public string Branch { get; set; }
+        [Display(Name = "用途")]
+        public PurposeType Purpose { get; set; }
 
         public ICollection<BrhImprestRecord> BrhImprestRecord { get; set; }
-
+    }
+    public enum PurposeType
+    {
+        默认 = 0,
+        线上推广 = 1
     }
 }

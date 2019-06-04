@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 namespace JJNG.Web.Areas.Finance.Controllers
 {
     [Area("Finance")]
@@ -21,10 +20,10 @@ namespace JJNG.Web.Areas.Finance.Controllers
         private readonly AppIdentityDbContext _identityContext;
         private UserManager<AppIdentityUser> _userManager;
 
-        public FncExpendRecordController(AppDbContext context, AppIdentityDbContext identitycontext, UserManager<AppIdentityUser> usrMgr)
+        public FncExpendRecordController(AppDbContext context, AppIdentityDbContext identityContext, UserManager<AppIdentityUser> usrMgr)
         {
             _context = context;
-            _identityContext = identitycontext;
+            _identityContext = identityContext;
             _userManager = usrMgr;
         }
 
@@ -39,28 +38,59 @@ namespace JJNG.Web.Areas.Finance.Controllers
             fncBranch.BranchId = branchId;
             fncBranch.Count = count;
             var list_branch = await _context.FncBranch.Where(x => x.BranchName != "运营中心" && x.BranchName != "町隐学院").ToListAsync();
-
-            List<BrhExpendRecord> brhExpendRecord = new List<BrhExpendRecord>();
-            brhExpendRecord = await _context.BrhExpendRecord.Where(x => x.Branch == branchName).ToListAsync();
-
-            return View(Tuple.Create<List<BrhExpendRecord>, List<FncBranch>>(brhExpendRecord, list_branch));
+            return View(Tuple.Create<FncBranch, List<FncBranch>>(fncBranch, list_branch));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(List<int> ids)
+        public async Task<JsonResult> GetExpendList([FromBody]FDAParams fdaParams)
         {
-            if (ids.Count > 0)
+            var expendList = await _context.BrhExpendRecord.Where(x => x.Branch == fdaParams.BranchName  && DateTime.Compare(fdaParams.StartDate, x.EnteringDate) <= 0 && DateTime.Compare(x.EnteringDate, fdaParams.EndDate) < 0).ToListAsync();
+            var pie1List = expendList.GroupBy(x => new { x.ExpendType }).Select(x => new
             {
-                _context.BrhExpendRecord.Where(x => ids.Contains(x.ExpendRecordId) && !x.IsFinance).ToList().ForEach(x =>
+                ExpendType = x.Key.ExpendType,
+                Total = x.Sum(s => s.Amount),
+            }).ToList();
+
+            var days = (fdaParams.EndDate - fdaParams.StartDate).Days;
+            List<FncMonthData> dailyList = new List<FncMonthData>();
+            for (var i = 0; i < days; i++)
+            {
+                var daily = new FncMonthData();
+                daily.Month = fdaParams.StartDate.AddDays(i).Date;
+                daily.HouseAmount = expendList.Where(x => DateTime.Compare(x.EnteringDate.Date, daily.Month) == 0).Select(x => x.Amount).Sum();
+                dailyList.Add(daily);
+            }
+            return Json(new { expendList, pie1List, dailyList });
+        }
+
+        public async Task<JsonResult> UpdateList([FromBody]FDAParams fdaParams)
+        {
+            if (fdaParams.Ids.Count > 0)
+            {
+                _context.BrhExpendRecord.Where(x => fdaParams.Ids.Contains(x.ExpendRecordId) && !x.IsFinance).ToList().ForEach(x =>
                 {
                     x.IsFinance = true;
                     _context.Update(x);
                 });
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(Index));
+
+            var expendList = await _context.BrhExpendRecord.Where(x => x.Branch == fdaParams.BranchName && DateTime.Compare(fdaParams.StartDate, x.EnteringDate) <= 0 && DateTime.Compare(x.EnteringDate, fdaParams.EndDate) < 0).ToListAsync();
+            var pie1List = expendList.GroupBy(x => new { x.ExpendType }).Select(x => new
+            {
+                ExpendType = x.Key.ExpendType,
+                Total = x.Sum(s => s.Amount),
+            }).ToList();
+
+            var days = (fdaParams.EndDate - fdaParams.StartDate).Days;
+            List<FncMonthData> dailyList = new List<FncMonthData>();
+            for (var i = 0; i < days; i++)
+            {
+                var daily = new FncMonthData();
+                daily.Month = fdaParams.StartDate.AddDays(i).Date;
+                daily.HouseAmount = expendList.Where(x => DateTime.Compare(x.EnteringDate.Date, daily.Month) == 0).Select(x => x.Amount).Sum();
+                dailyList.Add(daily);
+            }
+            return Json(new { expendList, pie1List, dailyList });
         }
     }
 }

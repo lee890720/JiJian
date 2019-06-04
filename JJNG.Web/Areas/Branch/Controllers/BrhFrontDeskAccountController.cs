@@ -81,6 +81,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                     daily.Average = daily.HouseAmount / daily.HouseCount;
                 else
                     daily.Average = 0;
+                daily.SaleAmount = dailyList.Select(x => x.HouseAmount).Sum() + daily.HouseAmount;
                 dailyList.Add(daily);
             }
             return Json(new { frontList, pie1List, pie2List, dailyList });

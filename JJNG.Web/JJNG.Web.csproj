@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Areas\Branch\Controllers\___5F7A.tmp" />
     <None Remove="Properties\PublishProfiles\leeinfo - Web Deploy.pubxml" />
     <None Remove="Properties\PublishProfiles\leeinfoweb - Web Deploy.pubxml" />
   </ItemGroup>
@@ -34,7 +35,7 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.5" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Validation" Version="3.2.11" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
 
@@ -46,6 +47,7 @@
     <Folder Include="Areas\Personnel\Models\" />
     <Folder Include="Connected Services\" />
     <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="wwwroot\.well-known\pki-validation\" />
     <Folder Include="wwwroot\lib\icomoon\" />
   </ItemGroup>
 
@@ -94,6 +96,9 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Branch\Views\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Finance\Views\FncScalp\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Finance\Views\FncFrontCalendar2\Index.cshtml">
@@ -150,7 +155,13 @@
     <Content Update="Areas\Personnel\_ViewStart.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Shared\Components\Branch2\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Shared\Components\Menu\Default.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Shared\_Layout4.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Shared\_Layout3.cshtml">

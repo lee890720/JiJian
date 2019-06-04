@@ -1,20 +1,18 @@
-﻿using System;
+﻿using JJNG.Data;
+using JJNG.Data.AppIdentity;
+using JJNG.Data.Branch;
+using JJNG.Data.Finance;
+using JJNG.Web.Areas.Branch.Models;
+using JJNG.Web.Areas.Finance.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using JJNG.Data;
-using JJNG.Data.Branch;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using JJNG.Data.AppIdentity;
-using Microsoft.AspNetCore.Identity;
-using JJNG.Web;
-using JJNG.Web.Areas.Branch.Models;
-using JJNG.Data.Finance;
-using JJNG.Web.Areas.Finance.Models;
 
 namespace JJNG.Web.Areas.Branch.Controllers
 {
@@ -445,13 +443,19 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 if (fncMonthData2 != null)
                 {
                     monthData1.环比增长额 = fncMonthData1.HouseAmount - fncMonthData2.HouseAmount;
-                    monthData1.环比增长率 = (double)monthData1.环比增长额 / (double)fncMonthData1.HouseAmount;
+                    monthData1.环比增长率 = (double)monthData1.环比增长额 / (double)fncMonthData2.HouseAmount;
                     monthData1.出环比增长额 = (decimal)(fncMonthData1.Rate - fncMonthData2.Rate);
-                    monthData1.出环比增长率 = (double)monthData1.出环比增长额 / fncMonthData1.Rate;
+                    monthData1.出环比增长率 = (double)monthData1.出环比增长额 / fncMonthData2.Rate;
                     monthData1.均环比增长额 = fncMonthData1.Average - fncMonthData2.Average;
-                    monthData1.均环比增长率 = (double)monthData1.均环比增长额 / (double)fncMonthData1.Average;
+                    monthData1.均环比增长率 = (double)monthData1.均环比增长额 / (double)fncMonthData2.Average;
                     monthData1.有环比增长额 = fncMonthData1.ValidAverage - fncMonthData2.ValidAverage;
-                    monthData1.有环比增长率 = (double)monthData1.有环比增长额 / (double)fncMonthData1.ValidAverage;
+                    monthData1.有环比增长率 = (double)monthData1.有环比增长额 / (double)fncMonthData2.ValidAverage;
+                    monthData1.支环比增长额 = fncMonthData1.Expend - fncMonthData2.Expend;
+                    monthData1.支环比增长率= (double)monthData1.支环比增长额 / (double)fncMonthData2.Expend;
+                    monthData1.外环比增长额 = fncMonthData1.SaleAmount - fncMonthData2.SaleAmount;
+                    monthData1.外环比增长率 = (double)monthData1.外环比增长额 / (double)fncMonthData2.SaleAmount;
+                    monthData1.外利环比增长额 = fncMonthData1.SaleProfit - fncMonthData2.SaleProfit;
+                    monthData1.外利环比增长率 = (double)monthData1.外利环比增长额 / (double)fncMonthData2.SaleProfit;
                 }
                 else
                 {
@@ -463,18 +467,30 @@ namespace JJNG.Web.Areas.Branch.Controllers
                     monthData1.均环比增长率 = 0;
                     monthData1.有环比增长额 = 0;
                     monthData1.有环比增长率 = 0;
+                    monthData1.支环比增长额 = 0;
+                    monthData1.支环比增长率 = 0;
+                    monthData1.外环比增长额 = 0;
+                    monthData1.外环比增长率 = 0;
+                    monthData1.外利环比增长额 = 0;
+                    monthData1.外利环比增长率 =0;
                 }
                 var fncMonthData3 = fncMonthDataList.SingleOrDefault(x => x.Month.ToString("yyyy-MM") == fncMonthData1.Month.AddYears(-1).ToString("yyyy-MM"));
                 if (fncMonthData3 != null)
                 {
                     monthData1.同比增长额 = fncMonthData1.HouseAmount - fncMonthData3.HouseAmount;
-                    monthData1.同比增长率 = (double)monthData1.同比增长额 / (double)fncMonthData1.HouseAmount;
+                    monthData1.同比增长率 = (double)monthData1.同比增长额 / (double)fncMonthData3.HouseAmount;
                     monthData1.出同比增长额 = (decimal)(fncMonthData1.Rate - fncMonthData3.Rate);
-                    monthData1.出同比增长率 = (double)monthData1.出同比增长额 / fncMonthData1.Rate;
+                    monthData1.出同比增长率 = (double)monthData1.出同比增长额 / fncMonthData3.Rate;
                     monthData1.均同比增长额 = fncMonthData1.Average - fncMonthData3.Average;
-                    monthData1.均同比增长率 = (double)monthData1.均同比增长额 / (double)fncMonthData1.Average;
+                    monthData1.均同比增长率 = (double)monthData1.均同比增长额 / (double)fncMonthData3.Average;
                     monthData1.有同比增长额 = fncMonthData1.ValidAverage - fncMonthData3.ValidAverage;
-                    monthData1.有同比增长率 = (double)monthData1.有同比增长额 / (double)fncMonthData1.ValidAverage;
+                    monthData1.有同比增长率 = (double)monthData1.有同比增长额 / (double)fncMonthData3.ValidAverage;
+                    monthData1.支同比增长额 = fncMonthData1.Expend - fncMonthData3.Expend;
+                    monthData1.支同比增长率 = (double)monthData1.支同比增长额 / (double)fncMonthData3.Expend;
+                    monthData1.外同比增长额 = fncMonthData1.SaleAmount - fncMonthData3.SaleAmount;
+                    monthData1.外同比增长率 = (double)monthData1.外同比增长额 / (double)fncMonthData3.SaleAmount;
+                    monthData1.外利同比增长额 = fncMonthData1.SaleProfit - fncMonthData3.SaleProfit;
+                    monthData1.外利同比增长率 = (double)monthData1.外利同比增长额 / (double)fncMonthData3.SaleProfit;
                 }
                 else
                 {
@@ -486,6 +502,12 @@ namespace JJNG.Web.Areas.Branch.Controllers
                     monthData1.均同比增长率 = 0;
                     monthData1.有同比增长额 = 0;
                     monthData1.有同比增长率 = 0;
+                    monthData1.支同比增长额 = 0;
+                    monthData1.支同比增长率 = 0;
+                    monthData1.外同比增长额 = 0;
+                    monthData1.外同比增长率 = 0;
+                    monthData1.外利同比增长额 = 0;
+                    monthData1.外利同比增长率 = 0;
                 }
                 monthDataList.Add(monthData1);
             }

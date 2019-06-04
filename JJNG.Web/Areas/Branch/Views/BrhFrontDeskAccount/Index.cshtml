@@ -236,6 +236,9 @@
                                 <th>
                                     出租率
                                 </th>
+                                <th>
+                                    本月累计房费收入
+                                </th>
                             </tr>
                         </thead>
                     </table>
@@ -1048,6 +1051,7 @@
                         { data: "average" },
                         { data: "validAverage" },
                         { data: "rate" },
+                        {data:"saleAmount"}
                     ],
                     columnDefs: [
                         {
@@ -1058,7 +1062,14 @@
                             }
                         },
                         {
-                            targets: [1, 4, 5],
+                            targets: [1],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data);
+                                return result.toFixed(2);
+                            }
+                        },
+                        {
+                            targets: [ 4, 5],
                             render: function (data, type, row, meta) {
                                 var result = parseFloat(data);
                                 return Math.round(result);
@@ -1076,6 +1087,13 @@
                             render: function (data, type, row, meta) {
                                 var result = parseFloat(data) * 100;
                                 return result.toFixed(2) + " %";
+                            }
+                        },
+                        {
+                            targets: [7],
+                            render: function (data, type, row, meta) {
+                                var result = parseFloat(data);
+                                return result.toFixed(2);
                             }
                         },
                     ],

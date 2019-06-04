@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,6 +38,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             foreach(var t in tempAccounts)
             {
                 var temp = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == t.ImprestAccountsId && x.IsFinance && !x.IsMove).Sum(x => x.Amount);
+                temp += _context.BrhScalp.Where(x => x.ImprestAccountsId == t.ImprestAccountsId && x.IsFinance && !x.IsMove).Sum(x => x.TotalPrice);
                 t.MoveAmount = temp;
                 _context.Update(t);
             }
@@ -62,7 +64,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ImprestAccountsId,ImprestAccountsName,Balance,Equity,Manager,Department,Branch")] BrhImprestAccounts brhImprestAccounts)
+        public async Task<IActionResult> Create([Bind("ImprestAccountsId,ImprestAccountsName,Balance,Equity,Manager,Department,Branch,Purpose")] BrhImprestAccounts brhImprestAccounts)
         {
             if (ModelState.IsValid)
             {
@@ -96,7 +98,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ImprestAccountsId,ImprestAccountsName,Balance,Equity,Manager,Department,Branch")] BrhImprestAccounts brhImprestAccounts)
+        public async Task<IActionResult> Edit(int id, [Bind("ImprestAccountsId,ImprestAccountsName,Balance,Equity,Manager,Department,Branch,Purpose")] BrhImprestAccounts brhImprestAccounts)
         {
             if (id != brhImprestAccounts.ImprestAccountsId)
             {
@@ -108,6 +110,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 try
                 {
                     var total = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == brhImprestAccounts.ImprestAccountsId && !x.IsMove).Sum(x => x.Amount);
+                    total += _context.BrhScalp.Where(x => x.ImprestAccountsId == brhImprestAccounts.ImprestAccountsId && !x.IsMove).Sum(x => x.TotalPrice);
                     brhImprestAccounts.Equity = brhImprestAccounts.Balance - total;
                     _context.Update(brhImprestAccounts);
                     await _context.SaveChangesAsync();
@@ -151,6 +154,47 @@ namespace JJNG.Web.Areas.Finance.Controllers
         {
             var brhImprestAccounts = await _context.BrhImprestAccounts.SingleOrDefaultAsync(m => m.ImprestAccountsId == id);
             _context.BrhImprestAccounts.Remove(brhImprestAccounts);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Move(int? id)
+        {
+            //var brhScalp = _context.BrhScalp.Where(x => x.ImprestAccountsId == id&&x.IsFinance&&!x.IsMove).ToList();
+            //foreach(var b in brhScalp)
+            //{
+            //    b.IsMove = true;
+            //}
+            //_context.UpdateRange(brhScalp);
+            //await _context.SaveChangesAsync();
+
+            var now = "-(" + TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time")).ToString("yyyy-MM-dd HH:mm") + ")-";
+            _context.BrhScalp.Where(x => x.ImprestAccountsId == id && x.IsFinance && !x.IsMove).ToList().ForEach(x =>
+            {
+                x.IsMove = true;
+                _context.Update(x);
+                var expendRecord = new BrhExpendRecord();
+                expendRecord.EnteringDate = x.EnteringDate;
+                expendRecord.ExpendType = "线上推广";
+                expendRecord.Purpose = "刷单";
+                expendRecord.Amount = x.Commission;
+                expendRecord.PaymentType = "推广备用金";
+                expendRecord.ConnectNumber = "";
+                expendRecord.Branch = x.Branch;
+                expendRecord.EnteringStaff = x.EnteringStaff;
+                expendRecord.IsFinance = x.IsFinance;
+                expendRecord.Note = "备用金转入" + now + x.Note;
+                _context.Add(expendRecord);
+            });
+            _context.SaveChanges();
+
+            var total = _context.BrhScalp.Where(x => x.ImprestAccountsId == id && !x.IsMove).Sum(x => x.TotalPrice);
+            var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.ImprestAccountsId == id);
+            brhImprestAccount.Equity = brhImprestAccount.Balance - total;
+            _context.Update(brhImprestAccount);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

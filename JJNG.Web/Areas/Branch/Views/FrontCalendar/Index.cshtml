@@ -98,6 +98,7 @@
         <div class="col-md-12">
             <div class="input-group" style="margin-bottom:10px;">
                 <div class="input-group-btn">
+                    <button id="addConnect" type="button" class="btn btn-primary">关联订单</button>
                     <button id="addPay" type="button" class="btn btn-primary">增加收款</button>
                     <button id="isFinish" type="button" class="btn btn-primary">未结账</button>
                     <button id="isFront" type="button" class="btn btn-primary">前台未审</button>
@@ -107,29 +108,25 @@
                         function selectState() {
                             var vs = $('#form-stateType option:selected').val();
                             var vt = $('#form-stateType option:selected').html();
-                            if(vs==0)
-                            {
+                            if (vs == 0) {
                                 $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-success");
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").addClass("btn-primary");
                             }
-                            if(vs==1)
-                            {
+                            if (vs == 1) {
                                 $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-success");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").addClass("btn-warning");
                             }
-                            if(vs==2)
-                            {
+                            if (vs == 2) {
                                 $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").addClass("btn-success");
                             }
-                            if(vs==3)
-                            {
+                            if (vs == 3) {
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").removeClass("btn-success");
@@ -156,6 +153,11 @@
             <div class="input-group" style="margin-bottom:10px">
                 <span class="input-group-addon">金额</span>
                 <input id="payAmount" type="text" value="0" class="form-control  clear-data" />
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div id="selectdiv" class="form-group" style="width:100%">
+
             </div>
         </div>
     </form>
@@ -185,13 +187,35 @@
     <script src="~/lib/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js" charset="utf-8"></script>
     <script>
         $(function () {
+            var SelectData = [];
+            function SelectFunc(data,id) {
+                $("#selectdiv").append(
+                    '<select id="selectNumbers" class="form-control select2" multiple="multiple" data-placeholder="请选择关联房间" style="width: 100%;"></select>'
+                );
+                $("#selectNumbers").select2();
+                var r = 0;
+                data.forEach(e => {
+                    if(e.houseNumber!=id)
+                    $("#selectNumbers").append('<option value="' + e.houseNumber + '">' + e.houseNumber + '</option>');
+                    console.log(e.houseNumber);
+                });
+            };
+            function getMultiSelectVal(id) {
+                //return $.map($("#" + id).select2('data'), function (value) {
+                //    return value.id
+                //}).join(",");
+                return $.map($("#" + id).select2('data'), function (value) {
+                    return value.id
+                });
+            }
+
             var _user=@Html.Raw(Json.Serialize(Model));
             var _roles=@Json.Serialize(list_roles);
             var _channel =[];
             var _resourcesData = [];
             var _resourceId = "";
             var date = new Date();
-            var _startdate = moment(date).add(-3,"days").format("YYYY-MM-DD");
+            var _startdate = moment(date).add(-2,"days").format("YYYY-MM-DD");
 
             //#region Ajax optionAjax
             var optionAjax = {
@@ -222,6 +246,7 @@
                     endDate:moment(_startdate).add(31,"days").format("YYYY-MM-DD"),
                 });
                 optionAjax.success = function (result) {
+                    SelectData = result.numberCollet;
                     _channel=result.channel;
                     if(result.resources1.isType)
                         _resourcesData.push(result.resources1);
@@ -371,6 +396,9 @@
                     selectable: true,
                     selectHelper: true,
                     select: function (start, end, jsEvent, view, resource) {
+                        $("#addConnect").removeAttr('disabled');
+                        $("#addConnect").show();
+                        $("#selectdiv").html("");
                         $(".clear-data").removeAttr("disabled", "disabled");
                         $('.btn').css("height",34);
                         $("#form-stateType").css("height",34);
@@ -391,6 +419,10 @@
                         $('#isFront').html("前台未审");
                         $('#isFinance').html("财务未审");
                         //#region change/keyup事件
+                        $("#addConnect").on('click', function () {
+                            SelectFunc(SelectData, resource.id);
+                            $("#addConnect").attr('disabled', "true");
+                        });
                         $("#addPay").on('click', function () {
                             $("#addPay").removeClass("btn-primary");
                             $("#addPay").addClass("btn-warning");
@@ -450,7 +482,11 @@
                         });
                         //#endregion
                         var d = dialog({
-                            title: "新建订单",
+                            title: "新建订单 " + " " + resource.houseType + " - " + resource.id + " < " + moment(start).format("MM-DD") + " ~ " + moment(end).format("MM-DD") + " >",
+                            //lock: true,//是否锁定屏幕
+                            drag: true,//是否可以拖动
+                            //resize: false,//是否可以拖动改变窗口大小
+                            //esc: false,//是否可以通过按esc键关闭窗口
                             content: $("#create-form"),
                             okValue: "确定",
                             ok: function () {
@@ -459,7 +495,7 @@
                                 var unitPrice = $('#form-unitPrice').val();
                                 var totalPrice = $('#form-totalPrice').val();
                                 var channel = $('#form-channel').val();
-                                var phone=$('#form-phone').val();
+                                var phone = $('#form-phone').val();
                                 var receivable = $('#form-receivable').val();
                                 var received = $('#form-received').val();
                                 var steward = $("#form-steward").val();
@@ -467,7 +503,7 @@
                                 var stewardLeader = $('#form-stewardLeader').val();
                                 var relationStaff = $('#form-relationStaff').val();
                                 var note = $('#form-note').val();
-                                var state=$('#form-stateType  option:selected').val();
+                                var state = $('#form-stateType  option:selected').val();
                                 var payDate = $('#payDate').val();
                                 var payWay = $('#payWay').val();
                                 var payAmount = $('#payAmount').val();
@@ -491,25 +527,25 @@
                                     contentType: "application/json; charset=utf-8",
                                     dataType: "json",
                                     data: JSON.stringify({
-                                        id:01,
-                                        resourceId:resource.id,
-                                        allDay:true,
-                                        editable:true,
-                                        start:moment(start).format("YYYY-MM-DD"),
-                                        end :moment(end).format("YYYY-MM-DD"),
-                                        frontDeskAccountsId:01,
+                                        id: 01,
+                                        resourceId: resource.id,
+                                        allDay: true,
+                                        editable: true,
+                                        start: moment(start).format("YYYY-MM-DD"),
+                                        end: moment(end).format("YYYY-MM-DD"),
+                                        frontDeskAccountsId: 01,
                                         houseNumber: resource.id,
-                                        count:DateDiff(moment(start).format("YYYY-MM-DD"),moment(end).format("YYYY-MM-DD")),
+                                        count: DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD")),
                                         startDate: moment(start).format("YYYY-MM-DD"),
                                         endDate: moment(end).format("YYYY-MM-DD"),
-                                        enteringDate:moment().format("YYYY-MM-DD"),
+                                        enteringDate: moment().format("YYYY-MM-DD"),
                                         enteringStaff: _user.userName,
                                         branch: _user.branch,
-                                        title:name+" "+channel,
-                                        customerName:name,
+                                        title: name + " " + channel,
+                                        customerName: name,
                                         customerCount: count,
                                         channel: channel,
-                                        phone:phone,
+                                        phone: phone,
                                         unitPrice: unitPrice,
                                         totalPrice: totalPrice,
                                         receivable: receivable,
@@ -519,125 +555,24 @@
                                         stewardLeader: stewardLeader,
                                         relationStaff: relationStaff,
                                         note: note,
-                                        state:state,
+                                        state: state,
                                         isFinish: isFinish,
                                         isFront: isFront,
                                         color: color,
                                         payDate: payDate,
                                         payWay: payWay,
                                         payAmount: payAmount,
+                                        houseType: resource.houseType,
+                                        selectVal: getMultiSelectVal('selectNumbers')
                                     }),
                                     beforeSend: function () {
                                         $('#modal-default').modal('show');
                                     },
                                     success: function (data) {
-                                        if (data.state != 3&&data.state!=null) {
-                                            $("#calendar").fullCalendar("renderEvent", {
-                                                id: data.id,
-                                                resourceId: resource.id,
-                                                allDay: true,
-                                                editable: true,
-                                                start: moment(start).format("YYYY-MM-DD"),
-                                                end: moment(end).format("YYYY-MM-DD"),
-                                                frontDeskAccountsId: data.id,
-                                                houseNumber: resource.id,
-                                                count: DateDiff(moment(start).format("YYYY-MM-DD"), moment(end).format("YYYY-MM-DD")),
-                                                startDate: moment(start).format("YYYY-MM-DD"),
-                                                endDate: moment(end).format("YYYY-MM-DD"),
-                                                enteringDate: data.enteringDate,
-                                                enteringStaff: _user.userName,
-                                                branch: _user.branch,
-                                                title: name + " " + channel,
-                                                customerName: name,
-                                                customerCount: count,
-                                                channel: channel,
-                                                phone: phone,
-                                                unitPrice: unitPrice,
-                                                totalPrice: totalPrice,
-                                                receivable: receivable,
-                                                received: data.received,
-                                                steward: steward,
-                                                frontDeskLeader: frontDeskLeader,
-                                                stewardLeader: stewardLeader,
-                                                relationStaff: relationStaff,
-                                                note: note,
-                                                state: state,
-                                                isFinish: data.isFinish,
-                                                isFront: isFront,
-                                                color: color,
-                                            }, false);
-                                        }
-                                        if (data.state1 != 3 && data.state1 != null) {
-                                            $("#calendar").fullCalendar("renderEvent", {
-                                                id: data.id1,
-                                                resourceId: resource.id,
-                                                allDay: true,
-                                                editable: true,
-                                                start: data.startDate1,
-                                                end: data.endDate1,
-                                                frontDeskAccountsId: data.id1,
-                                                houseNumber: resource.id,
-                                                count: data.count1,
-                                                startDate: data.startDate1,
-                                                endDate: data.endDate1,
-                                                enteringDate: data.enteringDate1,
-                                                enteringStaff: _user.userName,
-                                                branch: _user.branch,
-                                                title: name + " " + channel,
-                                                customerName: name,
-                                                customerCount: count,
-                                                channel: channel,
-                                                phone: phone,
-                                                unitPrice: unitPrice,
-                                                totalPrice: data.totalPrice1,
-                                                receivable: data.receivable1,
-                                                received: data.received1,
-                                                steward: steward,
-                                                frontDeskLeader: frontDeskLeader,
-                                                stewardLeader: stewardLeader,
-                                                relationStaff: relationStaff,
-                                                note: note,
-                                                state: data.state1,
-                                                isFinish: data.isFinish1,
-                                                isFront: isFront,
-                                                color: color,
-                                            }, false);
-                                        }
-                                        if (data.state2 != 3 && data.state2 != null) {
-                                            $("#calendar").fullCalendar("renderEvent", {
-                                                id: data.id2,
-                                                resourceId: resource.id,
-                                                allDay: true,
-                                                editable: true,
-                                                start: data.startDate2,
-                                                end: data.endDate2,
-                                                frontDeskAccountsId: data.id2,
-                                                houseNumber: resource.id,
-                                                count: data.count2,
-                                                startDate: data.startDate2,
-                                                endDate: data.endDate2,
-                                                enteringDate: data.enteringDate2,
-                                                enteringStaff: _user.userName,
-                                                branch: _user.branch,
-                                                title: name + " " + channel,
-                                                customerName: name,
-                                                customerCount: count,
-                                                channel: channel,
-                                                phone: phone,
-                                                unitPrice: unitPrice,
-                                                totalPrice: data.totalPrice2,
-                                                receivable: data.receivable2,
-                                                received: data.received2,
-                                                steward: steward,
-                                                frontDeskLeader: frontDeskLeader,
-                                                stewardLeader: stewardLeader,
-                                                relationStaff: relationStaff,
-                                                note: note,
-                                                state: data.state2,
-                                                isFinish: data.isFinish2,
-                                                isFront: isFront,
-                                                color: color,
-                                            }, false);
+                                        for (var i = 0; i < data.length; i++) {
+                                            if (data[i].state != 3 && data[i].state != null) {
+                                                $("#calendar").fullCalendar("renderEvent", data[i], false);
+                                            }
                                         }
                                     },
                                     complete: function () {
@@ -744,6 +679,8 @@
                     eventClick: function (event, jsEvent, view) {
                         if(event.isTitle)
                             return;
+                        $("#addConnect").hide();
+                        $("#selectdiv").html("");
                         $(".clear-data").removeAttr("disabled", "disabled");
                         $('.btn').css("height",34);
                         $("#form-stateType").css("height",34);
@@ -814,6 +751,9 @@
                             $("#isFinance").removeClass("btn-warning");
                             $("#isFinance").addClass("btn-primary");
                         }
+                        $("#addConnect").on('click', function () {
+                            SelectFunc(SelectData, event.houseNumber);
+                        });
                         $('#form-name').val(event.customerName);
                         $('#form-count').val(event.customerCount);
                         $('#form-unitPrice').val(event.unitPrice);
@@ -829,19 +769,18 @@
                         $('#form-note').val(event.note);
                         $('#form-stateType').val(event.state);
                         selectState(event.state);
-                        //if (event.isFinance) {
-                        //    $(".clear-data").attr("disabled","disabled");
-                        //    var d = dialog({
-                        //        title: "查看订单",
-                        //        content: $("#create-form"),
-                        //        cancelValue: "关闭",
-                        //        cancel: function () {
-                        //        }
-                        //    });
-                        //    d.width(600).showModal();
-                        //}
-                        //else {
-                        {
+                        if (event.isFinance) {
+                            $(".clear-data").attr("disabled","disabled");
+                            var d = dialog({
+                                title: "查看订单 " + " " + event.houseType + " - " + event.houseNumber + " < " + moment(event.start).format("MM-DD") + " ~ " + moment(event.end).format("MM-DD") + " >",
+                                content: $("#create-form"),
+                                cancelValue: "关闭",
+                                cancel: function () {
+                                }
+                            });
+                            d.width(600).showModal();
+                        }
+                        else {
                             //#region change/keyup事件
                             $("#addPay").on('click', function () {
                                 $("#addPay").removeClass("btn-primary");
@@ -922,7 +861,7 @@
                             //#endregion
                             $(".clear-data").removeAttr("disabled", "disabled");
                             var d = dialog({
-                                title: "修改订单",
+                                title: "修改订单 " + " " + event.houseType + " - " + event.houseNumber + " < " + moment(event.start).format("MM-DD") + " ~ " + moment(event.end).format("MM-DD") + " >",
                                 content: $("#create-form"),
                                 button: [{
                                     value: '收款明细',
@@ -1010,48 +949,16 @@
                                             payDate: payDate,
                                             payWay: payWay,
                                             payAmount: payAmount,
+                                            houseType:event.houseType
                                         }),
                                         beforeSend: function () {
                                             $('#modal-default').modal('show');
                                         },
                                         success: function (data) {
                                             $("#calendar").fullCalendar("removeEvents", event.id);
-                                            if(data.state!=3)
-                                                $("#calendar").fullCalendar("renderEvent", {
-                                                    id:event.id,
-                                                    resourceId:event.resourceId,
-                                                    allDay:event.allDay,
-                                                    editable:event.editable,
-                                                    start:event.start,
-                                                    end :event.end,
-                                                    frontDeskAccountsId:event.frontDeskAccountsId,
-                                                    houseNumber:event.resourceId,
-                                                    count:event.count,
-                                                    startDate: event.startDate,
-                                                    endDate: event.endDate,
-                                                    enteringDate:event.enteringDate,
-                                                    enteringStaff: event.enteringStaff,
-                                                    branch: event.branch,
-                                                    title:name+" "+channel,
-                                                    customerName:name,
-                                                    customerCount: count,
-                                                    channel: channel,
-                                                    phone:phone,
-                                                    unitPrice: unitPrice,
-                                                    totalPrice: totalPrice,
-                                                    receivable: receivable,
-                                                    received: data.received,
-                                                    steward: steward,
-                                                    frontDeskLeader: frontDeskLeader,
-                                                    stewardLeader: stewardLeader,
-                                                    relationStaff: relationStaff,
-                                                    note: note,
-                                                    state:state,
-                                                    isFinish: data.isFinish,
-                                                    isFront: isFront,
-                                                    isFinance:isFinance,
-                                                    color: color,
-                                                }, false);
+                                            if (data.state != 3 && data.state != null) {
+                                                $("#calendar").fullCalendar("renderEvent", data, false);
+                                            }
                                         },
                                         complete: function () {
                                             $('#modal-default').modal('hide');

@@ -50,37 +50,54 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.Branch)
                                 </th>
+                                <th>
+                                    用途
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ImprestAccountsName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Balance)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Equity)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Manager)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Department)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Branch)
-                                    </td>
-                                    <td>
-                                        <a asp-action="Index" asp-controller="BrhImprestRecord" asp-route-area="Branch" asp-route-id="@item.ImprestAccountsId" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-plus"></i> 增加明细
-                                        </a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ImprestAccountsName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Balance)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Equity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Manager)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Department)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Branch)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Purpose)
+                                </td>
+                                <td>
+                                    @{
+                                        if (item.Purpose == PurposeType.默认)
+                                        {
+                                            <a asp-action="Index" asp-controller="BrhImprestRecord" asp-route-area="Branch" asp-route-id="@item.ImprestAccountsId" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                                <i class="glyphicon glyphicon-plus"></i> 增加明细
+                                            </a>
+                                        }
+                                        else if (item.Purpose == PurposeType.线上推广)
+                                        {
+                                            <a asp-action="Index" asp-controller="BrhScalp" asp-route-area="Branch"  class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                                <i class="glyphicon glyphicon-plus"></i> 增加明细
+                                            </a>
+                                        }
+                                    }
+                                </td>
+                            </tr>
                             }
                         </tbody>
                         <tfoot>
