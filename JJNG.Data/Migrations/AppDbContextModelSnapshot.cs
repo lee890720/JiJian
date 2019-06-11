@@ -367,6 +367,9 @@ namespace JJNG.Data.Migrations
 
                     b.Property<decimal>("Commission");
 
+                    b.Property<string>("CustomerName")
+                        .IsRequired();
+
                     b.Property<DateTime>("EndDate");
 
                     b.Property<DateTime>("EnteringDate");

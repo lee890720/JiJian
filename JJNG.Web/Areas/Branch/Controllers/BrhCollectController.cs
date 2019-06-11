@@ -41,7 +41,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             var now = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time"));
             var connectRecord = _context.BrhConnectRecord.Where(x => x.Branch == _user.Branch).OrderByDescending(x => x.EnteringDate).LastOrDefault();
             var brhMemoList = _context.BrhMemo.Where(x=>x.Branch==_user.Branch&&x.IsFinish==false).ToList();
-            var brhImprestAccount = _context.BrhImprestAccounts.SingleOrDefault(x => x.Department == _user.Department && x.Branch == _user.Branch&&string.IsNullOrEmpty(x.Manager));
+            var brhImprestAccount = _context.BrhImprestAccounts.FirstOrDefault(x => x.Department == _user.Department && x.Branch == _user.Branch&&string.IsNullOrEmpty(x.Manager));
             var brhFrontDeskAccounts=_context.BrhFrontDeskAccounts.Where(x => x.Branch == _user.Branch&&DateTime.Compare(x.StartDate,now)<=0&&DateTime.Compare(x.EndDate,now)>0).ToList();
 
             List<BrhCollectModel> brhCollectModel = new List<BrhCollectModel>();

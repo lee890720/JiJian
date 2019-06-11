@@ -19,16 +19,16 @@ namespace JJNG.Web.Controllers
         }
         public IActionResult Index()
         {
-            if (User.IsInRole("前台")|| User.IsInRole("前台审核"))
-                return Redirect("/Branch/FrontCalendar");
-            if (User.IsInRole("管家"))
-                return Redirect("/Branch/BrhStewardAccount");
-            if (User.IsInRole("财务"))
+            if (User.IsInRole("Admins"))
                 return Redirect("/Finance/FncFrontCalendar");
             if (User.IsInRole("人事"))
-                return Redirect("/AppIdentity/UserAdmin");
-            if (User.IsInRole("Admins"))
-                return Redirect("/AppIdentity/UserAdmin");
+                return Redirect("/Finance/FncFrontCalendar");
+            if (User.IsInRole("财务"))
+                return Redirect("/Finance/FncFrontCalendar");
+            if (User.IsInRole("管家"))
+                return Redirect("/Branch/FrontCalendar");
+            if (User.IsInRole("前台")|| User.IsInRole("前台审核"))
+                return Redirect("/Branch/FrontCalendar");
             return View();
         }
 

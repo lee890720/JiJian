@@ -32,7 +32,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
         public async Task<IActionResult> Index()
         {
-   AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
+            AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
             ViewData["UserName"] = _user.UserName;
             ViewData["Branch"] = _user.Branch;
             return View(await _context.BrhExpendRecord.Where(x => x.Branch == _user.Branch).ToListAsync());
@@ -75,14 +75,14 @@ namespace JJNG.Web.Areas.Branch.Controllers
             ViewData["UserName"] = _user.UserName;
             ViewData["Branch"] = _user.Branch;
             var list_paymenttype = _context.FncPaymentType.ToList();
-            ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType",brhExpendRecord.PaymentType);
+            ViewData["PaymentType"] = new SelectList(list_paymenttype, "PaymentType", "PaymentType", brhExpendRecord.PaymentType);
             var list_expendtype = _context.FncExpendType.ToList();
-            ViewData["ExpendType"] = new SelectList(list_expendtype, "ExpendType", "ExpendType",brhExpendRecord.ExpendType);
+            ViewData["ExpendType"] = new SelectList(list_expendtype, "ExpendType", "ExpendType", brhExpendRecord.ExpendType);
             if (brhExpendRecord == null)
             {
                 return NotFound();
             }
-               return PartialView("~/Areas/Branch/Views/BrhExpendRecord/CreateEdit.cshtml", brhExpendRecord);
+            return PartialView("~/Areas/Branch/Views/BrhExpendRecord/CreateEdit.cshtml", brhExpendRecord);
         }
 
         [HttpPost]
@@ -115,7 +115,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-                return PartialView("~/Areas/Branch/Views/BrhExpendRecord/CreateEdit.cshtml", brhExpendRecord);
+            return PartialView("~/Areas/Branch/Views/BrhExpendRecord/CreateEdit.cshtml", brhExpendRecord);
         }
 
         public async Task<IActionResult> Delete(int? id)

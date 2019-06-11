@@ -20,6 +20,10 @@ namespace JJNG.Data.Branch
         public DateTime EnteringDate { get; set; }
 
         [Required]
+        [Display(Name = "客户名称")]
+        public string CustomerName { get; set; }
+
+        [Required]
         [Display(Name = "房号")]
         public string HouseNumber { get; set; }
 

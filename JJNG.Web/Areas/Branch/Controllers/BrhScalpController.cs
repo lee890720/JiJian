@@ -275,7 +275,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 var tempevent = new Event2();
                 tempevent.id = f.ScalpId.ToString();
                 tempevent.resourceId = f.HouseNumber;
-                tempevent.title =  f.Channel;
+                tempevent.title =  f.CustomerName+" "+f.Channel;
                 tempevent.allDay = true;
                 tempevent.start = f.StartDate.Date.ToString();
                 tempevent.end = f.EndDate.Date.ToString();
@@ -286,6 +286,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
                 tempevent.EnteringDate = f.EnteringDate;
                 tempevent.Branch = f.Branch;
                 tempevent.Channel = f.Channel;
+                tempevent.CustomerName = f.CustomerName;
                 tempevent.EndDate = f.EndDate;
                 tempevent.EnteringStaff = f.EnteringStaff;
                 tempevent.ScalpId = f.ScalpId;

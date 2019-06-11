@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <None Remove="Areas\Branch\Controllers\___5F7A.tmp" />
+    <None Remove="Areas\Finance\Views\FncExpendRecord\___3902.tmp" />
     <None Remove="Properties\PublishProfiles\leeinfo - Web Deploy.pubxml" />
     <None Remove="Properties\PublishProfiles\leeinfoweb - Web Deploy.pubxml" />
   </ItemGroup>
@@ -96,6 +97,12 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Branch\Views\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Finance\Views\FncExpendRecord\CreateEdit.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Finance\Views\FncExpendRecord\Delete.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Finance\Views\FncScalp\Index.cshtml">

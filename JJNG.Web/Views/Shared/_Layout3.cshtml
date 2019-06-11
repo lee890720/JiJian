@@ -11,7 +11,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@ViewData["Title"] | 既见</title>
+    <title>既见</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="~/css/adminlte.min.css" />
     <link rel="stylesheet" href="~/css/site.min.css" />
@@ -22,7 +22,7 @@
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
         <header id="header" class="main-header">
-            <a asp-action="Index" asp-controller="Home" asp-area="" class="logo">
+            <a asp-action="Index" asp-controller="Home" asp-area="" class="logo hidden-xs">
                 <span class="logo-mini"><b>既见</b></span>
                 <span class="logo-lg"><b>既见</b>MEET</span>
             </a>
@@ -33,7 +33,7 @@
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <li>
-                            <div class="input-group" style="width:400px;margin-right:10px;margin-top:9px">
+                            <div class="input-group hidden-xs" style="width:400px;margin-right:10px;margin-top:9px">
                                 @await Component.InvokeAsync("Branch")
                                 <div class="input-group-btn" style="padding-left:5px">
                                     <button id="isType" type="button" class="btn btn-primary">显示模式</button>
@@ -46,8 +46,19 @@
                                     <button id="next" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-right"></i></button>
                                 </div>
                             </div>
+                            <div class="input-group visible-xs" style="margin-top:8px;margin-right:8px">
+                                <a id="today2" class="btn btn-primary" style="color:white">今天</a>
+                                <a id="prev2" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-left" style="color:white"></i></a>
+                                <a id="next2" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-right" style="color:white"></i></a>
+                            </div>
                         </li>
-                        <li class="dropdown user user-menu">
+                        <li class="dropdown visible-xs">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-exchange"></i>
+                            </a>
+                            @await Component.InvokeAsync("Branch")
+                        </li>
+                        <li class="dropdown user user-menu hidden-xs">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="@_user.UserImage" class="user-image" alt="User Image">
                                 <span class="hidden-xs">@_userManager.GetUserName(User)</span>
@@ -69,9 +80,6 @@
                                     </div>
                                 </li>
                             </ul>
-                        </li>
-                        <li class="hidden-xs">
-                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                         </li>
                     </ul>
                 </div>

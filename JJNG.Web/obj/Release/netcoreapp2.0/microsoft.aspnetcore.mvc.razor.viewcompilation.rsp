@@ -93,6 +93,8 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncEarningType\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncEarningType\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncEarningType\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncExpendRecord\CreateEdit.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncExpendRecord\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncExpendRecord\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncExpendType\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncExpendType\Delete.cshtml
@@ -118,6 +120,7 @@ D:\JiJian\JJNG.Web
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\CreateEdit.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\Delete.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncPaymentType\Index.cshtml
+--file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncScalpList\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncScalp\Index.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncStewardAccount\DetialList.cshtml
 --file=D:\JiJian\JJNG.Web\Areas\Finance\Views\FncStewardAccount\Index.cshtml

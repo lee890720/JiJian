@@ -35,7 +35,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             ViewData["Branch"] = _user.Branch;
             ViewData["Department"] = _user.Department;
             var tempAccounts = _context.BrhImprestAccounts.ToList();
-            foreach(var t in tempAccounts)
+            foreach (var t in tempAccounts)
             {
                 var temp = _context.BrhImprestRecord.Where(x => x.ImprestAccountsId == t.ImprestAccountsId && x.IsFinance && !x.IsMove).Sum(x => x.Amount);
                 temp += _context.BrhScalp.Where(x => x.ImprestAccountsId == t.ImprestAccountsId && x.IsFinance && !x.IsMove).Sum(x => x.TotalPrice);
@@ -45,7 +45,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             _context.SaveChanges();
             var brhImprestAccounts = await _context.BrhImprestAccounts.ToListAsync();
             ViewData["Total"] = brhImprestAccounts.Sum(x => x.Balance);
-            return View( brhImprestAccounts);
+            return View(brhImprestAccounts);
         }
 
         public async Task<IActionResult> Create()
@@ -187,7 +187,8 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 expendRecord.EnteringStaff = x.EnteringStaff;
                 expendRecord.IsFinance = x.IsFinance;
                 expendRecord.Note = "备用金转入" + now + x.Note;
-                _context.Add(expendRecord);
+                if (expendRecord.Amount >0)
+                    _context.Add(expendRecord);
             });
             _context.SaveChanges();
 

@@ -31,6 +31,10 @@
     <form class="form-inline">
         <div class="col-md-12">
             <div class="input-group" style="margin-bottom:10px;width:100%">
+                <span class="input-group-addon" style="width:25%;">姓名</span>
+                <input id="form-name" type="text" class="form-control clear-data">
+            </div>
+            <div class="input-group" style="margin-bottom:10px;width:100%">
                 <span class="input-group-addon" style="width:25%;">单价</span>
                 <input id="form-unitPrice" type="text" class="form-control clear-data">
             </div>
@@ -257,6 +261,7 @@
                             $("#isFinance").removeClass("btn-warning");
                             $("#isFinance").addClass("btn-primary");
                         }
+                        $('#form-name').val(event.customerName);
                         $('#form-unitPrice').val(event.unitPrice);
                         $('#form-totalPrice').val(event.totalPrice);
                         $('#form-channel').val(event.channel);
@@ -324,8 +329,9 @@
                                             enteringDate:event.enteringDate,
                                             enteringStaff: event.enteringStaff,
                                             branch: event.branch,
-                                            title:channel,
+                                            title:name+" "+channel,
                                             channel: channel,
+                                            customerName:name,
                                             unitPrice: unitPrice,
                                             totalPrice: totalPrice,
                                             settlement: settlement,

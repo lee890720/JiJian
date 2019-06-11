@@ -17,6 +17,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">支出明细<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString() &nbsp;·&nbsp; @ViewData["UserName"].ToString()</small></h3>
                     <div class="box-tools pull-right">
+                        <a id="createModal" data-toggle="modal" data-target="#modal-action" class="btn btn-box-tool" asp-action="Create" asp-route-branchName="@Model.Item1.BranchName"> 新增</a>
                         <button title="审核" id="audit" class="btn btn-box-tool"> 审核</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="改变显示行数" style="padding-bottom:6px"><i class="fa fa-sort-numeric-asc"></i></button>
@@ -112,6 +113,7 @@
                                 <th class="col-visible">
                                     备注
                                 </th>
+                                <th></th>
                             </tr>
                         </thead>
                         @*<tfoot>
@@ -546,18 +548,12 @@
                 });
                 optionAjax.success = function (result) {
                     DailyBaseData = result.dailyList;
-                    Render_DailyBaseChart(DailyBaseData, 1);
+                    Render_DailyBaseChart(DailyBaseData);
                     P1legendData = [];
                     P1series1Data = [];
-                    P1series2Data = [];
                     for (var i = 0; i < result.pie1List.length; i++) {
-                        P1legendData.push(result.pie1List[i].channel);
-                        P1series1Data.push({ name: result.pie1List[i].channel, value: result.pie1List[i].aTotal });
-                        P1series2Data.push({ name: result.pie1List[i].channel, value: result.pie1List[i].cTotal });
-                    }
-                    for (var i = 0; i < result.pie2List.length; i++) {
-                        P2legendData.push(result.pie2List[i].payWay);
-                        P2seriesData.push({ name: result.pie2List[i].payWay, value: result.pie2List[i].total });
+                        P1legendData.push(result.pie1List[i].expendType);
+                        P1series1Data.push({ name: result.pie1List[i].expendType, value: result.pie1List[i].total });
                     }
                     var legendShow = false;
                     var centerValue = ['50%', '50%'];
@@ -575,13 +571,10 @@
                             {
                                 data: P1series1Data
                             },
-                            {
-                                data: P1series2Data
-                            },
                         ]
                     });
                     table1.api().clear();
-                    table1.api().rows.add(result.frontList).draw();
+                    table1.api().rows.add(result.expendList).draw();
                 };
                 $.ajax(optionAjax);
             });
@@ -632,7 +625,8 @@
                         { data: "enteringStaff" },
                         { data: "isFinance" },
                         { data: "branch" },
-                        {data:"note"}
+                        { data: "note" },
+                        {data:"isFinance"}
                     ],
                     columnDefs: [
                         {
@@ -660,6 +654,18 @@
                                 else
                                     return '<span>' + '<input type="checkbox" class="icheckbox_flat-blue" style="margin:0px"  name="ids" data-id="' + row.expendRecordId + '">' + " 财务未审" + '</span>';
                                 }
+                        },
+                        {
+                            targets: [-1],
+                            render: function (data, type, row, meta) {
+                                if (data) {
+                                    return '<a class="btn-sm btn-default" style="width:70px;margin-right:5px; min-width:50px;">' + '<i class="fa fa-lock"></i>' + ' 锁定' + '</a>';
+                                }
+                                else {
+                                    return '<a id="editModal" data-toggle="modal" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;" href="/Finance/FncExpendRecord/Edit/' + row.expendRecordId + '">' + '<i class="glyphicon glyphicon-pencil"></i>' + ' 编辑' + '</a>'
+                                        + '<a id="deleteModal" data-toggle="modal" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;" href="/Finance/FncExpendRecord/Delete/' + row.expendRecordId + '">' + '<i class="glyphicon glyphicon-trash"></i>' + ' 删除' + '</a>';
+                                }
+                            }
                         },
                     ],
                     //footerCallback: function (tfoot, data, start, end, display) {
@@ -812,7 +818,6 @@
                 window.onresize = function () {
                     DailyBaseChart.resize();
                     Pie1Chart.resize();
-                    Pie2Chart.resize();
                 }
             }, 200);
         });

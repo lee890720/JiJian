@@ -26,7 +26,6 @@
     }
 </style>
 <div style="background-color:white" id="calendar"></div>
-
 <div id="create-form" style="display:none;">
     <form class="form-inline">
         <div class="col-md-6">
@@ -100,29 +99,25 @@
                         function selectState() {
                             var vs = $('#form-stateType option:selected').val();
                             var vt = $('#form-stateType option:selected').html();
-                            if(vs==0)
-                            {
+                            if (vs == 0) {
                                 $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-success");
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").addClass("btn-primary");
                             }
-                            if(vs==1)
-                            {
+                            if (vs == 1) {
                                 $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-success");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").addClass("btn-warning");
                             }
-                            if(vs==2)
-                            {
+                            if (vs == 2) {
                                 $("#form-stateType").removeClass("btn-danger");
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").addClass("btn-success");
                             }
-                            if(vs==3)
-                            {
+                            if (vs == 3) {
                                 $("#form-stateType").removeClass("btn-warning");
                                 $("#form-stateType").removeClass("btn-primary");
                                 $("#form-stateType").removeClass("btn-success");
@@ -165,7 +160,7 @@
             var _resourcesData = [];
             var _resourceId = "";
             var date = new Date();
-            var _startdate = moment(date).add(-3,"days").format("YYYY-MM-DD");
+            var _startdate = moment(date).add(-1,"days").format("YYYY-MM-DD");
 
             //#region Ajax optionAjax
             var optionAjax = {
@@ -196,18 +191,32 @@
                     endDate:moment(_startdate).add(31,"days").format("YYYY-MM-DD"),
                 });
                 optionAjax.success = function (result) {
+                    var system = {};
+                    var p = navigator.platform;
+                    system.win = p.indexOf("Win") == 0;
+                    system.mac = p.indexOf("Mac") == 0;
+                    system.x11 = (p == "X11") || (p.indexOf("Linux") == 0);
+                    SelectData = result.numberCollet;
                     _channel=result.channel;
-                    if(result.resources1.isType)
+                    if ((system.win || system.mac || system.xll) &&result.resources1.isType)
                         _resourcesData.push(result.resources1);
                     else
                         _resourcesData.push(result.resources2);
                     InitCalendar();
-                    if(_resourcesData[0].isType)
+                    if (_resourcesData[0].isType)
+                    {
                         $("#isType").html("房型");
+                    }
                     else
                     {
                         $("#isType").html("房号");
                         $('#calendar').fullCalendar('option', {resourceAreaWidth: '150'});   //option支持set，注：不仅限于locale，还包括其它option操作
+                    }
+                    if (system.win || system.mac || system.xll) {
+
+                    }
+                    else {
+                        $('#calendar').fullCalendar('option', { resourceAreaWidth: '80' })
                     }
                 };
                 $.ajax(optionAjax);
@@ -216,251 +225,251 @@
 
             //#region InitCalendar
             function InitCalendar() {
-                $('#calendar').fullCalendar({
-                    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
-                    header: false,
-                    defaultView: 'timelineThirtyDays',
-                    views: {
-                        timelineThirtyDays: {
-                            type: 'timeline',
-                            duration: { days: 31 }
-                        }
-                    },
-                    viewRender:function( view, element ){
-                    },
-                    slotWidth: '140',
-                    slotLabelFormat: "ddd MM/DD",
-                    height: 'parent',
-                    defaultDate: _startdate,
-                    navLinks: true,
-                    resourceAreaWidth: '180',
-                    resourceLabelText:false,
-                    resourceOrder: 'order,title',
-                    resourceColumns: [
-                    {
-                        labelText: '房间',
-                        field: 'title',
-                        render:function(resource,el){
-                            //var p = /[0-9]/;
-                            //var b = p.test(resourceObj.title);
-                            if(resource.hasOwnProperty("isClean"))
+                var system = {};
+                var p = navigator.platform;
+                system.win = p.indexOf("Win") == 0;
+                system.mac = p.indexOf("Mac") == 0;
+                system.x11 = (p == "X11") || (p.indexOf("Linux") == 0);
+                if (system.win || system.mac || system.xll) {
+                    $('#calendar').fullCalendar({
+                        schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                        header: false,
+                        defaultView: 'timelineThirtyDays',
+                        views: {
+                            timelineThirtyDays: {
+                                type: 'timeline',
+                                duration: { days: 31 }
+                            }
+                        },
+                        viewRender: function (view, element) {
+                        },
+                        slotWidth: '140',
+                        slotLabelFormat: "ddd MM/DD",
+                        height: 'parent',
+                        defaultDate: _startdate,
+                        navLinks: true,
+                        resourceAreaWidth: '180',
+                        resourceLabelText: false,
+                        resourceOrder: 'order,title',
+                        resourceColumns: [
                             {
-                                if(!resource.isClean)
-                                {
-                                    el.css("color","red");
+                                labelText: '房间',
+                                field: 'title',
+                                render: function (resource, el) {
+                                    //var p = /[0-9]/;
+                                    //var b = p.test(resourceObj.title);
+                                    if (resource.hasOwnProperty("isClean")) {
+                                        if (!resource.isClean) {
+                                            el.css("color", "red");
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                labelText: '状态',
+                                field: 'state',
+                                width: "60",
+                                render: function (resource, el) {
+                                    el.css("text-align", "center");
+                                    if (resource.state == "空") {
+                                        el.css("color", 'red');
+                                    }
                                 }
                             }
-                        }
-                    },
-                    {
-                        labelText: '状态',
-                        field: 'state',
-                        width:"60",
-                        render: function(resource, el) {
-                            el.css("text-align","center");
-                            if (resource.state=="空") {
-                                el.css("color",'red');
-                            }
-                        }
-                    }
-                    ],
-                    //resources:_resourcesData,
-                    resources: function(callback, start, end, timezone) {
+                        ],
+                        //resources:_resourcesData,
+                        resources: function (callback, start, end, timezone) {
                             callback(_resourcesData);
-                    },
-                    resourceRender: function (resourceObj, labelTds, bodyTds) {
-                        labelTds.css('height', '18px');
-                        labelTds.css('vertical-align','middle');
-                    },
-                    editable: false,
-                    selectable: true,
-                    selectHelper: true,
-                    events: function(start, end, timezone, callback) {
+                        },
+                        resourceRender: function (resourceObj, labelTds, bodyTds) {
+                            labelTds.css('height', '18px');
+                            labelTds.css('vertical-align', 'middle');
+                        },
+                        editable: false,
+                        selectable: true,
+                        selectHelper: true,
+                        events: function (start, end, timezone, callback) {
                             optionAjax.url = "/Finance/FncFrontCalendar/GetCalendarData";
                             optionAjax.data = JSON.stringify({
                                 branch: _fncBranch.branchName,
                                 branchId: _fncBranch.branchId,
-                                startDate:start,
-                                endDate:end,
+                                startDate: start,
+                                endDate: end,
                             });
                             optionAjax.success = function (result) {
                                 callback(result.events);
                             };
                             $.ajax(optionAjax);
-                    },
-                    eventOverlap: false, // will cause the event to take up entire resource height
-                    eventRender: function (event, element) {//在呈现事件时触发
-                        if(moment(event.start).format("YYYY-MM-DD")==moment().format("YYYY-MM-DD")&&event.id==_fncBranch.branchName)
-                        {
-                            if(event.title=="满房"){
-                                element.css("background-color","black");
-                                element.css("border-color","black");
-                            }
-                            else{
-                                element.css("background-color","red");
-                                element.css("border-color","red");
-                            }
-                        }
-                        element.css("height", "18px");
-                        var el = element.html();
-                        var hl = "";
-                        if (!event.isTitle) {
-                            var phone=event.phone==null?"":event.phone;
-                            var note=event.note==null?"":event.note;
-                            var fstart  = moment(event.startDate).format("MM-DD");
-                            var fend  = moment(event.endDate).format("MM-DD");
-                            var unit=event.unitPrice;
-                            var total=event.totalPrice;
-                            element.attr('data-toggle',"tooltip");
-                            element.attr('title',event.customerName+"&nbsp;&lt;"+
-                                    event.channel+"&gt;&nbsp;"+
-                                    phone+"<br/>"+
-                                    event.houseNumber+
-                                    "&nbsp;&lt;"+fstart+
-                                    "&sim;"+fend+
-                                    "&gt;&nbsp;"+
-                                    "&nbsp;&yen;"+unit+
-                                    "&nbsp;&yen;"+total+
-                                    "&nbsp;<br/>"+
-                                    note);
-                            element.tooltip({
-                                html:true,
-                                placement:"auto",
-                            });
-                            if(event.state==0)
-                            {
-                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa  fa-user-times'></i>";
-                            }
-                            else if(event.state==1)
-                            {
-                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa fa-user'></i>";
-                            }
-                            else if(event.state==2)
-                            {
-                                hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;'>";
-                            }
-
-                            if (event.isFinish) {
-                                hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
-                            }
-                            else {
-                                hl += "&nbsp;<i class='glyphicon glyphicon-yen' style='color:red'></i>";
-                            }
-                            if (event.isFront) {
-                                hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
-                            }
-                            else {
-                                hl += "&nbsp;<i class='glyphicon glyphicon-remove' style='color:red'></i>";
-                            }
-                            if (event.isFinance) {
-                                hl += "&nbsp;<i class='fa fa-lock' style='color:white'></i>&nbsp;&nbsp;</div>";
-                            }
-                            else{
-                                hl+="&nbsp;&nbsp;</div>";
-                            }
-                            element.html(hl);
-                        }
-                    },
-                    eventClick: function (event, jsEvent, view) {
-                        if(event.isTitle)
-                            return;
-                        $(".clear-data").removeAttr("disabled", "disabled");
-                        $('.btn').css("height",34);
-                        $("#form-stateType").css("height",34);
-                        $("#addPay").removeClass("btn-warning");
-                        $("#addPay").addClass("btn-primary");
-                        $("#isFinish").removeClass("btn-warning");
-                        $("#isFinish").addClass("btn-primary");
-                        $("#isFront").removeClass("btn-warning");
-                        $("#isFront").addClass("btn-primary");
-                        $("#isFinance").removeClass("btn-warning");
-                        $("#isFinance").addClass("btn-primary");
-                        $("#table-1").show();
-                        $("#tbody-form").html("");
-                        $(".clear-data").val("");
-                        $("#form-received,#payAmount").val("0");
-                        $(".col-md-4").hide();
-                        $('#isFinish').html("未结账");
-                        $('#isFront').html("前台未审");
-                        $('#isFinance').html("财务未审");
-                        $.ajax({
-                            type: "post",
-                            async: true,
-                            url: "/Finance/FncFrontCalendar/List",
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            data: JSON.stringify({
-                                frontDeskAccountsId: event.id,
-                            }),
-                            success: function (data) {
-                                var hls = "";
-                                for (var i = 0; i < data.list.length; i++) {
-                                    hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list[i].payAmount+"</td></tr>";
+                        },
+                        eventOverlap: false, // will cause the event to take up entire resource height
+                        eventRender: function (event, element) {//在呈现事件时触发
+                            if (moment(event.start).format("YYYY-MM-DD") == moment().format("YYYY-MM-DD") && event.id == _fncBranch.branchName) {
+                                if (event.title == "满房") {
+                                    element.css("background-color", "black");
+                                    element.css("border-color", "black");
                                 }
-                                var ahl = $(hls);
-                                ahl.appendTo($("#tbody-form"));
-                            },
-                            error: function () {
-                                alert("Failed");
+                                else {
+                                    element.css("background-color", "red");
+                                    element.css("border-color", "red");
+                                }
                             }
-                        });
-                        if (event.isFinish) {
-                            $('#isFinish').html("已结账");
-                            $("#isFinish").removeClass("btn-primary");
-                            $("#isFinish").addClass("btn-warning");
-                        }
-                        else{
-                            $('#isFinish').html("未结账");
+                            element.css("height", "18px");
+                            var el = element.html();
+                            var hl = "";
+                            if (!event.isTitle) {
+                                var phone = event.phone == null ? "" : event.phone;
+                                var note = event.note == null ? "" : event.note;
+                                var fstart = moment(event.startDate).format("MM-DD");
+                                var fend = moment(event.endDate).format("MM-DD");
+                                var unit = event.unitPrice;
+                                var total = event.totalPrice;
+                                element.attr('data-toggle', "tooltip");
+                                element.attr('title', event.customerName + "&nbsp;&lt;" +
+                                    event.channel + "&gt;&nbsp;" +
+                                    phone + "<br/>" +
+                                    event.houseNumber +
+                                    "&nbsp;&lt;" + fstart +
+                                    "&sim;" + fend +
+                                    "&gt;&nbsp;" +
+                                    "&nbsp;&yen;" + unit +
+                                    "&nbsp;&yen;" + total +
+                                    "&nbsp;<br/>" +
+                                    note);
+                                element.tooltip({
+                                    html: true,
+                                    placement: "auto",
+                                });
+                                if (event.state == 0) {
+                                    hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa  fa-user-times'></i>";
+                                }
+                                else if (event.state == 1) {
+                                    hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa fa-user'></i>";
+                                }
+                                else if (event.state == 2) {
+                                    hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;'>";
+                                }
+
+                                if (event.isFinish) {
+                                    hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
+                                }
+                                else {
+                                    hl += "&nbsp;<i class='glyphicon glyphicon-yen' style='color:red'></i>";
+                                }
+                                if (event.isFront) {
+                                    hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
+                                }
+                                else {
+                                    hl += "&nbsp;<i class='glyphicon glyphicon-remove' style='color:red'></i>";
+                                }
+                                if (event.isFinance) {
+                                    hl += "&nbsp;<i class='fa fa-lock' style='color:white'></i>&nbsp;&nbsp;</div>";
+                                }
+                                else {
+                                    hl += "&nbsp;&nbsp;</div>";
+                                }
+                                element.html(hl);
+                            }
+                        },
+                        eventClick: function (event, jsEvent, view) {
+                            if (event.isTitle)
+                                return;
+                            $(".clear-data").removeAttr("disabled", "disabled");
+                            $('.btn').css("height", 34);
+                            $("#form-stateType").css("height", 34);
+                            $("#addPay").removeClass("btn-warning");
+                            $("#addPay").addClass("btn-primary");
                             $("#isFinish").removeClass("btn-warning");
                             $("#isFinish").addClass("btn-primary");
-                        }
-                        if (event.isFront) {
-                            $('#isFront').html("前台已审");
-                            $("#isFront").removeClass("btn-primary");
-                            $("#isFront").addClass("btn-warning");
-                        }
-                        else {
-                            $('#isFront').html("前台未审");
                             $("#isFront").removeClass("btn-warning");
                             $("#isFront").addClass("btn-primary");
-                        }
-                        if (event.isFinance) {
-                            $('#isFinance').html("财务已审");
-                            $("#isFinance").removeClass("btn-primary");
-                            $("#isFinance").addClass("btn-warning");
-                        }
-                        else {
-                            $('#isFinance').html("财务未审");
                             $("#isFinance").removeClass("btn-warning");
                             $("#isFinance").addClass("btn-primary");
-                        }
-                        $('#form-name').val(event.customerName);
-                        $('#form-count').val(event.customerCount);
-                        $('#form-unitPrice').val(event.unitPrice);
-                        $('#form-totalPrice').val(event.totalPrice);
-                        $('#form-channel').val(event.channel);
-                        $('#form-phone').val(event.phone);
-                        $('#form-receivable').val(event.receivable);
-                        $('#form-received').val(event.received);
-                        $("#form-steward").val(event.steward);
-                        $('#form-frontDeskLeader').val(event.frontDeskLeader);
-                        $('#form-stewardLeader').val(event.stewardLeader);
-                        $('#form-relationStaff').val(event.relationStaff);
-                        $('#form-note').val(event.note);
-                        $('#form-stateType').val(event.state);
-                        selectState(event.state);
-                        $(".clear-data").attr("disabled","disabled");
-                        $("#isFinance").on('click', function () {
+                            $("#table-1").show();
+                            $("#tbody-form").html("");
+                            $(".clear-data").val("");
+                            $("#form-received,#payAmount").val("0");
+                            $(".col-md-4").hide();
+                            $('#isFinish').html("未结账");
+                            $('#isFront').html("前台未审");
+                            $('#isFinance').html("财务未审");
+                            $.ajax({
+                                type: "post",
+                                async: true,
+                                url: "/Finance/FncFrontCalendar/List",
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                data: JSON.stringify({
+                                    frontDeskAccountsId: event.id,
+                                }),
+                                success: function (data) {
+                                    var hls = "";
+                                    for (var i = 0; i < data.list.length; i++) {
+                                        hls += "<tr><td class='brr' style='width:150px'>" + moment(data.list[i].payDate).format("YYYY-MM-DD HH:MM") + "</td><td class='brr' style='width:150px'>" + data.list[i].payWay + "</td><td class='brr' style='width:150px'>" + data.list[i].payAmount + "</td></tr>";
+                                    }
+                                    var ahl = $(hls);
+                                    ahl.appendTo($("#tbody-form"));
+                                },
+                                error: function () {
+                                    alert("Failed");
+                                }
+                            });
+                            if (event.isFinish) {
+                                $('#isFinish').html("已结账");
+                                $("#isFinish").removeClass("btn-primary");
+                                $("#isFinish").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isFinish').html("未结账");
+                                $("#isFinish").removeClass("btn-warning");
+                                $("#isFinish").addClass("btn-primary");
+                            }
+                            if (event.isFront) {
+                                $('#isFront').html("前台已审");
+                                $("#isFront").removeClass("btn-primary");
+                                $("#isFront").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isFront').html("前台未审");
+                                $("#isFront").removeClass("btn-warning");
+                                $("#isFront").addClass("btn-primary");
+                            }
+                            if (event.isFinance) {
+                                $('#isFinance').html("财务已审");
+                                $("#isFinance").removeClass("btn-primary");
+                                $("#isFinance").addClass("btn-warning");
+                            }
+                            else {
+                                $('#isFinance').html("财务未审");
+                                $("#isFinance").removeClass("btn-warning");
+                                $("#isFinance").addClass("btn-primary");
+                            }
+                            $('#form-name').val(event.customerName);
+                            $('#form-count').val(event.customerCount);
+                            $('#form-unitPrice').val(event.unitPrice);
+                            $('#form-totalPrice').val(event.totalPrice);
+                            $('#form-channel').val(event.channel);
+                            $('#form-phone').val(event.phone);
+                            $('#form-receivable').val(event.receivable);
+                            $('#form-received').val(event.received);
+                            $("#form-steward").val(event.steward);
+                            $('#form-frontDeskLeader').val(event.frontDeskLeader);
+                            $('#form-stewardLeader').val(event.stewardLeader);
+                            $('#form-relationStaff').val(event.relationStaff);
+                            $('#form-note').val(event.note);
+                            $('#form-stateType').val(event.state);
+                            selectState(event.state);
+                            $(".clear-data").attr("disabled", "disabled");
+                            $("#isFinance").on('click', function () {
                                 var hl = $("#isFinance").html();
                                 if (hl == "财务未审") {
                                     $('#isFinance').html("财务已审");
-                                    event.isFinance=true;
+                                    event.isFinance = true;
                                     $("#isFinance").removeClass("btn-primary");
                                     $("#isFinance").addClass("btn-warning");
                                 }
                                 if (hl == "财务已审") {
                                     $('#isFinance').html("财务未审");
-                                    event.isFinance=false;
+                                    event.isFinance = false;
                                     $("#isFinance").removeClass("btn-warning");
                                     $("#isFinance").addClass("btn-primary");
                                 }
@@ -482,7 +491,7 @@
                                     var unitPrice = $('#form-unitPrice').val();
                                     var totalPrice = $('#form-totalPrice').val();
                                     var channel = $('#form-channel').val();
-                                    var phone=$('#form-phone').val();
+                                    var phone = $('#form-phone').val();
                                     var receivable = $('#form-receivable').val();
                                     var received = $('#form-received').val();
                                     var steward = $("#form-steward").val();
@@ -490,7 +499,7 @@
                                     var stewardLeader = $('#form-stewardLeader').val();
                                     var relationStaff = $('#form-relationStaff').val();
                                     var note = $('#form-note').val();
-                                    var state=$('#form-stateType  option:selected').val();
+                                    var state = $('#form-stateType  option:selected').val();
                                     var payDate = $('#payDate').val();
                                     var payWay = $('#payWay').val();
                                     var payAmount = $('#payAmount').val();
@@ -518,25 +527,25 @@
                                         contentType: "application/json; charset=utf-8",
                                         dataType: "json",
                                         data: JSON.stringify({
-                                            id:event.id,
-                                            resourceId:event.resourceId,
-                                            allDay:event.allDay,
-                                            editable:event.editable,
-                                            start:event.start,
-                                            end :event.end,
-                                            frontDeskAccountsId:event.frontDeskAccountsId,
-                                            houseNumber:event.resourceId,
-                                            count:event.count,
+                                            id: event.id,
+                                            resourceId: event.resourceId,
+                                            allDay: event.allDay,
+                                            editable: event.editable,
+                                            start: event.start,
+                                            end: event.end,
+                                            frontDeskAccountsId: event.frontDeskAccountsId,
+                                            houseNumber: event.resourceId,
+                                            count: event.count,
                                             startDate: event.startDate,
                                             endDate: event.endDate,
-                                            enteringDate:event.enteringDate,
+                                            enteringDate: event.enteringDate,
                                             enteringStaff: event.enteringStaff,
                                             branch: event.branch,
-                                            title:name+" "+channel,
-                                            customerName:name,
+                                            title: name + " " + channel,
+                                            customerName: name,
                                             customerCount: count,
                                             channel: channel,
-                                            phone:phone,
+                                            phone: phone,
                                             unitPrice: unitPrice,
                                             totalPrice: totalPrice,
                                             receivable: receivable,
@@ -546,10 +555,10 @@
                                             stewardLeader: stewardLeader,
                                             relationStaff: relationStaff,
                                             note: note,
-                                            state:state,
+                                            state: state,
                                             isFinish: isFinish,
                                             isFront: isFront,
-                                            isFinance:isFinance,
+                                            isFinance: isFinance,
                                             color: color,
                                             payDate: payDate,
                                             payWay: payWay,
@@ -576,9 +585,142 @@
                                 }
                             });
                             d.width(600).showModal();
-                    }
-                });
-            }
+                        }
+                    });
+                }
+                else {
+                    $('#calendar').fullCalendar({
+                        schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                        header: false,
+                        defaultView: 'timelineThirtyDays',
+                        views: {
+                            timelineThirtyDays: {
+                                type: 'timeline',
+                                duration: { days: 31 }
+                            }
+                        },
+                        viewRender: function (view, element) {
+                        },
+                        slotWidth: '140',
+                        slotLabelFormat: "ddd MM/DD",
+                        height: 'parent',
+                        defaultDate: _startdate,
+                        navLinks: true,
+                        resourceAreaWidth: '180',
+                        resourceLabelText: false,
+                        resourceOrder: 'order,title',
+                        resourceColumns: [
+                            {
+                                labelText: '房间',
+                                field: 'title',
+                                render: function (resource, el) {
+                                    //var p = /[0-9]/;
+                                    //var b = p.test(resourceObj.title);
+                                    if (resource.hasOwnProperty("isClean")) {
+                                        if (!resource.isClean) {
+                                            el.css("color", "red");
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        //resources:_resourcesData,
+                        resources: function (callback, start, end, timezone) {
+                            callback(_resourcesData);
+                        },
+                        resourceRender: function (resourceObj, labelTds, bodyTds) {
+                            labelTds.css('height', '18px');
+                            labelTds.css('vertical-align', 'middle');
+                        },
+                        editable: false,
+                        selectable: true,
+                        selectHelper: true,
+                        events: function (start, end, timezone, callback) {
+                            optionAjax.url = "/Finance/FncFrontCalendar/GetCalendarData";
+                            optionAjax.data = JSON.stringify({
+                                branch: _fncBranch.branchName,
+                                branchId: _fncBranch.branchId,
+                                startDate: start,
+                                endDate: end,
+                            });
+                            optionAjax.success = function (result) {
+                                callback(result.events);
+                            };
+                            $.ajax(optionAjax);
+                        },
+                        eventOverlap: false, // will cause the event to take up entire resource height
+                        eventRender: function (event, element) {//在呈现事件时触发
+                            if (moment(event.start).format("YYYY-MM-DD") == moment().format("YYYY-MM-DD") && event.id == _fncBranch.branchName) {
+                                if (event.title == "满房") {
+                                    element.css("background-color", "black");
+                                    element.css("border-color", "black");
+                                }
+                                else {
+                                    element.css("background-color", "red");
+                                    element.css("border-color", "red");
+                                }
+                            }
+                            element.css("height", "18px");
+                            var el = element.html();
+                            var hl = "";
+                            if (!event.isTitle) {
+                                var phone = event.phone == null ? "" : event.phone;
+                                var note = event.note == null ? "" : event.note;
+                                var fstart = moment(event.startDate).format("MM-DD");
+                                var fend = moment(event.endDate).format("MM-DD");
+                                var unit = event.unitPrice;
+                                var total = event.totalPrice;
+                                element.attr('data-toggle', "tooltip");
+                                element.attr('title', event.customerName + "&nbsp;&lt;" +
+                                    event.channel + "&gt;&nbsp;" +
+                                    phone + "<br/>" +
+                                    event.houseNumber +
+                                    "&nbsp;&lt;" + fstart +
+                                    "&sim;" + fend +
+                                    "&gt;&nbsp;" +
+                                    "&nbsp;&yen;" + unit +
+                                    "&nbsp;&yen;" + total +
+                                    "&nbsp;<br/>" +
+                                    note);
+                                element.tooltip({
+                                    html: true,
+                                    placement: "auto",
+                                });
+                                if (event.state == 0) {
+                                    hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa  fa-user-times'></i>";
+                                }
+                                else if (event.state == 1) {
+                                    hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;color:black'><i class='fa fa-user'></i>";
+                                }
+                                else if (event.state == 2) {
+                                    hl = "<div style='width:60%;float:left;'>" + el + "</div><div style='text-align:right;font-size:10px;'>";
+                                }
+
+                                if (event.isFinish) {
+                                    hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
+                                }
+                                else {
+                                    hl += "&nbsp;<i class='glyphicon glyphicon-yen' style='color:red'></i>";
+                                }
+                                if (event.isFront) {
+                                    hl += "&nbsp;<i class='glyphicon glyphicon-ok' style='color:white'></i>";
+                                }
+                                else {
+                                    hl += "&nbsp;<i class='glyphicon glyphicon-remove' style='color:red'></i>";
+                                }
+                                if (event.isFinance) {
+                                    hl += "&nbsp;<i class='fa fa-lock' style='color:white'></i>&nbsp;&nbsp;</div>";
+                                }
+                                else {
+                                    hl += "&nbsp;&nbsp;</div>";
+                                }
+                                element.html(hl);
+                            }
+                        },
+                    });
+
+                }
+            };
             $('#isType').on('click',function(){
                 var isT=_resourcesData[0].isType;
                 if(isT)
@@ -612,7 +754,7 @@
                 });
             });
 
-            $('#today').on('click', function () {
+            $('#today,#today2').on('click', function () {
                 $('#calendar').fullCalendar('today');
                 var tempdate = moment();
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
@@ -622,13 +764,13 @@
                 $('#calendar').fullCalendar('changeView', 'timelineThirtyDays', $('#startdate').val());
             });
 
-            $('#prev').on('click', function () {
+            $('#prev,#prev2').on('click', function () {
                 $('#calendar').fullCalendar('prev');
                 var tempdate = moment($('#startdate').val()).add(-31, 'days');
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
             });
 
-            $('#next').on('click', function () {
+            $('#next,#next2').on('click', function () {
                 $('#calendar').fullCalendar('next');
                 var tempdate = moment($('#startdate').val()).add(31, 'days');
                 $('#startdate').datepicker('setDate', moment(tempdate).format("YYYY-MM-DD"));
