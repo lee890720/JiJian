@@ -8,6 +8,7 @@ using JJNG.Web.Areas.AppIdentity.Models;
 using JJNG.Data.AppIdentity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using JJNG.Data;
 
 namespace JJNG.Web.Areas.AppIdentity.Controllers
 {
@@ -19,18 +20,21 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
         private IUserValidator<AppIdentityUser> userValidator;
         private IPasswordValidator<AppIdentityUser> passwordValidator;
         private IPasswordHasher<AppIdentityUser> passwordHasher;
-        private readonly AppIdentityDbContext _context;
+        private readonly AppIdentityDbContext _identityContext;
+        private readonly AppDbContext _context;
 
         public UserAdminController(UserManager<AppIdentityUser> usrMgr,
                 IUserValidator<AppIdentityUser> userValid,
                 IPasswordValidator<AppIdentityUser> passValid,
                 IPasswordHasher<AppIdentityUser> passwordHash,
-                AppIdentityDbContext context)
+                AppIdentityDbContext identityContext,
+                AppDbContext context)
         {
             userManager = usrMgr;
             userValidator = userValid;
             passwordValidator = passValid;
             passwordHasher = passwordHash;
+            _identityContext = identityContext;
             _context = context;
         }
 
@@ -38,9 +42,9 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
 
         public IActionResult Create()
         {
-            var list_department = _context.UserDepartment.ToList();
-            var list_position = _context.UserPosition.ToList();
-            var list_branch = _context.UserBranch.ToList();
+            var list_department = _identityContext.UserDepartment.ToList();
+            var list_position = _identityContext.UserPosition.ToList();
+            var list_branch = _context.FncBranch.ToList();
             ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName");
             ViewData["Position"] = new SelectList(list_position, "PositionName", "PositionName");
             ViewData["Branch"] = new SelectList(list_branch, "BranchName", "BranchName");
@@ -52,7 +56,7 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
         {
             if (ModelState.IsValid)
             {
-                var list_branch = _context.UserBranch.ToList();
+                var list_branch = _context.FncBranch.ToList();
                 var bid = 0;
                 foreach(var b in list_branch)
                 {
@@ -135,9 +139,9 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
         public async Task<IActionResult> Edit(string id)
         {
             AppIdentityUser user = await userManager.FindByIdAsync(id);
-            var list_department = _context.UserDepartment.ToList();
-            var list_position = _context.UserPosition.ToList();
-            var list_branch = _context.UserBranch.ToList();
+            var list_department = _identityContext.UserDepartment.ToList();
+            var list_position = _identityContext.UserPosition.ToList();
+            var list_branch = _context.FncBranch.ToList();
             ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName", user.Department.ToString());
             ViewData["Position"] = new SelectList(list_position, "PositionName", "PositionName", user.Position.ToString());
             ViewData["Branch"] = new SelectList(list_branch, "BranchName", "BranchName", user.Branch.ToString());
@@ -157,7 +161,7 @@ namespace JJNG.Web.Areas.AppIdentity.Controllers
         //[AllowAnonymous]
         public async Task<IActionResult> Edit(string id, string PhoneNumber,string Department,string Position,string Branch,string password)
         {
-            var list_branch = _context.UserBranch.ToList();
+            var list_branch = _context.FncBranch.ToList();
             var bid = 0;
             foreach (var b in list_branch)
             {

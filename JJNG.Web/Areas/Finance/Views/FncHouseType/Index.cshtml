@@ -1,4 +1,4 @@
-﻿@model Tuple<List<FncHouseType>, List<FncHouseNumber>>
+﻿@model List<FncHouseType>
 
 @{
     var actionName = ViewContext.RouteData.Values["action"].ToString();
@@ -14,10 +14,35 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">定价管理<small class="hidden-xs" style="color:skyblue">&emsp; @ViewData["Branch"].ToString()</small></h3>
+                    <div class="box-tools pull-right">
+                        <span id="excelButton"></span>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <div class="btn-group  hidden-xs" style="padding-top:1px">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" title="显示隐藏列">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-left" role="menu" style="padding-left:10px">
+                                <li><input type="checkbox" class="toggle-vis" data-column="2" />&nbsp;<small>预付价</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="3" />&nbsp;<small>现付价</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="4" />&nbsp;<small>预付底价</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="5" />&nbsp;<small>门店价</small></li>
+                                <li><input type="checkbox" class="toggle-vis" data-column="6" />&nbsp;<small>合作价</small></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+
                 <div class="box-body table-responsive">
                     <div class="form-group">
-                        <div class="col-md-3 col-sm-6 col-xs-12 no-padding hidden-xs" style="margin-bottom:10px;">
-                            <a id="createModal" data-toggle="modal" asp-action="Create" asp-route-id="@ViewData["BranchId"]" data-target="#modal-action" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 新增房型</a>
+                        <div class="col-md-6 col-sm-6 col-xs-12 no-padding hidden-xs" style="margin-bottom:10px;">
+                            <a id="price1" class="btn btn-primary"> 淡季价</a>
+                            <a id="price2" class="btn btn-primary"> 淡季+15%</a>
+                            <a id="price3" class="btn btn-primary"> 旺季价</a>
                         </div>
                         <div class="col-md-3 col-sm-6 col-xs-12 no-padding pull-right" style="margin-bottom:10px;">
                             <input type="text" placeholder="搜索" id="search" class="form-control">
@@ -33,91 +58,52 @@
                                     顺序
                                 </th>
                                 <th>
-                                    店面名称
+                                    预付价
                                 </th>
-                                <th></th>
+                                <th>
+                                    现付价
+                                </th>
+                                <th>
+                                    预付底价
+                                </th>
+                                <th class="col-visible">
+                                    门店价
+                                </th>
+                                <th class="col-visible">
+                                    合作价
+                                </th>
+                                <th>
+                                    OTA排序1
+                                </th>
+                                <th>
+                                    OTA排序2
+                                </th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach (var item in Model.Item1)
-                            {
+                        <tfoot>
                             <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.HouseType)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Order)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.FncBranch.BranchName)
-                                </td>
-                                <td>
-                                    <a id="create2Modal" data-toggle="modal" asp-action="Create2" asp-route-id="@item.HouseTypeId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                        <i class="glyphicon glyphicon-plus"></i> 增加房号
-                                    </a>
-                                    <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.HouseTypeId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                        <i class="glyphicon glyphicon-pencil"></i> 编辑
-                                    </a>
-                                    <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.HouseTypeId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
-                                        <i class="glyphicon glyphicon-trash"></i> 删除
-                                    </a>
-                                </td>
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                                @{
+                                    var otaPre = 0;
+                                    var otaBase = 0;
+                                    var otaSpot = 0;
+                                    foreach (var f in Model)
+                                    {
+                                        otaPre += f.OTAPre * f.FncHouseNumber.Count;
+                                        otaBase += ((int)((f.OTAPre + f.OTASpot) * f.OTABase)) * f.FncHouseNumber.Count;
+                                        otaSpot += (f.OTAPre + f.OTASpot) * f.FncHouseNumber.Count;
 
-            <div class="box box-primary">
-                <div class="box-body table-responsive">
-                    <div class="form-group">
-                        @*<div class="col-md-3 col-sm-6 col-xs-12 no-padding hidden-xs" style="margin-bottom:10px;">
-                                <a id="createModal" data-toggle="modal" asp-action="Create" asp-route-id="@ViewData["BranchId"]" data-target="#modal-action" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 新增房型</a>
-                            </div>*@
-                        <div class="col-md-3 col-sm-6 col-xs-12 no-padding pull-right" style="margin-bottom:10px;">
-                            <input type="text" placeholder="搜索" id="search2" class="form-control">
-                        </div>
-                    </div>
-                    <table id="table-2" class="table  table-bordered table-striped table-hover" width="100%">
-                        <thead>
-                            <tr>
-                                <th>
-                                    房号
-                                </th>
-                                <th>
-                                    房型
-                                </th>
-                                <th>
-                                    店面名称
-                                </th>
-                                <th></th>
+                                    }
+                                    otaPre = otaPre / Model[0].FncBranch.Count;
+                                    otaBase = otaBase / Model[0].FncBranch.Count;
+                                    otaSpot = otaSpot / Model[0].FncBranch.Count;
+                                }
+                                <th colspan="2" style="text-align:right !important">均价:</th>
+                                <th>@otaPre</th>
+                                <th>@otaSpot</th>
+                                <th>@otaBase</th>
+                                <th colspan="4"></th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Item2)
-                            {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.HouseNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FncHouseType.HouseType)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FncHouseType.FncBranch.BranchName)
-                                    </td>
-                                    <td>
-                                        <a id="edit2Modal" data-toggle="modal" asp-action="Edit2" asp-route-id="@item.HouseNumberId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-pencil"></i> 编辑
-                                        </a>
-                                        <a id="delete2Modal" data-toggle="modal" asp-action="Delete2" asp-route-id="@item.HouseNumberId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -127,10 +113,23 @@
 @section Scripts{
     <script>
         $(function () {
-            var table1 = $('#table-1').DataTable(
+            var fncHouseType =@Html.Raw(Json.Serialize(Model));
+            var fncHouseType2 =@Html.Raw(Json.Serialize(Model));
+            for (var f in fncHouseType2) {
+                fncHouseType2[f].otaPre=(fncHouseType2[f].otaPre * 1.15).toFixed(0);
+            }
+            var fncHouseType3 = @Html.Raw(Json.Serialize(Model));
+            for (var f in fncHouseType3) {
+                fncHouseType3[f].otaPre = (fncHouseType3[f].otaPre + fncHouseType3[f].peakPrice).toFixed(0);
+            }
+            console.log(fncHouseType);
+            console.log(fncHouseType2);
+            console.log(fncHouseType3);
+            var table1 = $('#table-1').dataTable(
                 {
                     responsive: true,
                     order: [[1, "asc"]],
+                    paging: false,
                     dom:
                         "<'row'<'col-sm-6'><'col-sm-6'>>" +
                         "<'row'<'col-sm-12'tr>>" +
@@ -159,44 +158,103 @@
                             sortDescending: ": 以降序排列此列"
                         }
                     },
+                    data: [],
+                    columns: [
+                        { data: "houseType" },
+                        { data: "order" },
+                        { data: "otaPre" },
+                        { data: "otaSpot" },
+                        { data: "otaBase" },
+                        { data: "stickerPrice" },
+                        { data: "cooperationPrice" },
+                        { data: "otaOrder1" },
+                        { data: "otaOrder2" },
+                    ],
+                    columnDefs: [
+                        {
+                            targets: "col-visible",
+                            visible: false,
+                        },
+                        {
+                            targets: [3],
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                    $(td).css('color', '#4cae05');
+                            },
+                            render: function (data, type, row, meta) {
+                                return parseInt( row.otaPre)+ data;
+                            }
+                        },
+                        {
+                            targets: [4],
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                $(td).css('color', '#ff5256');
+                            },
+                            render: function (data, type, row, meta) {
+                                return ((parseInt(row.otaPre) + row.otaSpot)*data).toFixed(0);
+                            }
+                        },
+                        {
+                            targets: [5],
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                $(td).css('color', '#4cae05');
+                            },
+                            render: function (data, type, row, meta) {
+                                return parseInt(row.otaPre) + data;
+                            }
+                        },
+                        {
+                            targets: [6],
+                            createdCell: function (td, cellData, rowData, row, col) {
+                                $(td).css('color', '#ff5256');
+                            },
+                            render: function (data, type, row, meta) {
+                                return (parseInt(row.otaPre) *data/10).toFixed(0)*10;
+                            }
+                        },
+                    ],
                 });
-            $("#search").keyup(function () { table1.search($("#search").val()).draw(); });
 
-            var table2 = $('#table-2').DataTable(
-            {
-                responsive: true,
-                paging:false,
-                order: [[0, "asc"]],
-                dom:
-                    "<'row'<'col-sm-6'><'col-sm-6'>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                language: {
-                    processing: "加载中...",
-                    lengthMenu: "每页显示 _MENU_ 条数据",
-                    zeroRecords: "没有匹配结果",
-                    info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
-                    infoEmpty: "显示第 0 至 0 项结果，共 0 项",
-                    infoFiltered: "(由 _MAX_ 项结果过滤)",
-                    infoPostFix: "",
-                    search: "搜索:",
-                    url: "",
-                    emptyTable: "没有匹配结果",
-                    loadingRecords: "载入中...",
-                    thousands: ",",
-                    paginate: {
-                        first: "首页",
-                        previous: "上一页",
-                        next: "下一页",
-                        last: "末页"
-                    },
-                    aria: {
-                        sortAscending: ": 以升序排列此列",
-                        sortDescending: ": 以降序排列此列"
-                    }
-                },
+            //#region 显示隐藏列
+            $('.toggle-vis').on('change', function (e) {
+                e.preventDefault();
+                console.log($(this).attr('data-column'));
+                var column = table1.api().column($(this).attr('data-column'));
+                column.visible(!column.visible());
             });
-            $("#search2").keyup(function () { table2.search($("#search2").val()).draw(); });
+            //#endregion
+
+            new $.fn.dataTable.Buttons(table1.api(), {
+                buttons: [
+                    //'copy', 'excel', 'pdf'
+                    {
+                        extend: 'excel',
+                        text: '导出',
+                        className: "excelButton",
+                        exportOptions: {
+                        }
+                    },
+                ]
+            });
+
+
+            table1.api().buttons().container().appendTo($("#excelButton"));
+            $(".excelButton").removeClass("btn-default");
+            $(".excelButton").addClass("btn btn-box-tool hidden-xs");
+            $("#search").keyup(function () { table1.api().search($("#search").val()).draw(); });
+            table1.api().clear();
+            table1.api().rows.add(fncHouseType).draw();
+            $("#price1").click(function () {
+                table1.api().clear();
+                table1.api().rows.add(fncHouseType).draw();
+            });
+            $("#price2").click(function () {
+                table1.api().clear();
+                table1.api().rows.add(fncHouseType2).draw();
+            });
+            $("#price3").click(function () {
+                table1.api().clear();
+                table1.api().rows.add(fncHouseType3).draw();
+            });
         });
     </script>
 }

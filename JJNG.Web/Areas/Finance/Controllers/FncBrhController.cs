@@ -12,12 +12,12 @@ namespace JJNG.Web.Areas.Finance.Controllers
 {
     [Area("Finance")]
     [Authorize(Roles = "Admins,管理员,人事,财务")]
-    public class FncBranchController : Controller
+    public class FncBrhController : Controller
     {
         private readonly AppDbContext _context;
         private readonly AppIdentityDbContext _identityContext;
 
-        public FncBranchController(AppDbContext context, AppIdentityDbContext identityContext)
+        public FncBrhController(AppDbContext context, AppIdentityDbContext identityContext)
         {
             _context = context;
             _identityContext = identityContext;
@@ -39,12 +39,12 @@ namespace JJNG.Web.Areas.Finance.Controllers
 
         public IActionResult Create()
         {
-            return PartialView("~/Areas/Finance/Views/FncBranch/CreateEdit.cshtml");
+            return PartialView("~/Areas/Finance/Views/FncBrh/CreateEdit.cshtml");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BranchId,BranchName")] FncBranch fncBranch)
+        public async Task<IActionResult> Create([Bind("BranchId,BranchName,Count")] FncBranch fncBranch)
         {
             if (ModelState.IsValid)
             {
@@ -52,7 +52,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return PartialView("~/Areas/Finance/Views/FncBranch/CreateEdit.cshtml", fncBranch);
+            return PartialView("~/Areas/Finance/Views/FncBrh/CreateEdit.cshtml", fncBranch);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -67,14 +67,14 @@ namespace JJNG.Web.Areas.Finance.Controllers
             {
                 return NotFound();
             }
-            return PartialView("~/Areas/Finance/Views/FncBranch/CreateEdit.cshtml", fncBranch);
+            return PartialView("~/Areas/Finance/Views/FncBrh/CreateEdit.cshtml", fncBranch);
         }
 
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BranchId,BranchName")] FncBranch fncBranch)
+        public async Task<IActionResult> Edit(int id, [Bind("BranchId,BranchName,Count")] FncBranch fncBranch)
         {
             if (id != fncBranch.BranchId)
             {
@@ -101,7 +101,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return PartialView("~/Areas/Finance/Views/FncBranch/CreateEdit.cshtml", fncBranch);
+            return PartialView("~/Areas/Finance/Views/FncBrh/CreateEdit.cshtml", fncBranch);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -118,7 +118,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 return NotFound();
             }
 
-            return PartialView("~/Areas/Finance/Views/FncBranch/Delete.cshtml", fncBranch.BranchName);
+            return PartialView("~/Areas/Finance/Views/FncBrh/Delete.cshtml", fncBranch.BranchName);
         }
 
         [HttpPost]

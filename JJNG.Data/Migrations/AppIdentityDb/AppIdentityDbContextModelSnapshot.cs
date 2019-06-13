@@ -83,34 +83,6 @@ namespace JJNG.Data.Migrations.AppIdentityDb
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("JJNG.Data.AppIdentity.UserBranch", b =>
-                {
-                    b.Property<int>("BranchId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("BranchName");
-
-                    b.HasKey("BranchId");
-
-                    b.ToTable("User_Branch");
-                });
-
-            modelBuilder.Entity("JJNG.Data.AppIdentity.UserBranchDetial", b =>
-                {
-                    b.Property<int>("BranchDetialId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("BranchId");
-
-                    b.Property<string>("HouseNumber");
-
-                    b.HasKey("BranchDetialId");
-
-                    b.HasIndex("BranchId");
-
-                    b.ToTable("User_BranchDetial");
-                });
-
             modelBuilder.Entity("JJNG.Data.AppIdentity.UserDepartment", b =>
                 {
                     b.Property<int>("DepartmentId")
@@ -241,14 +213,6 @@ namespace JJNG.Data.Migrations.AppIdentityDb
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("JJNG.Data.AppIdentity.UserBranchDetial", b =>
-                {
-                    b.HasOne("JJNG.Data.AppIdentity.UserBranch", "UserBranch")
-                        .WithMany("UserBranchDetial")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -27,7 +27,10 @@
                         <thead>
                             <tr>
                                 <th>
-                                    @*@Html.DisplayNameFor(model => model.BranchName)*@
+                                    @Html.DisplayNameFor(model => model.BranchName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Count)
                                 </th>
                                 <th></th>
                             </tr>
@@ -35,31 +38,34 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.BranchName)
-                                    </td>
-                                    <td>
-                                        @if (item.BranchName != "运营中心" && item.BranchName != "町隐学院")
-                                        {
-                                            <a asp-action="Index" asp-controller="FncHouseType" asp-route-area="Finance" asp-route-id="@item.BranchId" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                                <i class="glyphicon glyphicon-plus"></i> 增加房型
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <a class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                                <i class="glyphicon glyphicon-plus"></i> 不可增加
-                                            </a>
-                                        }
-                                        <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.BranchId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-pencil"></i> 编辑
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BranchName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Count)
+                                </td>
+                                <td>
+                                    @if (item.BranchName != "运营中心" && item.BranchName != "町隐学院")
+                                    {
+                                        <a asp-action="Index" asp-controller="AppHouseType" asp-route-area="AppIdentity" asp-route-id="@item.BranchId" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                            <i class="glyphicon glyphicon-plus"></i> 增加房型
                                         </a>
-                                        <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.BranchId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
-                                            <i class="glyphicon glyphicon-trash"></i> 删除
+                                    }
+                                    else
+                                    {
+                                        <a class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                            <i class="glyphicon glyphicon-plus"></i> 不可增加
                                         </a>
-                                    </td>
-                                </tr>
+                                    }
+                                    <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.BranchId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                        <i class="glyphicon glyphicon-pencil"></i> 编辑
+                                    </a>
+                                    <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.BranchId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
+                                        <i class="glyphicon glyphicon-trash"></i> 删除
+                                    </a>
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -125,16 +131,6 @@
                     $('#modal-default').modal('hide');
                 },
             };
-            //#endregion
-
-            //#region Ajax GetHouse
-            function GetHouse() {
-                optionAjax.url = "/Finance/FncBranch/GetHouse";
-                optionAjax.success = function (result) {
-                };
-                $.ajax(optionAjax);
-            };
-            GetHouse();
             //#endregion
         });
     </script>

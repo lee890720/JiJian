@@ -190,7 +190,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             Branch2 resources2 = new Branch2();
             List<RoomType> roomTypeList = new List<RoomType>();
             var fncBranch = _context.FncBranch.SingleOrDefault(x => x.BranchName == branch);
-            var fncHouseTypeList = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fncBranch.BranchId).ToList();
+            var fncHouseTypeList = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fncBranch.BranchId&&x.IsReal).ToList();
             var typeCollet = fncHouseTypeList.Select(x => x.HouseTypeId).ToArray();
             var fncHouseNumberList = _context.FncHouseNumber.Where(x => typeCollet.Contains(x.HouseTypeId)).ToList();
             List<Room> roomNumberList = new List<Room>();
@@ -385,7 +385,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             Branch2 resources2 = new Branch2();
             List<RoomType> roomTypeList = new List<RoomType>();
             var fncBranch = _context.FncBranch.SingleOrDefault(x => x.BranchName == branch);
-            var fncHouseTypeList = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fncBranch.BranchId).ToList();
+            var fncHouseTypeList = _context.FncHouseType.Include(x => x.FncHouseNumber).Where(x => x.BranchId == fncBranch.BranchId&&x.IsReal).ToList();
             var typeCollet = fncHouseTypeList.Select(x => x.HouseTypeId).ToArray();
             var fncHouseNumberList = _context.FncHouseNumber.Where(x => typeCollet.Contains(x.HouseTypeId)).ToList();
             List<Room> roomNumberList = new List<Room>();

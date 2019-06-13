@@ -44,7 +44,7 @@ namespace JJNG.Web.Areas.Personnel.Controllers
             ViewData["Branch"] = _user.Branch;
 
             var list_department = _identityContext.UserDepartment.ToList();
-            var list_belongto = _identityContext.UserBranch.ToList();
+            var list_belongto = _context.FncBranch.ToList();
             ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName");
             ViewData["Branch"] = new SelectList(list_belongto, "BranchName", "BranchName");
 
@@ -77,7 +77,7 @@ namespace JJNG.Web.Areas.Personnel.Controllers
                 return NotFound();
             }
             var list_department = _identityContext.UserDepartment.ToList();
-            var list_belongto = _identityContext.UserBranch.ToList();
+            var list_belongto = _context.FncBranch.ToList();
             ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName", psnAddressAccount.Department);
             ViewData["Branch"] = new SelectList(list_belongto, "BranchName", "BranchName", psnAddressAccount.Branch);
 

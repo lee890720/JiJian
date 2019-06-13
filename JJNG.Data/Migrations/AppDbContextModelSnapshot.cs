@@ -592,9 +592,27 @@ namespace JJNG.Data.Migrations
 
                     b.Property<int>("BranchId");
 
+                    b.Property<double>("CooperationPrice");
+
                     b.Property<string>("HouseType");
 
+                    b.Property<bool>("IsReal");
+
+                    b.Property<double>("OTABase");
+
+                    b.Property<string>("OTAOrder1");
+
+                    b.Property<string>("OTAOrder2");
+
+                    b.Property<int>("OTAPre");
+
+                    b.Property<int>("OTASpot");
+
                     b.Property<string>("Order");
+
+                    b.Property<double>("PeakPrice");
+
+                    b.Property<int>("StickerPrice");
 
                     b.HasKey("HouseTypeId");
 

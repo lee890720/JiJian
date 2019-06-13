@@ -18,6 +18,7 @@ namespace JJNG.Data.Finance
 
         [Display(Name = "名称")]
         public string BranchName { get; set; }
+        [Display(Name = "房间数")]
         public int Count { get; set; }
         public bool IsType { get; set; }
         public ICollection<FncHouseType> FncHouseType { get; set; }

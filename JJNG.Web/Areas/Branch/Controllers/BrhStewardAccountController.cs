@@ -63,7 +63,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
             ViewData["UserName"] = _user.UserName;
             ViewData["Branch"] = _user.Branch;
 
-            var belongToId = _identityContext.UserBranch.SingleOrDefault(x => x.BranchName == _user.Branch).BranchId;
+            var belongToId = _context.FncBranch.SingleOrDefault(x => x.BranchName == _user.Branch).BranchId;
 
             var list_paymentType = _context.FncPaymentType.ToList();
             ViewData["PaymentType"] = new SelectList(list_paymentType, "PaymentType", "PaymentType");
@@ -163,7 +163,7 @@ namespace JJNG.Web.Areas.Branch.Controllers
 
             AppIdentityUser _user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            var belongToId = _identityContext.UserBranch.SingleOrDefault(x => x.BranchName == _user.Branch).BranchId;
+            var belongToId = _context.FncBranch.SingleOrDefault(x => x.BranchName == _user.Branch).BranchId;
 
             return PartialView("~/Areas/Branch/Views/BrhStewardAccount/Edit.cshtml", brhStewardAccounts);
         }

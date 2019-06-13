@@ -1,4 +1,4 @@
-﻿@model Tuple<BrhConnectRecord, List<BrhMemo>, BrhImprestAccounts, List<BrhFrontDeskAccounts>, List<BrhCollectModel>, FncBranch>
+﻿@model Tuple<BrhConnectRecord, List<BrhMemo>, BrhImprestAccounts, List<BrhFrontDeskAccounts>,  FncBranch>
 @{
     var actionName = ViewContext.RouteData.Values["action"].ToString();
     var controllerName = ViewContext.RouteData.Values["controller"].ToString();
@@ -581,7 +581,7 @@
     <script>
         $(function () {
             //初始化参数
-            var _fncBranch =@Html.Raw(Json.Serialize(Model.Item6));
+            var _fncBranch =@Html.Raw(Json.Serialize(Model.Item5));
             var brhGroupChart = echarts.init(document.getElementById('brhGroupChart'));
             var legendData = [];
             var seriesData = [];

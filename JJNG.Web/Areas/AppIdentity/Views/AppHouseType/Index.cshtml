@@ -1,0 +1,260 @@
+﻿@model Tuple<List<FncHouseType>, List<FncHouseNumber>>
+
+@{
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+    ViewData["Title"] = controllerName;
+    string path = "/" + areaName + "/" + controllerName;
+}
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body table-responsive">
+                    <div class="form-group">
+                        <div class="col-md-3 col-sm-6 col-xs-12 no-padding hidden-xs" style="margin-bottom:10px;">
+                            <a id="createModal" data-toggle="modal" asp-action="Create" asp-route-id="@ViewData["BranchId"]" data-target="#modal-action" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 新增房型</a>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-12 no-padding pull-right" style="margin-bottom:10px;">
+                            <input type="text" placeholder="搜索" id="search" class="form-control">
+                        </div>
+                    </div>
+                    <table id="table-1" class="table  table-bordered table-striped table-hover" width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    房型
+                                </th>
+                                <th>
+                                    顺序
+                                </th>
+                                <th>
+                                    预付价
+                                </th>
+                                <th>
+                                    现付基数
+                                </th>
+                                <th>
+                                    底价基数
+                                </th>
+                                <th>
+                                    门店价基数
+                                </th>
+                                <th>
+                                    合作价基数
+                                </th>
+                                <th>
+                                    旺季基数
+                                </th>
+                                <th>
+                                    OTA排序1
+                                </th>
+                                <th>
+                                    OTA排序2
+                                </th>
+                                <th>
+                                    店面名称
+                                </th>
+                                <th>
+                                    是否为真实房型
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Item1)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.HouseType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Order)
+                                </td>
+                                <td>
+                                    @item.OTAPre
+                                </td>
+                                <td>
+                                    @item.OTASpot
+                                </td>
+                                <td>
+                                    @(item.OTABase*100) %
+                                </td>
+                                <td>
+                                    @item.StickerPrice
+                                </td>
+                                <td>
+                                    @(item.CooperationPrice*100) %
+                                </td>
+                                <td>
+                                    @item.PeakPrice
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OTAOrder1)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OTAOrder2)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FncBranch.BranchName)
+                                </td>
+                                <td>
+                                    <input type="checkbox" checked="@item.IsReal" class="flat-blue" />
+                                </td>
+                                <td>
+                                    @if (item.IsReal)
+                                    {
+                                        <a id="create2Modal" data-toggle="modal" asp-action="Create2" asp-route-id="@item.HouseTypeId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                            <i class="glyphicon glyphicon-plus"></i> 增加房号
+                                        </a>
+                                    }
+                                    <a id="editModal" data-toggle="modal" asp-action="Edit" asp-route-id="@item.HouseTypeId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                        <i class="glyphicon glyphicon-pencil"></i> 编辑
+                                    </a>
+                                    <a id="deleteModal" data-toggle="modal" asp-action="Delete" asp-route-id="@item.HouseTypeId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
+                                        <i class="glyphicon glyphicon-trash"></i> 删除
+                                    </a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="box box-primary">
+                <div class="box-body table-responsive">
+                    <div class="form-group">
+                        @*<div class="col-md-3 col-sm-6 col-xs-12 no-padding hidden-xs" style="margin-bottom:10px;">
+                                <a id="createModal" data-toggle="modal" asp-action="Create" asp-route-id="@ViewData["BranchId"]" data-target="#modal-action" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> 新增房型</a>
+                            </div>*@
+                        <div class="col-md-3 col-sm-6 col-xs-12 no-padding pull-right" style="margin-bottom:10px;">
+                            <input type="text" placeholder="搜索" id="search2" class="form-control">
+                        </div>
+                    </div>
+                    <table id="table-2" class="table  table-bordered table-striped table-hover" width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    房号
+                                </th>
+                                <th>
+                                    房型
+                                </th>
+                                <th>
+                                    店面名称
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Item2)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.HouseNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FncHouseType.HouseType)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FncHouseType.FncBranch.BranchName)
+                                    </td>
+                                    <td>
+                                        <a id="edit2Modal" data-toggle="modal" asp-action="Edit2" asp-route-id="@item.HouseNumberId" data-target="#modal-action" class="btn-sm btn-primary" style="width:70px;margin-right:5px; min-width:50px;">
+                                            <i class="glyphicon glyphicon-pencil"></i> 编辑
+                                        </a>
+                                        <a id="delete2Modal" data-toggle="modal" asp-action="Delete2" asp-route-id="@item.HouseNumberId" data-target="#modal-action" class="btn-sm btn-danger" style="width:70px;margin-right:5px; min-width:50px;">
+                                            <i class="glyphicon glyphicon-trash"></i> 删除
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts{
+    <script>
+        $(function () {
+            var table1 = $('#table-1').DataTable(
+                {
+                    responsive: true,
+                    order: [[1, "asc"]],
+                    paging:false,
+                    dom:
+                        "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    language: {
+                        processing: "加载中...",
+                        lengthMenu: "每页显示 _MENU_ 条数据",
+                        zeroRecords: "没有匹配结果",
+                        info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                        infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                        infoFiltered: "(由 _MAX_ 项结果过滤)",
+                        infoPostFix: "",
+                        search: "搜索:",
+                        url: "",
+                        emptyTable: "没有匹配结果",
+                        loadingRecords: "载入中...",
+                        thousands: ",",
+                        paginate: {
+                            first: "首页",
+                            previous: "上一页",
+                            next: "下一页",
+                            last: "末页"
+                        },
+                        aria: {
+                            sortAscending: ": 以升序排列此列",
+                            sortDescending: ": 以降序排列此列"
+                        }
+                    },
+                });
+            $("#search").keyup(function () { table1.search($("#search").val()).draw(); });
+
+            var table2 = $('#table-2').DataTable(
+            {
+                responsive: true,
+                paging:false,
+                order: [[0, "asc"]],
+                dom:
+                    "<'row'<'col-sm-6'><'col-sm-6'>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                language: {
+                    processing: "加载中...",
+                    lengthMenu: "每页显示 _MENU_ 条数据",
+                    zeroRecords: "没有匹配结果",
+                    info: "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                    infoEmpty: "显示第 0 至 0 项结果，共 0 项",
+                    infoFiltered: "(由 _MAX_ 项结果过滤)",
+                    infoPostFix: "",
+                    search: "搜索:",
+                    url: "",
+                    emptyTable: "没有匹配结果",
+                    loadingRecords: "载入中...",
+                    thousands: ",",
+                    paginate: {
+                        first: "首页",
+                        previous: "上一页",
+                        next: "下一页",
+                        last: "末页"
+                    },
+                    aria: {
+                        sortAscending: ": 以升序排列此列",
+                        sortDescending: ": 以降序排列此列"
+                    }
+                },
+            });
+            $("#search2").keyup(function () { table2.search($("#search2").val()).draw(); });
+        });
+    </script>
+}

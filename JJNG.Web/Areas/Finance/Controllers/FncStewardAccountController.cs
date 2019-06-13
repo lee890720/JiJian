@@ -1,6 +1,7 @@
 ﻿using JJNG.Data;
 using JJNG.Data.AppIdentity;
 using JJNG.Data.Branch;
+using JJNG.Data.Finance;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -35,7 +36,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             ViewData["UserName"] = _user.UserName;
             ViewData["Branch"] = _user.Branch;
 
-            var list_branch = _identityContext.UserBranch.Where(x => x.BranchName != "运营中心"&& x.BranchName != "町隐学院").ToList();
+            var list_branch = _context.FncBranch.Where(x => x.BranchName != "运营中心"&& x.BranchName != "町隐学院").ToList();
             List<BrhStewardAccounts> brhStewardAccounts = new List<BrhStewardAccounts>();
 
             if (string.IsNullOrEmpty(branch))
@@ -43,7 +44,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             else
                 brhStewardAccounts = await _context.BrhStewardAccounts.Where(x => x.Branch == branch).ToListAsync();
 
-            return View(Tuple.Create<List<BrhStewardAccounts>, List<UserBranch>>(brhStewardAccounts, list_branch));
+            return View(Tuple.Create<List<BrhStewardAccounts>, List<FncBranch>>(brhStewardAccounts, list_branch));
         }
 
         [HttpPost]

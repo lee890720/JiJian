@@ -1,0 +1,23 @@
+﻿@model JJNG.Data.Finance.FncHouseNumber
+
+@{
+    Layout = "_CreateEditLayout";
+    var actionName = ViewContext.RouteData.Values["action"].ToString();
+    var controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    var areaName = ViewContext.RouteData.Values["area"].ToString();
+    ViewData["action"] = actionName;
+    ViewData["controller"] = controllerName;
+    ViewData["area"] = areaName;
+}
+<div class="col-md-4">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <input type="hidden" asp-for="HouseTypeId" value="@ViewData["HouseTypeId"]" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="HouseNumber" class="control-label"></label>
+        <input id="houseNumber" asp-for="HouseNumber" class="form-control" />
+        <span asp-validation-for="HouseNumber" class="text-danger"></span>
+    </div>
+</div>
+

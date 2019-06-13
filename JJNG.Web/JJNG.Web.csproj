@@ -12,10 +12,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\AppIdentity\Views\UserBranchDetial\**" />
+    <Compile Remove="Areas\AppIdentity\Views\UserBranch\**" />
+    <Compile Remove="Areas\Finance\Views\FncCollect\**" />
     <Compile Remove="Data\**" />
+    <Content Remove="Areas\AppIdentity\Views\UserBranchDetial\**" />
+    <Content Remove="Areas\AppIdentity\Views\UserBranch\**" />
+    <Content Remove="Areas\Finance\Views\FncCollect\**" />
     <Content Remove="Data\**" />
+    <EmbeddedResource Remove="Areas\AppIdentity\Views\UserBranchDetial\**" />
+    <EmbeddedResource Remove="Areas\AppIdentity\Views\UserBranch\**" />
+    <EmbeddedResource Remove="Areas\Finance\Views\FncCollect\**" />
     <EmbeddedResource Remove="Data\**" />
+    <None Remove="Areas\AppIdentity\Views\UserBranchDetial\**" />
+    <None Remove="Areas\AppIdentity\Views\UserBranch\**" />
+    <None Remove="Areas\Finance\Views\FncCollect\**" />
     <None Remove="Data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Areas\AppIdentity\Controllers\UserBranchController.cs" />
+    <Compile Remove="Areas\AppIdentity\Controllers\UserBranchDetialController.cs" />
+    <Compile Remove="Areas\Finance\Controllers\FncCollectController.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,6 +84,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Areas\AppIdentity\Views\AppBrh\CreateEdit.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\AppIdentity\Views\AppBrh\Delete.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\AppIdentity\Views\AppBrh\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\AppIdentity\Views\AppHouseType\Create2.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\AppIdentity\Views\AppHouseType\CreateEdit.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\AppIdentity\Views\AppHouseType\Delete.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\AppIdentity\Views\AppHouseType\Edit2.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\AppIdentity\Views\AppHouseType\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Areas\AppIdentity\Views\UserAdmin\Edit2.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -106,9 +148,6 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Finance\Views\FncScalp\Index.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
-    <Content Update="Areas\Finance\Views\FncFrontCalendar2\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Areas\Finance\Views\FncHouseType\Edit2.cshtml">

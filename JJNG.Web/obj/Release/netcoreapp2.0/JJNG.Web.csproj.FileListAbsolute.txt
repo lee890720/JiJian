@@ -22,9 +22,9 @@ D:\JiJian\JJNG.Web\bin\Release\netcoreapp2.0\JJNG.Data.dll
 D:\JiJian\JJNG.Web\bin\Release\netcoreapp2.0\JJNG.Data.pdb
 D:\JiJian\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.csprojAssemblyReference.cache
 D:\JiJian\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.csproj.CoreCompileInputs.cache
+D:\JiJian\JJNG.Web\obj\Release\netcoreapp2.0\UserSecretsAssemblyInfo.cs
 D:\JiJian\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.AssemblyInfoInputs.cache
 D:\JiJian\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.AssemblyInfo.cs
 D:\JiJian\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.csproj.CopyComplete
 D:\JiJian\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.dll
 D:\JiJian\JJNG.Web\obj\Release\netcoreapp2.0\JJNG.Web.pdb
-D:\JiJian\JJNG.Web\obj\Release\netcoreapp2.0\UserSecretsAssemblyInfo.cs

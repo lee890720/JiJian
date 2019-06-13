@@ -55,7 +55,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
             ViewData["Branch"] = _user.Branch;
 
             var list_department = _identityContext.UserDepartment.ToList();
-            var list_belongto = _identityContext.UserBranch.ToList();
+            var list_belongto = _context.FncBranch.ToList();
             ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName");
             ViewData["Branch"] = new SelectList(list_belongto, "BranchName", "BranchName");
 
@@ -89,7 +89,7 @@ namespace JJNG.Web.Areas.Finance.Controllers
                 return NotFound();
             }
             var list_department = _identityContext.UserDepartment.ToList();
-            var list_belongto = _identityContext.UserBranch.ToList();
+            var list_belongto = _context.FncBranch.ToList();
             ViewData["Department"] = new SelectList(list_department, "DepartmentName", "DepartmentName", brhImprestAccounts.Department);
             ViewData["Branch"] = new SelectList(list_belongto, "BranchName", "BranchName", brhImprestAccounts.Branch);
 
